@@ -3,7 +3,7 @@ import React from 'react'
 
 const Signup = () => {
   return (
-    <div className='w-[80%] mx-auto mt-10'>
+    <div className='md:w-[80%] w-full mx-auto mt-10'>
         <AdminSignUp />
     </div>
   )

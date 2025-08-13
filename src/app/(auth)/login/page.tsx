@@ -3,7 +3,7 @@ import React, { Suspense } from 'react';
 
 const page = () => {
 	return (
-		<div className='w-[80%] mx-auto'>
+		<div className='md:w-[80%] w-full mx-auto'>
 			<Suspense fallback={<div>Loading...</div>}>
 				<Login />
 			</Suspense>
