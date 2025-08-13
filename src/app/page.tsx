@@ -14,6 +14,7 @@ import {
 import HowItWorks from '@/components/HowItWorks';
 import Link from 'next/link';
 import { servicesFeatures, testmonials } from './Constants';
+import Footer from '@/components/Footer';
 
 export default function Home() {
 	const howItWorks = [
@@ -334,6 +335,7 @@ export default function Home() {
 					/>
 				</div>
 			</section>
+			<Footer />
 		</>
 	);
 }
