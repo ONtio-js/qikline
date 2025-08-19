@@ -10,14 +10,15 @@ interface BusinessProviderProps {
 export const BusinessProvider: React.FC<BusinessProviderProps> = ({
 	children,
 }) => {
-	const { fetchBusinessData, isInitialized } = useBusinessStore();
+	const { fetchBusinessData, isInitialized, error } = useBusinessStore();
 
 	useEffect(() => {
 		// Initialize business data when the provider mounts
-		if (!isInitialized) {
+		// Only fetch if not initialized and no error exists
+		if (!isInitialized && !error) {
 			fetchBusinessData();
 		}
-	}, [isInitialized, fetchBusinessData]);
+	}, [isInitialized, error, fetchBusinessData]);
 
 	return <>{children}</>;
 };

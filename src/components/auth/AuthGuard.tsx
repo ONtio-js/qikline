@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { authService } from '@/services/auth';
 
@@ -14,39 +14,50 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	useEffect(() => {
-		const checkAuth = async () => {
-			try {
-				// Check if user is authenticated
-				const authenticated = authService.isAuthenticated();
+	const checkAuth = useCallback(async () => {
+		console.log('AuthGuard: Checking authentication...', {
+			pathname,
+			windowAvailable: typeof window !== 'undefined',
+			timestamp: new Date().toISOString(),
+		});
 
-				if (!authenticated) {
-					// Redirect to login with current path as redirect parameter
-					router.push(
-						`/login?redirect=${encodeURIComponent(pathname)}`
-					);
-					return;
-				}
+		try {
+			// Check if user is authenticated
+			const authenticated = authService.isAuthenticated();
 
-				setIsAuthenticated(true);
-			} catch (error) {
-				console.error('Auth check failed:', error);
+			console.log('AuthGuard: Authentication result:', {
+				authenticated,
+				timestamp: new Date().toISOString(),
+			});
+
+			if (!authenticated) {
+				console.log(
+					'AuthGuard: Not authenticated, redirecting to login'
+				);
+				// Redirect to login with current path as redirect parameter
 				router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
-			} finally {
-				setIsLoading(false);
+				return;
 			}
-		};
 
+			console.log('AuthGuard: Authenticated, setting state');
+			setIsAuthenticated(true);
+		} catch (error) {
+			console.error('Auth check failed:', error);
+			router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+		} finally {
+			setIsLoading(false);
+		}
+	}, [pathname, router]);
+
+	useEffect(() => {
 		checkAuth();
-	}, [router, pathname]);
+	}, [checkAuth]);
 
 	// Show loading state while checking authentication
 	if (isLoading) {
 		return (
 			<div className='min-h-screen flex items-center justify-center bg-white/20'>
-				<div className='animate-spin rounded-full h-32 w-32 border-b-2 border-blue-700'>
-					
-				</div>
+				<div className='animate-spin rounded-full h-32 w-32 border-b-2 border-blue-700'></div>
 			</div>
 		);
 	}

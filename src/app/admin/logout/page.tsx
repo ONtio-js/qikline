@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { authService } from '@/services/auth';
+import { removeTokens } from '@/utils/token';
 
 export default function LogoutPage() {
 	useEffect(() => {
-		// Perform logout - this will handle the redirect automatically
-		authService.logout();
+		removeTokens();
+		window.location.href = '/login';
 	}, []);
 
 	return (

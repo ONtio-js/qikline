@@ -69,6 +69,7 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 			if (!token) {
 				setError('No access token available');
 				setLoading(false);
+				set({ isInitialized: true }); // Mark as initialized to prevent infinite loops
 				return;
 			}
 
@@ -84,6 +85,7 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 				set({ isInitialized: true });
 			} else {
 				setError('Failed to fetch business data');
+				set({ isInitialized: true }); // Mark as initialized to prevent infinite loops
 			}
 		} catch (error) {
 			setError(
@@ -91,6 +93,7 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 					? error.message
 					: 'An error occurred while fetching business data'
 			);
+			set({ isInitialized: true }); // Mark as initialized to prevent infinite loops
 		} finally {
 			setLoading(false);
 		}

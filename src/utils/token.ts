@@ -177,11 +177,11 @@ export const setTokens = (accessToken: string, refreshToken: string) => {
 
 export const getAccessToken = () => {
 	if (typeof window !== 'undefined') {
-		// Try localStorage first, then cookies
-		const localToken = safeGetLocalStorage(TOKEN_KEY);
+		// Try cookies first (matches middleware behavior), then localStorage
 		const cookieToken = getCookie(TOKEN_KEY);
+		const localToken = safeGetLocalStorage(TOKEN_KEY);
 
-		return localToken || cookieToken;
+		return cookieToken || localToken;
 	}
 	return null;
 };
