@@ -13,6 +13,7 @@ import {
 	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuItem,
+	useSidebar,
 } from '@/components/ui/sidebar';
 import { HiOutlineCalendarDays } from 'react-icons/hi2';
 import Logo from '../Logo';
@@ -79,10 +80,15 @@ const items: MenuItem[] = [
 
 export function AppSidebar() {
 	const pathname = usePathname();
-
+	const { setOpenMobile } = useSidebar();
 
 	const handleLogout = () => {
 		authService.logout();
+	};
+
+	const handleNavigationClick = () => {
+		// Close mobile sidebar when navigation link is clicked
+		setOpenMobile(false);
 	};
 
 	return (
@@ -109,6 +115,7 @@ export function AppSidebar() {
 											className={cn(
 												' flex items-center gap-x-2'
 											)}
+											onClick={handleNavigationClick}
 										>
 											<span
 												className={cn(

@@ -43,9 +43,8 @@ interface BusinessStore {
 	error: string | null;
 	isInitialized: boolean;
 
-	// Actions
 	fetchBusinessData: () => Promise<void>;
-	setBusinessData: (data: BusinessData) => void;
+	setBusinessData: (data: BusinessData | null) => void;
 	updateBusiness: (updates: Partial<BusinessData>) => void;
 	clearBusinessData: () => void;
 	setLoading: (loading: boolean) => void;
@@ -54,46 +53,72 @@ interface BusinessStore {
 
 export const useBusinessStore = create<BusinessStore>((set, get) => ({
 	businessData: null,
-	isLoading: false,
+	isLoading: true,
 	error: null,
 	isInitialized: false,
 
 	fetchBusinessData: async () => {
 		const { setLoading, setError, setBusinessData } = get();
 
+		console.log('BusinessStore: Starting to fetch business data');
 		setLoading(true);
 		setError(null);
 
 		try {
 			const token = getAccessToken();
 			if (!token) {
+				console.log('BusinessStore: No access token available');
 				setError('No access token available');
 				setLoading(false);
-				set({ isInitialized: true }); // Mark as initialized to prevent infinite loops
+				set({ isInitialized: true });
 				return;
 			}
 
+			console.log('BusinessStore: Calling getBusiness API');
 			const response = await getBusiness();
 
 			if (response.status) {
-				// Assuming the API returns an array, we'll take the first business
-				// or you might need to adjust this based on your API response
 				const businessData = Array.isArray(response.data)
 					? response.data[0]
 					: response.data;
-				setBusinessData(businessData);
+
+				if (businessData) {
+					console.log(
+						'BusinessStore: Business data fetched successfully',
+						businessData
+					);
+					setBusinessData(businessData);
+				} else {
+					console.log(
+						'BusinessStore: No business data found - user may need to create a business profile'
+					);
+					// Don't set an error for this case - it's normal for new users
+					setBusinessData(null);
+				}
 				set({ isInitialized: true });
 			} else {
-				setError('Failed to fetch business data');
-				set({ isInitialized: true }); // Mark as initialized to prevent infinite loops
+				console.log(
+					'BusinessStore: Failed to fetch business data',
+					response
+				);
+				// If status is false, it means no business was found or there was an error
+				// For new users, this is normal - they need to create a business profile
+				console.log(
+					'BusinessStore: No business profile found - user needs to create one'
+				);
+				setBusinessData(null);
+				set({ isInitialized: true });
 			}
 		} catch (error) {
-			setError(
-				error instanceof Error
-					? error.message
-					: 'An error occurred while fetching business data'
+			console.error('BusinessStore: Error fetching business data', error);
+			// For any error, assume the user needs to create a business profile
+			// This is the safest approach for new users
+			console.log(
+				'BusinessStore: Error occurred - user may need to create a business profile'
 			);
-			set({ isInitialized: true }); // Mark as initialized to prevent infinite loops
+			setBusinessData(null);
+			setError(null); // Don't show error for this case
+			set({ isInitialized: true });
 		} finally {
 			setLoading(false);
 		}
@@ -112,6 +137,7 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 			const response = await createBusiness(data);
 			if (response.status) {
 				setBusinessData(response.data as BusinessData);
+				set({ isInitialized: true }); // Mark as initialized after successful creation
 			} else {
 				setError('Failed to create business data');
 			}
@@ -125,7 +151,7 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 			setLoading(false);
 		}
 	},
-	setBusinessData: (data: BusinessData) => {
+	setBusinessData: (data: BusinessData | null) => {
 		set({ businessData: data, error: null });
 	},
 

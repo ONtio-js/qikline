@@ -16,12 +16,9 @@ export const useBusiness = () => {
 		setError,
 	} = useBusinessStore();
 
-	// Auto-fetch business data if not initialized
-	useEffect(() => {
-		if (!isInitialized) {
-			fetchBusinessData();
-		}
-	}, [isInitialized, fetchBusinessData]);
+	// Note: BusinessProvider handles initial data fetching
+	// This hook provides access to business data and actions
+	// Only fetch if explicitly called or if there's an error and not initialized
 
 	return {
 		// State

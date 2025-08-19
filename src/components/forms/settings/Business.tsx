@@ -39,7 +39,7 @@ export const Business = () => {
 		Array<{ id: string; image: string; file?: File }>
 	>([]);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const { businessData } = useBusiness();
+	const { businessData, fetchBusinessData } = useBusiness();
 
 	const form = useForm({
 		defaultValues: {
@@ -200,6 +200,8 @@ export const Business = () => {
 					toast.success(response.message);
 					form.reset();
 					setUploadedImages([]);
+					// Refresh business data to update the store
+					await fetchBusinessData();
 				} else {
 					toast.error(response.message, {
 						duration: 3000,
@@ -229,6 +231,8 @@ export const Business = () => {
 				toast.success(response.message);
 				form.reset();
 				setUploadedImages([]);
+				// Refresh business data to update the store
+				await fetchBusinessData();
 			} else {
 				toast.error(response.message);
 			}

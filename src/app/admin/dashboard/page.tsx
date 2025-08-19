@@ -27,9 +27,17 @@ import { useBusiness } from '@/hooks/useBusiness';
 
 const Page = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const { businessData, isLoading } = useBusiness();
-	console.log(businessData);
-	// Show loading state
+	const { businessData, isLoading, isInitialized, error, fetchBusinessData } =
+		useBusiness();
+
+	console.log('Dashboard - Business Data State:', {
+		businessData: businessData ? 'Found' : 'Not found',
+		isLoading,
+		isInitialized,
+		error,
+		hasBusiness: !!businessData,
+	});
+
 	if (isLoading) {
 		return (
 			<div className='min-h-screen flex items-center justify-center'>
@@ -38,31 +46,52 @@ const Page = () => {
 		);
 	}
 
+	// Show business setup modal if no business data and not loading
+	if (!businessData && !isOpen && isInitialized) {
+		return <BusinessSetupModal onClose={() => setIsOpen(true)} />;
+	}
 
 	return (
 		<>
-			{' '}
-			{!businessData && !isOpen && (
-				<BusinessSetupModal
-					onClose={() => setIsOpen(true)}
-				/>
-			)}
 			<div className=''>
 				<div className='flex items-center justify-between p-6'>
 					<div className='space-y-2 w-xs'>
 						<h4 className='text-2xl font-bold'>Dashboard</h4>
 						<p className='text-gray-500'>
 							Manage your bookings and business operations
-							
 						</p>
+						{/* Debug info */}
+						<div className='text-xs text-gray-400 mt-2'>
+							Status:{' '}
+							{isLoading
+								? 'Loading'
+								: isInitialized
+								? 'Initialized'
+								: 'Not initialized'}{' '}
+							| Business: {businessData ? 'Found' : 'Not found'} |
+							Error: {error || 'None'}
+						</div>
 					</div>
-					<Button
-						className='bg-blue-700 text-white hover:bg-blue-800 w-xs h-12 hidden md:flex'
-						size='lg'
-					>
-						<MdAddCard size={24} />
-						<span>New Booking</span>
-					</Button>
+					<div className='flex gap-2'>
+						<Button
+							onClick={() => {
+								console.log('Manual refresh triggered');
+								fetchBusinessData();
+							}}
+							variant='outline'
+							size='sm'
+							className='text-xs'
+						>
+							Refresh Data
+						</Button>
+						<Button
+							className='bg-blue-700 text-white hover:bg-blue-800 w-xs h-12 hidden md:flex'
+							size='lg'
+						>
+							<MdAddCard size={24} />
+							<span>New Booking</span>
+						</Button>
+					</div>
 				</div>
 				<div className='overflow-x-auto no-scrollbar'>
 					<div className='grid grid-cols-4 gap-4 mt-6 border-b border-gray-200 pb-10 p-6 min-w-[1200px]'>

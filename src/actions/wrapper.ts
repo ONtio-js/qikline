@@ -305,8 +305,8 @@ class ApiWrapper {
 	}
 }
 
-// Export a singleton instance
+
 export const apiWrapper = ApiWrapper.getInstance();
 
-// Export the class for testing purposes
+
 export { ApiWrapper };
