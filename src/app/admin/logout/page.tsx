@@ -1,19 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { authService } from '@/services/auth';
 
 export default function LogoutPage() {
-	const router = useRouter();
-
 	useEffect(() => {
-		// Perform logout
+		// Perform logout - this will handle the redirect automatically
 		authService.logout();
-
-		// Redirect to login page
-		router.push('/login');
-	}, [router]);
+	}, []);
 
 	return (
 		<div className='min-h-screen flex items-center justify-center'>
