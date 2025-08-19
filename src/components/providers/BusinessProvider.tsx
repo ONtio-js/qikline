@@ -12,7 +12,7 @@ interface BusinessProviderProps {
 export const BusinessProvider: React.FC<BusinessProviderProps> = ({
 	children,
 }) => {
-	const { fetchBusinessData, isInitialized, error, isLoading } =
+	const { fetchBusinessData, isInitialized, error } =
 		useBusinessStore();
 	const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
