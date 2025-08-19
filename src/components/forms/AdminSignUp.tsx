@@ -19,6 +19,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { signup } from '@/actions/auth/businessOwner/route';
 import { useRouter } from 'next/navigation';
+import Logo from '../Logo';
 
 const AdminSignUp = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -56,6 +57,9 @@ const AdminSignUp = () => {
 	};
 	return (
 		<Form {...form}>
+			<div   className='flex  items-center mb-6 md:hidden'>
+				<Logo />
+			</div>
 			<h2 className='text-2xl font-bold mb-2'>
 				Create an Account
 			</h2>

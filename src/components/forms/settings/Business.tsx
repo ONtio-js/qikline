@@ -240,7 +240,7 @@ export const Business = () => {
 	};
 	return (
 		<Form {...form}>
-			<div className='p-4 px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
+			<div className='p-4 px-2 md:px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
 				<div className='flex items-center justify-between my-6'>
 					<h4 className='text-lg font-semibold text-gray-800'>
 						Business Information
@@ -599,10 +599,10 @@ export const Business = () => {
 							))}
 						</div>
 
-						<div className='flex justify-center gap-4 mb-10'>
+						<div className='flex flex-col-reverse md:flex-row justify-center gap-4 mb-10'>
 							<Button
 								variant={'outline'}
-								className='w-[200px] md:w-xs h-12 text-[16px] text-gray-600 hover:bg-gray-100'
+								className='w-xs md:w-xs h-12 text-[16px] text-gray-600 hover:bg-gray-100'
 								onClick={() => {
 									form.reset();
 									setUploadedImages([]);
@@ -611,7 +611,7 @@ export const Business = () => {
 								Cancel
 							</Button>
 							<Button
-								className=' w-[200px] md:w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
+								className=' w-xs md:w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
 								type='submit'
 								disabled={form.formState.isSubmitting}
 							>

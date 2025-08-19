@@ -25,6 +25,7 @@ import {
 	MdOutlinePeople,
 } from 'react-icons/md';
 import { authService } from '@/services/auth';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 type MenuItem = {
 	title: string;
@@ -135,13 +136,25 @@ export function AppSidebar() {
 							</SidebarMenu>
 						</SidebarGroupContent>
 					</div>
-					<SidebarFooter className=''>
+					<SidebarFooter className='flex flex-col gap-y-5 border-t border-gray-200 pt-6'>
+						<Link href={'/admin/dashboard/profile'} className='flex items-center gap-x-2 cursor-pointer'>
+							<Avatar className=' bg-blue-700' >
+								<AvatarImage src={'/admin/icons/user.svg'} />
+								<AvatarFallback>
+									JD
+								</AvatarFallback>
+							</Avatar>
+							<div>
+								<p className='text-sm font-medium'>John Doe</p>
+								<p className='text-xs text-gray-500'>john@gmail.com</p>
+							</div>
+						</Link>
 						<button
 							onClick={handleLogout}
-							className='flex items-center gap-x-2 w-full p-2 rounded-md hover:bg-red-50 hover:text-red-700 transition-colors'
+							className='flex items-center gap-x-4 w-full p-2 rounded-md transition-colors cursor-pointer'
 						>
 							<LogOut
-								size={24}
+								size={20}
 								className='text-gray-400'
 							/>
 							<span className='text-gray-700'>Logout</span>

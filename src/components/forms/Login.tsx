@@ -23,6 +23,7 @@ import { login } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
 import { EyeIcon } from 'lucide-react';
 import { debugStorage, setTokens } from '@/utils/token';
+import Logo from '../Logo';
 
 const Login = () => {
 	const router = useRouter();
@@ -84,6 +85,9 @@ const Login = () => {
 
 	return (
 		<Form {...form}>
+			<div className='flex items-center  mb-6 md:hidden'>
+				<Logo />
+			</div>
 			<h2 className='text-2xl font-bold mb-2'>Login to your account</h2>
 			<p className='text-sm text-gray-500 mb-8'>
 				Enter your details to login to your account
@@ -170,7 +174,7 @@ const Login = () => {
 					}
 					type='submit'
 					className={cn(
-						'w-xs h-12 font-semibold text-base rounded-md hover:bg-blue-800 bg-blue-700 text-white'
+						'w-xs h-12 font-semibold text-base rounded-md hover:bg-blue-800 bg-blue-700 text-white '
 					)}
 				>
 					{form.formState.isSubmitting

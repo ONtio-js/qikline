@@ -187,7 +187,7 @@ const Add = ({
 				setOpen(false);
 				e.stopPropagation();
 			}}
-			className='fixed top-0 left-0 z-50 bg-black/20 h-screen w-screen p-4   flex items-center justify-center gap-y-2 hover:shadow-md transition-all duration-300 cursor-pointer group space-y-4 hover:border-blue-500'
+			className='fixed top-0 left-0 z-50 bg-black/20 h-screen w-screen md:p-4   flex items-end md:items-center justify-center gap-y-2 hover:shadow-md transition-all duration-300 group space-y-4'
 		>
 			<motion.div
 				onClick={(e) => e.stopPropagation()}
@@ -196,7 +196,7 @@ const Add = ({
 				exit={{ opacity: 0, y: 100, scale: 0.9 }}
 				transition={{ duration: 0.3, ease: 'easeInOut', delay: 0.05 }}
 				viewport={{ once: true, amount: 0.5 }}
-				className='bg-white w-[90%] md:w-[700px] p-6 md:p-10 rounded-md border border-gray-200 flex flex-col gap-y-2 shadow-md transition-all duration-300 cursor-pointer group space-y-4'
+				className='bg-white w-full md:w-[700px] p-6 md:p-10 rounded-t-2xl md:rounded-md border h-[90%] md:h-auto border-gray-200 flex flex-col gap-y-2 shadow-md transition-all duration-300 cursor-pointer group space-y-4'
 			>
 				<div className='flex items-center justify-between'>
 					<h2 className='text-gray-800 text-lg font-medium capitalize'>
@@ -363,19 +363,19 @@ const Add = ({
 								</FormItem>
 							)}
 						/>
-						<div className='flex gap-x-5 items-center justify-center'>
+						<div className='flex flex-col-reverse md:flex-row gap-y-4 md:gap-x-5 items-center justify-center'>
 							<Button
 								type='button'
 								variant={'outline'}
 								size={'lg'}
-								className='min-w-[10rem] md:w-[18rem] h-12'
+								className='w-xs md:w-[12rem] h-12'
 								onClick={() => setOpen(false)}
 							>
 								{edit ? 'Cancel' : 'Close'}
 							</Button>
 							<Button
 								type='submit'
-								className='min-w-[10rem] md:w-[18rem] h-12 bg-blue-700 hover:bg-blue-800'
+								className='w-xs md:w-[12rem] h-12 bg-blue-700 hover:bg-blue-800'
 								size={'lg'}
 								disabled={isPending}
 							>

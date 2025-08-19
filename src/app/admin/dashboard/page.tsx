@@ -60,30 +60,10 @@ const Page = () => {
 						<p className='text-gray-500'>
 							Manage your bookings and business operations
 						</p>
-						{/* Debug info */}
-						<div className='text-xs text-gray-400 mt-2'>
-							Status:{' '}
-							{isLoading
-								? 'Loading'
-								: isInitialized
-								? 'Initialized'
-								: 'Not initialized'}{' '}
-							| Business: {businessData ? 'Found' : 'Not found'} |
-							Error: {error || 'None'}
-						</div>
+						
 					</div>
 					<div className='flex gap-2'>
-						<Button
-							onClick={() => {
-								console.log('Manual refresh triggered');
-								fetchBusinessData();
-							}}
-							variant='outline'
-							size='sm'
-							className='text-xs'
-						>
-							Refresh Data
-						</Button>
+						
 						<Button
 							className='bg-blue-700 text-white hover:bg-blue-800 w-xs h-12 hidden md:flex'
 							size='lg'
