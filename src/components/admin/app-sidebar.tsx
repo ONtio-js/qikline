@@ -3,7 +3,6 @@ import { LogOut, Bell, Settings } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 
 import {
 	Sidebar,
@@ -80,7 +79,7 @@ const items: MenuItem[] = [
 
 export function AppSidebar() {
 	const pathname = usePathname();
-	const router = useRouter();
+
 
 	const handleLogout = () => {
 		authService.logout();
