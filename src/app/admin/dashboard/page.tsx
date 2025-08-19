@@ -27,7 +27,7 @@ import { useBusiness } from '@/hooks/useBusiness';
 
 const Page = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const { businessData, isLoading, isInitialized, error, fetchBusinessData } =
+	const { businessData, isLoading, isInitialized, error } =
 		useBusiness();
 
 	console.log('Dashboard - Business Data State:', {
