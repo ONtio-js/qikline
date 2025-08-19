@@ -91,7 +91,7 @@ const Verify = () => {
 					form.handleSubmit(onSubmit)(e);
 				}}
 			>
-				<InputOTPGroup className='w-full md:w-auto'>
+				<InputOTPGroup className='w-full md:w-auto '>
 					<InputOTP
 						maxLength={6}
 						className='mb-4'

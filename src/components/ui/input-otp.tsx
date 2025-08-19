@@ -30,7 +30,7 @@ function InputOTPGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="input-otp-group"
-      className={cn("flex items-center gap-x-5", className)}
+      className={cn("flex items-center md:gap-x-5", className)}
       {...props}
     />
   )
@@ -51,7 +51,7 @@ function InputOTPSlot({
       data-slot="input-otp-slot"
       data-active={isActive}
       className={cn(
-        "data-[active=true]:border-blue-500 data-[active=true]:ring-blue-500/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive dark:bg-input/30 border-input relative flex h-16 w-12 md:w-16 items-center justify-center border-y border-r text-sm  transition-all outline-none  data-[active=true]:z-10 data-[active=true]:ring-[3px] border-2 rounded-md mx-2",
+        "data-[active=true]:border-blue-500 data-[active=true]:ring-blue-500/50 data-[active=true]:aria-invalid:ring-destructive/20 dark:data-[active=true]:aria-invalid:ring-destructive/40 aria-invalid:border-destructive data-[active=true]:aria-invalid:border-destructive dark:bg-input/30 border-input relative flex h-16 w-12 md:w-16 items-center justify-center border-y border-r text-sm  transition-all outline-none  data-[active=true]:z-10 data-[active=true]:ring-[3px] border-[1.5px] rounded-md md:mx-2 ",
         className
       )}
       {...props}
