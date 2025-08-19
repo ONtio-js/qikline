@@ -65,7 +65,16 @@ const removeCookie = (name: string) => {
 				cookieString += ';secure';
 			}
 
+			// Add domain if not localhost (must match the domain used when setting)
+			if (
+				window.location.hostname !== 'localhost' &&
+				window.location.hostname !== '127.0.0.1'
+			) {
+				cookieString += `;domain=${window.location.hostname}`;
+			}
+
 			document.cookie = cookieString;
+			console.log('Cookie removed:', name);
 		} catch (error) {
 			console.error('Error removing cookie:', error);
 		}
@@ -198,14 +207,34 @@ export const getRefreshToken = () => {
 };
 
 export const removeTokens = () => {
+	console.log('removeTokens called, clearing all tokens...');
+
 	if (typeof window !== 'undefined') {
 		// Remove from localStorage
-		safeRemoveLocalStorage(TOKEN_KEY);
-		safeRemoveLocalStorage(REFRESH_TOKEN_KEY);
+		const localStorageRemoved = safeRemoveLocalStorage(TOKEN_KEY);
+		const refreshTokenRemoved = safeRemoveLocalStorage(REFRESH_TOKEN_KEY);
 
 		// Remove from cookies
 		removeCookie(TOKEN_KEY);
 		removeCookie(REFRESH_TOKEN_KEY);
+
+		console.log('Token removal results:', {
+			localStorageRemoved,
+			refreshTokenRemoved,
+			windowAvailable: typeof window !== 'undefined',
+		});
+
+		// Verify removal
+		setTimeout(() => {
+			const remainingAccessToken = getAccessToken();
+			const remainingRefreshToken = getRefreshToken();
+			console.log('Token removal verification:', {
+				accessTokenRemaining: !!remainingAccessToken,
+				refreshTokenRemaining: !!remainingRefreshToken,
+				accessTokenLength: remainingAccessToken?.length,
+				refreshTokenLength: remainingRefreshToken?.length,
+			});
+		}, 100);
 	}
 };
 
@@ -296,5 +325,38 @@ export const testTokenStorage = () => {
 		removeTokens();
 		console.log('Test tokens cleaned up');
 		console.log('=== Test Complete ===');
+	}, 100);
+};
+
+// Test function to verify logout process
+export const testLogout = () => {
+	console.log('=== Testing Logout Process ===');
+
+	// First, set some test tokens
+	const testAccessToken = 'test-access-token-' + Date.now();
+	const testRefreshToken = 'test-refresh-token-' + Date.now();
+
+	console.log('Setting test tokens for logout test...');
+	setTokens(testAccessToken, testRefreshToken);
+
+	// Wait a bit, then test logout
+	setTimeout(() => {
+		console.log('Testing logout...');
+		removeTokens();
+
+		// Wait a bit more, then verify
+		setTimeout(() => {
+			const remainingAccessToken = getAccessToken();
+			const remainingRefreshToken = getRefreshToken();
+
+			console.log('Logout test results:', {
+				accessTokenRemoved: !remainingAccessToken,
+				refreshTokenRemoved: !remainingRefreshToken,
+				remainingAccessToken: !!remainingAccessToken,
+				remainingRefreshToken: !!remainingRefreshToken,
+			});
+
+			console.log('=== Logout Test Complete ===');
+		}, 100);
 	}, 100);
 };

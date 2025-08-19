@@ -151,8 +151,33 @@ class AuthService {
 	}
 
 	logout() {
+		console.log('AuthService: Logout initiated...');
 		removeTokens();
+
+		// Clear business store state if available
 		if (typeof window !== 'undefined') {
+			try {
+				// Import and clear business store
+				import('@/lib/store/businessStore')
+					.then(({ useBusinessStore }) => {
+						useBusinessStore.getState().clearBusinessData();
+						console.log('AuthService: Business store cleared');
+					})
+					.catch(() => {
+						console.log(
+							'AuthService: Business store not available'
+						);
+					});
+			} catch (error) {
+				console.log(
+					'AuthService: Error clearing business store:',
+					error
+				);
+			}
+		}
+
+		if (typeof window !== 'undefined') {
+			console.log('AuthService: Redirecting to login page...');
 			window.location.href = '/login';
 		}
 	}
