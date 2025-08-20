@@ -69,6 +69,7 @@ export default function Home() {
 			icon: <LucideLayoutDashboard />,
 		},
 	];
+	const router = useRouter();
 	return (
 		<>
 			<Header />
@@ -88,7 +89,7 @@ export default function Home() {
 							variant='outline'
 							className='text-lg text-white bg-blue-700 w-[18rem] transition-all duration-300 hover:bg-blue-800 hover:text-white h-14  font-medium'
 							size='lg'
-							onClick={() => useRouter().push('/customers')}
+							onClick={() => router.push('/customers')}
 						>
 							Find a Service
 						</Button>
@@ -96,7 +97,7 @@ export default function Home() {
 							variant='outline'
 							className=' text-lg bg-transparent h-14 text-blue-700 font-medium w-[18rem] transition-all duration-300 hover:bg-blue-700 hover:text-white border border-blue-700  px-5'
 							size='lg'
-							onClick={() => useRouter().push('/login')}
+							onClick={() => router.push('/login')}
 						>
 							List Your Business
 						</Button>
