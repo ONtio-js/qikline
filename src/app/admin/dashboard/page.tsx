@@ -24,8 +24,12 @@ import { Separator } from '@/components/ui/separator';
 import BusinessSetupModal from '@/components/admin/BusinessSetupModal';
 import { motion } from 'framer-motion';
 import { useBusiness } from '@/hooks/useBusiness';
+import Pending from '@/components/status/Pending';
+import BookingCard from '@/components/admin/BookingCard';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
+	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const { businessData, isLoading, isInitialized, error } =
 		useBusiness();
@@ -60,10 +64,8 @@ const Page = () => {
 						<p className='text-gray-500'>
 							Manage your bookings and business operations
 						</p>
-						
 					</div>
 					<div className='flex gap-2'>
-						
 						<Button
 							className='bg-blue-700 text-white hover:bg-blue-800 w-xs h-12 hidden md:flex'
 							size='lg'
@@ -220,80 +222,109 @@ const Page = () => {
 							</div>
 						</div>
 						<TabsContent value='upcoming'>
-							<Table className='mt-6 pl-6 w-full'>
+							<div className='flex flex-col md:hidden gap-y-5'>
+								<BookingCard
+										id='1'
+										client_name='John Doe'
+										client_email='john.doe@example.com'
+										client_phone='1234567890'
+										service_name='Haircut'
+										service_duration={30}
+										booking_date='2025-01-01'
+										booking_time='10:00 AM'
+										status='PENDING'
+									/>
+									<BookingCard
+										id='1'
+										client_name='John Doe'
+										client_email='john.doe@example.com'
+										client_phone='1234567890'
+										service_name='Haircut'
+										service_duration={30}
+										booking_date='2025-01-01'
+										booking_time='10:00 AM'
+										status='PENDING'
+									/>
+							</div>
+							<Table className='hidden md:block mt-6 pl-6 w-full'>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
 									<TableRow>
 										<TableHead className='pl-12'>
-											Booking ID
+											S/N
 										</TableHead>
 										<TableHead>Client</TableHead>
-										<TableHead>Service</TableHead>
 										<TableHead>Status</TableHead>
-										<TableHead>Service duration</TableHead>
 										<TableHead>Time</TableHead>
+										<TableHead>Service</TableHead>
+										<TableHead>Service Duration </TableHead>
+
 										<TableHead>Action</TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody className='space-y-2 '>
 									<TableRow className='h-12 mt-4'>
-										<TableCell className=' pl-12'>
-											1001
+										<TableCell className='pl-12'>
+											01
 										</TableCell>
-										<TableCell className='flex items-center gap-x-2'>
+										<TableCell className='font-medium flex items-center gap-x-3 '>
 											<Avatar className='w-10 h-10'>
 												<AvatarImage src='https://github.com/shadcn.png' />
 												<AvatarFallback>
 													JD
 												</AvatarFallback>
 											</Avatar>
-											John Doe
+											<div className='flex flex-col gap-y-1'>
+												<p className='text-base font-medium'>
+													John Doe
+												</p>
+											</div>
+										</TableCell>
+										<TableCell>
+											<Pending />
+										</TableCell>
+										<TableCell>
+											2025-01-01 at 10:00 AM
 										</TableCell>
 										<TableCell>
 											{' '}
-											<span className='text-blue-700 border border-blue-700 rounded-full px-2 py-1	'>
+											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
 												Haircut
 											</span>
 										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-emerald-700 border border-emerald-700 rounded-full px-2 py-1	'>
-												progress
-											</span>{' '}
-										</TableCell>
-										<TableCell>50 min</TableCell>
-										<TableCell>10:00 AM</TableCell>
+										<TableCell>30 mins</TableCell>
 										<TableCell className=''>
 											<MoreHorizontal size={24} />
 										</TableCell>
 									</TableRow>
-									<TableRow className='h-12 mt-4'>
-										<TableCell className=' pl-12'>
-											1002
+									<TableRow className='h-14 mt-4'>
+										<TableCell className='pl-12'>
+											02
 										</TableCell>
-										<TableCell className='flex items-center gap-x-2'>
+										<TableCell className='font-medium flex items-center gap-x-3 '>
 											<Avatar className='w-10 h-10'>
-												<AvatarImage src='https://github.com/shadcn.png' />
 												<AvatarFallback>
 													JF
 												</AvatarFallback>
 											</Avatar>
-											Jane Fray
+											<div className='flex flex-col gap-y-1'>
+												<p className='text-base font-medium'>
+													Jane Fray
+												</p>
+											</div>
+										</TableCell>
+										<TableCell>
+											<Pending />
+										</TableCell>
+										<TableCell>
+											2025-01-01 at 10:00 AM
 										</TableCell>
 										<TableCell>
 											{' '}
-											<span className='text-blue-700 border border-blue-700 rounded-full px-2 py-1	'>
-												{' '}
-												Tinting
+											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+												Haircut
 											</span>
 										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-red-700 border border-red-700 rounded-full px-2 py-1	'>
-												Pending
-											</span>
-										</TableCell>
-										<TableCell>30 min</TableCell>
-										<TableCell>10:00 AM</TableCell>
+										<TableCell>30 mins</TableCell>
 										<TableCell className=''>
 											<MoreHorizontal size={24} />
 										</TableCell>
@@ -302,14 +333,211 @@ const Page = () => {
 							</Table>
 						</TabsContent>
 						<TabsContent value='today'>
-							Change your password here.
+							<div className='flex flex-col md:hidden gap-y-5'>
+								<BookingCard
+									id='1'
+									client_name='John Doe'
+									client_email='john.doe@example.com'
+									client_phone='1234567890'
+									service_name='Haircut'
+									service_duration={30}
+									booking_date='2025-01-01'
+									booking_time='10:00 AM'
+									status='PENDING'
+								/>
+							</div>
+							<Table className='hidden md:block mt-6 pl-6 w-full'>
+								<TableHeader className='bg-gray-100 py-2  h-12'>
+									<TableRow>
+										<TableHead className='pl-12'>
+											S/N
+										</TableHead>
+										<TableHead>Client</TableHead>
+										<TableHead>Status</TableHead>
+										<TableHead>Time</TableHead>
+										<TableHead>Service</TableHead>
+										<TableHead>Service Duration </TableHead>
+
+										<TableHead>Action</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody className='space-y-2 '>
+									<TableRow className='h-12 mt-4'>
+										<TableCell className='pl-12'>
+											01
+										</TableCell>
+										<TableCell className='font-medium flex items-center gap-x-3 '>
+											<Avatar className='w-10 h-10'>
+												<AvatarImage src='https://github.com/shadcn.png' />
+												<AvatarFallback>
+													JD
+												</AvatarFallback>
+											</Avatar>
+											<div className='flex flex-col gap-y-1'>
+												<p className='text-base font-medium'>
+													John Doe
+												</p>
+											</div>
+										</TableCell>
+										<TableCell>
+											<Pending />
+										</TableCell>
+										<TableCell>
+											2025-01-01 at 10:00 AM
+										</TableCell>
+										<TableCell>
+											{' '}
+											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+												Haircut
+											</span>
+										</TableCell>
+										<TableCell>30 mins</TableCell>
+										<TableCell className=''>
+											<MoreHorizontal size={24} />
+										</TableCell>
+									</TableRow>
+									<TableRow className='h-14 mt-4'>
+										<TableCell className='pl-12'>
+											02
+										</TableCell>
+										<TableCell className='font-medium flex items-center gap-x-3 '>
+											<Avatar className='w-10 h-10'>
+												<AvatarFallback>
+													JF
+												</AvatarFallback>
+											</Avatar>
+											<div className='flex flex-col gap-y-1'>
+												<p className='text-base font-medium'>
+													Jane Fray
+												</p>
+											</div>
+										</TableCell>
+										<TableCell>
+											<Pending />
+										</TableCell>
+										<TableCell>
+											2025-01-01 at 10:00 AM
+										</TableCell>
+										<TableCell>
+											{' '}
+											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+												Haircut
+											</span>
+										</TableCell>
+										<TableCell>30 mins</TableCell>
+										<TableCell className=''>
+											<MoreHorizontal size={24} />
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
 						</TabsContent>
 						<TabsContent value='completed'>
-							Change your password here.
+							<div className='flex flex-col md:hidden gap-y-5'>
+								<BookingCard
+									id='1'
+									client_name='John Doe'
+									client_email='john.doe@example.com'
+									client_phone='1234567890'
+									service_name='Haircut'
+									service_duration={30}
+									booking_date='2025-01-01'
+									booking_time='10:00 AM'
+									status='PENDING'
+								/>
+							</div>
+							<Table className='hidden md:block mt-6 pl-6 w-full'>
+								<TableHeader className='bg-gray-100 py-2  h-12'>
+									<TableRow>
+										<TableHead className='pl-12'>
+											S/N
+										</TableHead>
+										<TableHead>Client</TableHead>
+										<TableHead>Status</TableHead>
+										<TableHead>Time</TableHead>
+										<TableHead>Service</TableHead>
+										<TableHead>Service Duration </TableHead>
+
+										<TableHead>Action</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody className='space-y-2 '>
+									<TableRow className='h-12 mt-4'>
+										<TableCell className='pl-12'>
+											01
+										</TableCell>
+										<TableCell className='font-medium flex items-center gap-x-3 '>
+											<Avatar className='w-10 h-10'>
+												<AvatarImage src='https://github.com/shadcn.png' />
+												<AvatarFallback>
+													JD
+												</AvatarFallback>
+											</Avatar>
+											<div className='flex flex-col gap-y-1'>
+												<p className='text-base font-medium'>
+													John Doe
+												</p>
+											</div>
+										</TableCell>
+										<TableCell>
+											<Pending />
+										</TableCell>
+										<TableCell>
+											2025-01-01 at 10:00 AM
+										</TableCell>
+										<TableCell>
+											{' '}
+											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+												Haircut
+											</span>
+										</TableCell>
+										<TableCell>30 mins</TableCell>
+										<TableCell className=''>
+											<MoreHorizontal size={24} />
+										</TableCell>
+									</TableRow>
+									<TableRow className='h-14 mt-4'>
+										<TableCell className='pl-12'>
+											02
+										</TableCell>
+										<TableCell className='font-medium flex items-center gap-x-3 '>
+											<Avatar className='w-10 h-10'>
+												<AvatarFallback>
+													JF
+												</AvatarFallback>
+											</Avatar>
+											<div className='flex flex-col gap-y-1'>
+												<p className='text-base font-medium'>
+													Jane Fray
+												</p>
+											</div>
+										</TableCell>
+										<TableCell>
+											<Pending />
+										</TableCell>
+										<TableCell>
+											2025-01-01 at 10:00 AM
+										</TableCell>
+										<TableCell>
+											{' '}
+											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+												Haircut
+											</span>
+										</TableCell>
+										<TableCell>30 mins</TableCell>
+										<TableCell className=''>
+											<MoreHorizontal size={24} />
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
 						</TabsContent>
 					</Tabs>
 					<div className='flex items-center justify-center mt-10'>
-						<Button className='bg-transparent font-medium text-lg text-gray-800 hover:bg-gray-100 w-xs border border-gray-200 h-12'>
+						<Button
+							onClick={() => router.push('/admin/dashboard/bookings')}
+							className='bg-transparent font-medium text-lg text-gray-800 hover:bg-gray-100 w-xs border border-gray-200 h-12'
+						>
 							View all bookings
 						</Button>
 					</div>

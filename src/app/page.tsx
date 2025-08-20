@@ -17,6 +17,7 @@ import HowItWorks from '@/components/HowItWorks';
 import Link from 'next/link';
 import { servicesFeatures, testmonials } from './Constants';
 import Footer from '@/components/Footer';
+import { motion } from 'framer-motion';
 
 export default function Home() {
 	
@@ -71,11 +72,11 @@ export default function Home() {
 	];
 	const router = useRouter();
 	return (
-		<>
+		<div className='overflow-x-hidden'>
 			<Header />
 			<section className='px-3 bg-gradient-to-t from-[#F1D5FF] via-[] to-[#EFF7FF] py-20'>
 				<div className='space-y-6 mt-'>
-					<h1 className='text-4xl md:text-5xl font-bold text-center max-w-[550px] mx-auto leading-16'>
+					<h1 className='text-3xl md:text-5xl font-bold text-center max-w-[550px] mx-auto leading-16'>
 						Book services with{' '}
 						<span className='text-blue-700'>Ease</span>
 					</h1>
@@ -103,24 +104,32 @@ export default function Home() {
 						</Button>
 					</div>
 					<div className='overflow-hidden md:overflow-auto'>
-						<div className='overflow-x-scroll flex justify-center items-stretch mx-auto max-w-[50rem] gap-7 mt-20'>
-							<div className='w-full'>
+						<div className='overflow-x-scroll flex justify-center items-stretch mx-auto md:max-w-[50rem] gap-7 mt-20'>
+							<div className='w-[60%] flex-shrink-0 hidden md:block'>
 								<Image
 									src={'/hero-3.jpg'}
 									width={200}
 									height={200}
 									alt='hero-3'
-									className='h-full object-cover w-full rounded-md'
+									className='h-full object-cover w-full rounded-md '
 								/>
 							</div>
-							<div className='flex md:flex-col  gap-x-7 space-y-7 md:w-[50%]'>
+							<div className='flex md:flex-col  gap-x-5 space-y-7 md:w-[50%] '>
+								<Image
+									src={'/hero-3.jpg'}
+									width={200}
+									height={200}
+									alt='hero-3'
+									className='w-[90%] h-full rounded-md md:hidden'
+								/>
 								<Image
 									src={'/hero-2.jpg'}
 									width={200}
 									height={200}
 									alt='hero-3'
-									className='w-full h-full rounded-md'
+									className='h-full w-full rounded-md'
 								/>
+
 								<Image
 									src={'/hero-1.png'}
 									width={200}
@@ -145,7 +154,7 @@ export default function Home() {
 								title={how.title}
 								description={how.description}
 								icon={how.icon}
-								key={how.id}
+								id={how.id}
 							/>
 						);
 					})}
@@ -154,7 +163,17 @@ export default function Home() {
 					<div className='space-y-10'>
 						<h2 className='text-3xl font-semibold md:max-w-[25rem] capitalize'>
 							grow your business with{' '}
-							<span className='text-blue-800'>QikLine</span>
+							<motion.span
+								initial={{ opacity: 0, x: -10 }}
+								whileInView={{
+									opacity: 1,
+									x: 0,
+									transition: { duration: 0.3, delay: 0.1 },
+								}}
+								className='text-blue-800'
+							>
+								QikLine
+							</motion.span>
 						</h2>
 						<p className='text-gray-700 text-lg'>
 							List your services, accept bookings, and manage your
@@ -165,8 +184,17 @@ export default function Home() {
 						<div className='grid md:grid-cols-2 gap-10 mt-10 '>
 							{features.map((feature) => {
 								return (
-									<div
+									<motion.div
 										key={feature.id}
+										initial={{
+											opacity: 0,
+											x: feature.id % 2 === 0 ? -10 : 10,
+										}}
+										whileInView={{ opacity: 1, x: 0 }}
+										transition={{
+											duration: 0.3,
+											delay: feature.id * 0.1,
+										}}
 										className='flex gap-4 items-start'
 									>
 										<div className='p-5 text-white  bg-blue-600/80 rounded-2xl'>
@@ -180,7 +208,7 @@ export default function Home() {
 												{feature.description}
 											</p>
 										</div>
-									</div>
+									</motion.div>
 								);
 							})}
 						</div>
@@ -188,26 +216,57 @@ export default function Home() {
 							<Link href={'/admin'}>Register Your Business</Link>
 						</Button>
 					</div>
-					<div className='bg-[#F1D9FF] pl-20 my-auto py-10 flex justify-end rounded-2xl'>
-						<Image
+					<motion.div
+						initial={{ opacity: 0, x: -100, y: -20 }}
+						whileInView={{
+							opacity: 1,
+							x: 0,
+							y: 0,
+							transition: { duration: 0.5, delay: 0.1 },
+						}}
+						
+						className='bg-[#F1D9FF] pl-20 my-auto py-10 flex justify-end rounded-2xl'
+					>
+						<motion.img
+							initial={{ opacity: 0, x: 100, y: 20 }}
+							whileInView={{
+								opacity: 1,
+								x: 0,
+								y: 0,
+								transition: { duration: 0.3, delay: 0.2 },
+							}}
 							src={'/dashboard.svg'}
 							width={2000}
 							height={1000}
 							alt='dashboard'
 							className='w-[87%] h-[80%]'
 						/>
-					</div>
+					</motion.div>
 				</div>
 				<div className='grid md:grid-cols-2 gap-20 mt-32 md:px-10'>
-					<div className='bg-[#F1D9FF] hidden  pl-20 my-auto py-10 md:flex justify-end rounded-2xl'>
-						<Image
+					<motion.div initial={{ opacity: 0, x: 100, y: 20 }}
+						whileInView={{
+							opacity: 1,
+							x: 0,
+							y: 0,
+							transition: { duration: 0.5, delay: 0.1 },
+						}} className='bg-[#F1D9FF] hidden  pl-20 my-auto py-10 md:flex justify-end rounded-2xl'>
+						<motion.img
+							initial={{ opacity: 0, x: -100, y: -20 }}
+							whileInView={{
+								opacity: 1,
+								x: 0,
+								y: 0,
+								transition: { duration: 0.5, delay: 0.1 },
+							}}
+							exit={{ opacity: 0, x: -100, y: -20 }}
 							src={'/dashboard.svg'}
 							width={2000}
 							height={1000}
 							alt='dashboard'
 							className='w-[87%] h-[80%]'
 						/>
-					</div>
+					</motion.div>
 					<div className='space-y-10'>
 						<h2 className='text-3xl font-semibold max-w-[25rem] capitalize'>
 							Find trusted
@@ -225,8 +284,11 @@ export default function Home() {
 						<div className='grid md:grid-cols-2 gap-10 mt-10 '>
 							{servicesFeatures.map((feature) => {
 								return (
-									<div
+									<motion.div
 										key={feature.id}
+										initial={{ opacity: 0, x: feature.id % 2 === 0 ? -10 : 10 }}
+										whileInView={{ opacity: 1, x: 0 }}
+										transition={{ duration: 0.3, delay: feature.id * 0.1 }}
 										className='flex gap-4 items-start'
 									>
 										<div className='p-5 text-white  bg-blue-600/80 rounded-2xl'>
@@ -240,7 +302,7 @@ export default function Home() {
 												{feature.description}
 											</p>
 										</div>
-									</div>
+									</motion.div>
 								);
 							})}
 						</div>
@@ -250,15 +312,18 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
-			<section className='p-20 '>
+			<section className='md:p-20 py-20 px-5'>
 				<Title
 					title='what our users say'
 					description='Join thousands of satisfied customers and business owners who love QikLine.'
 				/>
 				<div className='grid md:grid-cols-3 gap-10 justify-items-center mt-20 '>
 					{testmonials.map((testmonial) => (
-						<div
+						<motion.div
 							key={testmonial.id}
+							initial={{ opacity: 0, x: -100, y: -20 }}
+							whileInView={{ opacity: 1, x: 0, y: 0 }}
+							transition={{ duration: 0.3, delay: testmonial.id * 0.1 }}
 							className='border border-gray-200 p-8 rounded-2xl '
 						>
 							<p className='flex gap-1 mb-6'>
@@ -289,22 +354,24 @@ export default function Home() {
 									<p>{testmonial.profession}</p>
 								</div>
 							</div>
-						</div>
+						</motion.div>
 					))}
 				</div>
 			</section>
-			<section className='p-20 pb-0 mb-20 mt-14 bg-gradient-to-t from-[#F1D5FF]  to-[#EFF7FF]'>
+			<section className='md:p-20 py-20 px-5 pb-0 mb-20 mt-14 bg-gradient-to-t from-[#F1D5FF]  to-[#EFF7FF]'>
 				<div className='space-y-10 max-w-3xl mx-auto flex flex-col items-center'>
 					<h2 className='text-4xl font-semibold capitalize'>
 						start booking{' '}
-						<span className='text-blue-700'>smarter</span>
+						<motion.span initial={{ opacity: 0, scale: 1.5 }}
+						whileInView={{ opacity: 1, scale: 1 }}
+						transition={{ duration: 0.3, delay: 0.1 }} className='text-blue-700'>smarter</motion.span>
 					</h2>
 					<p className='text-lg text-gray-800 text-center max-w-2xl'>
 						Join thousands of users saving time every day with
 						QikLine. Whether you&apos;re a customer or a business
 						owner, we&apos;ve got the perfect solution for you.
 					</p>
-					<div className='flex gap-10'>
+					<div className='flex flex-col md:flex-row gap-10'>
 						<Link
 							href={'/customers'}
 							className='bg-blue-700 hover:bg-blue-800 text-white px-10 py-4 text-lg rounded-md font-medium min-w-3xs text-center'
@@ -315,35 +382,44 @@ export default function Home() {
 							href={'/customers'}
 							className='border-blue-700 border text-lg hover:bg-blue-800 hover:text-white px-10 text-blue-700 py-4 rounded-md font-medium min-w-3xs text-center'
 						>
-							Get Started Now
+							Schedule a Demo
 						</Link>
 					</div>
 				</div>
-				<div className='flex items-end gap-10 justify-center mt-20'>
-					<Image
+				<div className='flex items-end gap-10 justify-center mt-20 overflow-y-hidden'>
+					<motion.img
+						initial={{ opacity: 0, x: -100, y: -20 }}
+						whileInView={{ opacity: 1, x: 0, y: 0 }}
+						transition={{ duration: 0.3, delay: 0.1 }}
 						src={'/Dashboard-1.svg'}
 						width={100}
 						height={100}
 						alt='dashboard'
-						className='w-1/4 h-full'
+						className='w-1/4 h-full hidden md:block'
 					/>
-					<Image
+					<motion.img
+						initial={{ opacity: 0, y: 100 }}
+						whileInView={{ opacity: 1,  y: 0 }}
+						transition={{ duration: 0.3, delay: 0.2 }}
 						src={'/Dashboard-3.svg'}
 						width={100}
 						height={100}
 						alt='dashboard'
-						className='w-1/4'
+						className='md:w-1/4 w-full -mb-32 md:mb-0'
 					/>
-					<Image
+					<motion.img
+						initial={{ opacity: 0, x: -100, y: -20 }}
+						whileInView={{ opacity: 1, x: 0, y: 0 }}
+						transition={{ duration: 0.3, delay: 0.3 }}
 						src={'/Dashboard-2.svg'}
 						width={100}
 						height={100}
 						alt='dashboard'
-						className='w-1/4'
+						className='hidden md:block w-1/4'
 					/>
 				</div>
 			</section>
 			<Footer />
-		</>
+		</div>
 	);
 }

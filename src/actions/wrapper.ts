@@ -145,13 +145,11 @@ class ApiWrapper {
 
 	private logout() {
 		removeTokens();
-		// You can add additional logout logic here, like redirecting to login page
 		if (typeof window !== 'undefined') {
 			window.location.href = '/login';
 		}
 	}
 
-	// Public methods for making requests
 	public async get<T = unknown>(
 		url: string,
 		config?: AxiosRequestConfig
@@ -164,12 +162,20 @@ class ApiWrapper {
 			};
 		} catch (error: unknown) {
 			const axiosError = error as {
-				response?: { data?: { message?: string } };
+				response?: {
+					data?: {
+						message?: string;
+						errors?: {
+							non_field_errors?: string[];
+						};
+					};
+				};
 				message?: string;
 			};
 			return {
 				success: false,
 				error:
+					axiosError.response?.data?.errors?.non_field_errors?.[0] ||
 					axiosError.response?.data?.message ||
 					axiosError.message ||
 					'Request failed',
@@ -190,12 +196,20 @@ class ApiWrapper {
 			};
 		} catch (error: unknown) {
 			const axiosError = error as {
-				response?: { data?: { message?: string } };
+				response?: {
+					data?: {
+						message?: string;
+						errors?: {
+							non_field_errors?: string[];
+						};
+					};
+				};
 				message?: string;
 			};
 			return {
 				success: false,
 				error:
+					axiosError.response?.data?.errors?.non_field_errors?.[0] ||
 					axiosError.response?.data?.message ||
 					axiosError.message ||
 					'Request failed',
@@ -281,12 +295,10 @@ class ApiWrapper {
 		}
 	}
 
-	// Method to check if user is authenticated
 	public isAuthenticated(): boolean {
 		return !!getAccessToken();
 	}
 
-	// Method to get current tokens
 	public getTokens() {
 		return {
 			accessToken: getAccessToken(),
@@ -294,19 +306,15 @@ class ApiWrapper {
 		};
 	}
 
-	// Method to manually set tokens (useful after login)
 	public setTokens(accessToken: string, refreshToken: string) {
 		setTokens(accessToken, refreshToken);
 	}
 
-	// Method to clear tokens (useful for logout)
 	public clearTokens() {
 		removeTokens();
 	}
 }
 
-
 export const apiWrapper = ApiWrapper.getInstance();
-
 
 export { ApiWrapper };

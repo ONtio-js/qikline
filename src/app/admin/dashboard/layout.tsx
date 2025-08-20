@@ -54,8 +54,10 @@ const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 									</Link>
 								</div>
 							</div>
-
-							{!isBookings && <SearchBox placeholder='Search ' />}
+							<div className='w-full px-6'>
+								{!isBookings && <SearchBox placeholder='Search ' />}
+							</div>
+							
 						</div>
 						{children}
 					</main>
