@@ -1,7 +1,9 @@
+'use client'
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import Title from '@/components/Title';
+import { useRouter } from 'next/navigation';
 import {
 	Calendar1Icon,
 	FlashlightIcon,
@@ -17,6 +19,7 @@ import { servicesFeatures, testmonials } from './Constants';
 import Footer from '@/components/Footer';
 
 export default function Home() {
+	
 	const howItWorks = [
 		{
 			id: 1,
@@ -69,22 +72,23 @@ export default function Home() {
 	return (
 		<>
 			<Header />
-			<section className=' bg-gradient-to-t from-[#F1D5FF] via-[] to-[#EFF7FF] py-20'>
+			<section className='px-3 bg-gradient-to-t from-[#F1D5FF] via-[] to-[#EFF7FF] py-20'>
 				<div className='space-y-6 mt-'>
-					<h1 className='text-5xl font-bold text-center max-w-[450px] mx-auto leading-16'>
-						<span className='text-blue-700'>Book</span> Local
-						Services in Minutes
+					<h1 className='text-4xl md:text-5xl font-bold text-center max-w-[550px] mx-auto leading-16'>
+						Book services with{' '}
+						<span className='text-blue-700'>Ease</span>
 					</h1>
 
 					<p className='text-center  text-gray-700 max-w-[570px] mx-auto'>
 						Skip the wait. Discover businesses near you and book
 						appointments instantly, no calls, no stress.
 					</p>
-					<div className='flex items-center gap-x-5 justify-center'>
+					<div className='flex flex-col mt-10  md:flex-row items-center gap-5 justify-center'>
 						<Button
 							variant='outline'
 							className='text-lg text-white bg-blue-700 w-[18rem] transition-all duration-300 hover:bg-blue-800 hover:text-white h-14  font-medium'
 							size='lg'
+							onClick={() => useRouter().push('/customers')}
 						>
 							Find a Service
 						</Button>
@@ -92,45 +96,48 @@ export default function Home() {
 							variant='outline'
 							className=' text-lg bg-transparent h-14 text-blue-700 font-medium w-[18rem] transition-all duration-300 hover:bg-blue-700 hover:text-white border border-blue-700  px-5'
 							size='lg'
+							onClick={() => useRouter().push('/login')}
 						>
 							List Your Business
 						</Button>
 					</div>
-					<div className='flex justify-center items-stretch mx-auto max-w-[50rem] gap-7 mt-20'>
-						<div className='w-full'>
-							<Image
-								src={'/hero-3.jpg'}
-								width={200}
-								height={200}
-								alt='hero-3'
-								className='h-full object-cover w-full rounded-md'
-							/>
-						</div>
-						<div className=' space-y-7 w-[50%]'>
-							<Image
-								src={'/hero-2.jpg'}
-								width={200}
-								height={200}
-								alt='hero-3'
-								className='w-full rounded-md'
-							/>
-							<Image
-								src={'/hero-1.png'}
-								width={200}
-								height={200}
-								alt='hero-3'
-								className='w-full rounded-md'
-							/>
+					<div className='overflow-hidden'>
+						<div className='overflow-x-scroll flex justify-center items-stretch mx-auto max-w-[50rem] gap-7 mt-20'>
+							<div className='w-full'>
+								<Image
+									src={'/hero-3.jpg'}
+									width={200}
+									height={200}
+									alt='hero-3'
+									className='h-full object-cover w-full rounded-md'
+								/>
+							</div>
+							<div className='flex  gap-x-10 space-y-7 md:w-[50%]'>
+								<Image
+									src={'/hero-2.jpg'}
+									width={200}
+									height={200}
+									alt='hero-3'
+									className='w-full h-full rounded-md'
+								/>
+								<Image
+									src={'/hero-1.png'}
+									width={200}
+									height={200}
+									alt='hero-3'
+									className='w-full rounded-md'
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
 			</section>
-			<section className='p-20'>
+			<section className='py-20 md:p-20 px-5 '>
 				<Title
 					title='How it works'
 					description='Getting your service appointment has never been easier. Follow these simple steps to get started.'
 				/>
-				<div className='grid grid-cols-3  align-middle mt-14 justify-items-center'>
+				<div className='grid md:grid-cols-3  align-middle mt-14 justify-items-center gap-y-10'>
 					{howItWorks.map((how) => {
 						return (
 							<HowItWorks
@@ -142,9 +149,9 @@ export default function Home() {
 						);
 					})}
 				</div>
-				<div className='grid grid-cols-2 gap-20 mt-32 px-10'>
+				<div className='grid md:grid-cols-2 gap-20 mt-32 md:px-10'>
 					<div className='space-y-10'>
-						<h2 className='text-3xl font-semibold max-w-[25rem] capitalize'>
+						<h2 className='text-3xl font-semibold md:max-w-[25rem] capitalize'>
 							grow your business with{' '}
 							<span className='text-blue-800'>QikLine</span>
 						</h2>
@@ -154,7 +161,7 @@ export default function Home() {
 							businesses already growing with QikLine.
 						</p>
 
-						<div className='grid grid-cols-2 gap-10 mt-10 '>
+						<div className='grid md:grid-cols-2 gap-10 mt-10 '>
 							{features.map((feature) => {
 								return (
 									<div
@@ -190,8 +197,8 @@ export default function Home() {
 						/>
 					</div>
 				</div>
-				<div className='grid grid-cols-2 gap-20 mt-32 px-10'>
-					<div className='bg-[#F1D9FF] pl-20 my-auto py-10 flex justify-end rounded-2xl'>
+				<div className='grid md:grid-cols-2 gap-20 mt-32 md:px-10'>
+					<div className='bg-[#F1D9FF] hidden  pl-20 my-auto py-10 md:flex justify-end rounded-2xl'>
 						<Image
 							src={'/dashboard.svg'}
 							width={2000}
@@ -214,7 +221,7 @@ export default function Home() {
 							training, we&apos;ve got you covered.
 						</p>
 
-						<div className='grid grid-cols-2 gap-10 mt-10 '>
+						<div className='grid md:grid-cols-2 gap-10 mt-10 '>
 							{servicesFeatures.map((feature) => {
 								return (
 									<div
@@ -247,7 +254,7 @@ export default function Home() {
 					title='what our users say'
 					description='Join thousands of satisfied customers and business owners who love QikLine.'
 				/>
-				<div className='grid grid-cols-3 gap-10 justify-items-center mt-20 '>
+				<div className='grid md:grid-cols-3 gap-10 justify-items-center mt-20 '>
 					{testmonials.map((testmonial) => (
 						<div
 							key={testmonial.id}
