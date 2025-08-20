@@ -101,7 +101,7 @@ export default function Home() {
 							List Your Business
 						</Button>
 					</div>
-					<div className='overflow-hidden'>
+					<div className='overflow-hidden md:overflow-auto'>
 						<div className='overflow-x-scroll flex justify-center items-stretch mx-auto max-w-[50rem] gap-7 mt-20'>
 							<div className='w-full'>
 								<Image
@@ -112,7 +112,7 @@ export default function Home() {
 									className='h-full object-cover w-full rounded-md'
 								/>
 							</div>
-							<div className='flex  gap-x-10 space-y-7 md:w-[50%]'>
+							<div className='flex md:flex-col  gap-x-7 space-y-7 md:w-[50%]'>
 								<Image
 									src={'/hero-2.jpg'}
 									width={200}
