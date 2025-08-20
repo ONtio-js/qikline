@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
@@ -20,7 +20,6 @@ import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
 
 export default function Home() {
-	
 	const howItWorks = [
 		{
 			id: 1,
@@ -151,6 +150,7 @@ export default function Home() {
 					{howItWorks.map((how) => {
 						return (
 							<HowItWorks
+								key={how.id}
 								title={how.title}
 								description={how.description}
 								icon={how.icon}
@@ -224,7 +224,6 @@ export default function Home() {
 							y: 0,
 							transition: { duration: 0.5, delay: 0.1 },
 						}}
-						
 						className='bg-[#F1D9FF] pl-20 my-auto py-10 flex justify-end rounded-2xl'
 					>
 						<motion.img
@@ -244,13 +243,16 @@ export default function Home() {
 					</motion.div>
 				</div>
 				<div className='grid md:grid-cols-2 gap-20 mt-32 md:px-10'>
-					<motion.div initial={{ opacity: 0, x: 100, y: 20 }}
+					<motion.div
+						initial={{ opacity: 0, x: 100, y: 20 }}
 						whileInView={{
 							opacity: 1,
 							x: 0,
 							y: 0,
 							transition: { duration: 0.5, delay: 0.1 },
-						}} className='bg-[#F1D9FF] hidden  pl-20 my-auto py-10 md:flex justify-end rounded-2xl'>
+						}}
+						className='bg-[#F1D9FF] hidden  pl-20 my-auto py-10 md:flex justify-end rounded-2xl'
+					>
 						<motion.img
 							initial={{ opacity: 0, x: -100, y: -20 }}
 							whileInView={{
@@ -286,9 +288,15 @@ export default function Home() {
 								return (
 									<motion.div
 										key={feature.id}
-										initial={{ opacity: 0, x: feature.id % 2 === 0 ? -10 : 10 }}
+										initial={{
+											opacity: 0,
+											x: feature.id % 2 === 0 ? -10 : 10,
+										}}
 										whileInView={{ opacity: 1, x: 0 }}
-										transition={{ duration: 0.3, delay: feature.id * 0.1 }}
+										transition={{
+											duration: 0.3,
+											delay: feature.id * 0.1,
+										}}
 										className='flex gap-4 items-start'
 									>
 										<div className='p-5 text-white  bg-blue-600/80 rounded-2xl'>
@@ -323,7 +331,10 @@ export default function Home() {
 							key={testmonial.id}
 							initial={{ opacity: 0, x: -100, y: -20 }}
 							whileInView={{ opacity: 1, x: 0, y: 0 }}
-							transition={{ duration: 0.3, delay: testmonial.id * 0.1 }}
+							transition={{
+								duration: 0.3,
+								delay: testmonial.id * 0.1,
+							}}
 							className='border border-gray-200 p-8 rounded-2xl '
 						>
 							<p className='flex gap-1 mb-6'>
@@ -362,9 +373,14 @@ export default function Home() {
 				<div className='space-y-10 max-w-3xl mx-auto flex flex-col items-center'>
 					<h2 className='text-4xl font-semibold capitalize'>
 						start booking{' '}
-						<motion.span initial={{ opacity: 0, scale: 1.5 }}
-						whileInView={{ opacity: 1, scale: 1 }}
-						transition={{ duration: 0.3, delay: 0.1 }} className='text-blue-700'>smarter</motion.span>
+						<motion.span
+							initial={{ opacity: 0, scale: 1.5 }}
+							whileInView={{ opacity: 1, scale: 1 }}
+							transition={{ duration: 0.3, delay: 0.1 }}
+							className='text-blue-700'
+						>
+							smarter
+						</motion.span>
 					</h2>
 					<p className='text-lg text-gray-800 text-center max-w-2xl'>
 						Join thousands of users saving time every day with
@@ -399,7 +415,7 @@ export default function Home() {
 					/>
 					<motion.img
 						initial={{ opacity: 0, y: 100 }}
-						whileInView={{ opacity: 1,  y: 0 }}
+						whileInView={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.3, delay: 0.2 }}
 						src={'/Dashboard-3.svg'}
 						width={100}

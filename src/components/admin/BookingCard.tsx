@@ -13,15 +13,12 @@ type BookingCardProps = {
 	status: string;
 };
 const BookingCard = ({
-	id,
 	client_name,
-	client_email,
-	client_phone,
 	service_name,
 	service_duration,
 	booking_date,
 	booking_time,
-	status,
+	
 }: BookingCardProps) => {
 	return (
 		<div className='hover:border-blue-500 transition-all duration-300 flex gap-x-4 p-6 border border-gray-200 rounded-md cursor-pointer hover:shadow-md'>
