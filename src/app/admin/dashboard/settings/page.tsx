@@ -21,8 +21,8 @@ const Page = () => {
 					defaultValue='businessprofile'
 					className='w-full  '
 				>
-					<div className='flex items-center justify-between px-6 pt-6'>
-						<TabsList className=' h-13 bg-gray-100 px-2 rounded-md w-[500px]'>
+					<div className='flex overflow-x-hidden items-center justify-between px-6 pt-6'>
+						<TabsList className='overflow-x-scroll flex justify-start h-13 bg-gray-100 px-2 rounded-md w-full md:w-[500px] no-scrollbar'>
 							<TabsTrigger
 								value='businessprofile'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'

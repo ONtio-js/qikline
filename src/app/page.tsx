@@ -71,13 +71,20 @@ export default function Home() {
 	];
 	const router = useRouter();
 	return (
-		<div className='overflow-x-hidden'>
+		<div className='overflow-x-hidden pt-10 md:pt-20'>
 			<Header />
 			<section className='px-3 bg-gradient-to-t from-[#F1D5FF] via-[] to-[#EFF7FF] py-20'>
 				<div className='space-y-6 mt-'>
 					<h1 className='text-3xl md:text-5xl font-bold text-center max-w-[550px] mx-auto leading-16'>
 						Book services with{' '}
-						<span className='text-blue-700'>Ease</span>
+						<motion.span
+							initial={{ opacity: 0, x: -10, y: -10 }}
+							whileInView={{ opacity: 1, x: 0, y: 0 }}
+							transition={{ duration: 0.3, delay: 0.1, type: 'spring', stiffness: 200, damping: 10 }}
+							className='text-blue-700 inline-block'
+						>
+							Ease</motion.span>
+							
 					</h1>
 
 					<p className='text-center  text-gray-700 max-w-[570px] mx-auto'>
@@ -194,6 +201,9 @@ export default function Home() {
 										transition={{
 											duration: 0.3,
 											delay: feature.id * 0.1,
+											type: 'spring',
+											stiffness: 200,
+											damping: 10,
 										}}
 										className='flex gap-4 items-start'
 									>
@@ -232,7 +242,7 @@ export default function Home() {
 								opacity: 1,
 								x: 0,
 								y: 0,
-								transition: { duration: 0.3, delay: 0.2 },
+								transition: { duration: 0.3, delay: 0.2, type: 'spring', stiffness: 200, damping: 10 },
 							}}
 							src={'/dashboard.svg'}
 							width={2000}
@@ -259,7 +269,7 @@ export default function Home() {
 								opacity: 1,
 								x: 0,
 								y: 0,
-								transition: { duration: 0.5, delay: 0.1 },
+								transition: { duration: 0.5, delay: 0.1, type: 'spring', stiffness: 200, damping: 10 },
 							}}
 							exit={{ opacity: 0, x: -100, y: -20 }}
 							src={'/dashboard.svg'}
@@ -296,6 +306,9 @@ export default function Home() {
 										transition={{
 											duration: 0.3,
 											delay: feature.id * 0.1,
+											type: 'spring',
+											stiffness: 200,
+											damping: 10,
 										}}
 										className='flex gap-4 items-start'
 									>
@@ -334,6 +347,9 @@ export default function Home() {
 							transition={{
 								duration: 0.3,
 								delay: testmonial.id * 0.1,
+								type: 'spring',
+								stiffness: 200,
+								damping: 10,
 							}}
 							className='border border-gray-200 p-8 rounded-2xl '
 						>
@@ -371,18 +387,18 @@ export default function Home() {
 			</section>
 			<section className='md:p-20 py-20 px-5 pb-0 mb-20 mt-14 bg-gradient-to-t from-[#F1D5FF]  to-[#EFF7FF]'>
 				<div className='space-y-10 max-w-3xl mx-auto flex flex-col items-center'>
-					<h2 className='text-4xl font-semibold capitalize'>
+					<h2 className='md:text-4xl text-3xl font-semibold capitalize'>
 						start booking{' '}
 						<motion.span
 							initial={{ opacity: 0, scale: 1.5 }}
 							whileInView={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.3, delay: 0.1 }}
+							transition={{ duration: 0.3, delay: 0.1, type: 'spring', stiffness: 200, damping: 10 }}
 							className='text-blue-700'
 						>
 							smarter
 						</motion.span>
 					</h2>
-					<p className='text-lg text-gray-800 text-center max-w-2xl'>
+					<p className='md:text-lg text-base text-gray-800 text-center max-w-2xl'>
 						Join thousands of users saving time every day with
 						QikLine. Whether you&apos;re a customer or a business
 						owner, we&apos;ve got the perfect solution for you.

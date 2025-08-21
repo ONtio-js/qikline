@@ -549,7 +549,7 @@ export const Business = () => {
 						</div>
 
 						{/* Image grid */}
-						<div className='grid grid-cols-3 gap-4 pb-3'>
+						<div className='grid md:grid-cols-3 gap-4 pb-3'>
 							{uploadedImages.length > 0
 								? uploadedImages.map((image, index) => (
 										<div
@@ -563,7 +563,7 @@ export const Business = () => {
 												}`}
 												width={300}
 												height={160}
-												className='rounded-lg h-40 w-full object-cover'
+												className='rounded-lg md:h-40 h-20 w-full object-cover'
 											/>
 											<button
 												type='button'
