@@ -25,13 +25,22 @@ const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 								<Link href={'/admin/dashboard/settings'}>
 									<Settings
 										size={24}
-										className='text-gray-400'
+										className={`${
+											pathname.includes('settings') ||
+											pathname.includes('profile')
+												? 'text-blue-700'
+												: 'text-gray-400'
+										} `}
 									/>
 								</Link>
 								<Link href={'/admin/dashboard/notification'}>
 									<Bell
 										size={24}
-										className='text-gray-400'
+										className={`${
+											pathname.includes('notification')
+												? 'text-blue-700'
+												: 'text-gray-400'
+										} `}
 									/>
 								</Link>
 							</div>
@@ -43,21 +52,33 @@ const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 									<Link href='/admin/dashboard/settings'>
 										<Settings
 											size={24}
-											className='text-gray-400'
+											className={`${
+												pathname.includes('settings') ||
+												pathname.includes('profile')
+													? 'text-blue-700'
+													: 'text-gray-400'
+											} `}
 										/>
 									</Link>
 									<Link href='/admin/dashboard/notification'>
 										<Bell
 											size={24}
-											className='text-gray-400'
+											className={`${
+												pathname.includes(
+													'notification'
+												)
+													? 'text-blue-700'
+													: 'text-gray-400'
+											} `}
 										/>
 									</Link>
 								</div>
 							</div>
 							<div className='w-full px-6'>
-								{!isBookings && <SearchBox placeholder='Search ' />}
+								{!isBookings && (
+									<SearchBox placeholder='Search ' />
+								)}
 							</div>
-							
 						</div>
 						{children}
 					</main>

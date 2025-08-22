@@ -137,16 +137,20 @@ export function AppSidebar() {
 						</SidebarGroupContent>
 					</div>
 					<SidebarFooter className='flex flex-col gap-y-5 border-t border-gray-200 pt-6'>
-						<Link href={'/admin/dashboard/profile'} className='flex items-center gap-x-2 cursor-pointer'>
-							<Avatar className=' bg-blue-700' >
+						<Link
+							onClick={handleNavigationClick}
+							href={'/admin/dashboard/profile'}
+							className='flex items-center gap-x-2 cursor-pointer'
+						>
+							<Avatar className=' bg-blue-700'>
 								<AvatarImage src={'/admin/icons/user.svg'} />
-								<AvatarFallback>
-									JD
-								</AvatarFallback>
+								<AvatarFallback>JD</AvatarFallback>
 							</Avatar>
 							<div>
 								<p className='text-sm font-medium'>John Doe</p>
-								<p className='text-xs text-gray-500'>john@gmail.com</p>
+								<p className='text-xs text-gray-500'>
+									john@gmail.com
+								</p>
 							</div>
 						</Link>
 						<button

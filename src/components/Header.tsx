@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import {motion} from 'framer-motion' 
 import { X } from 'lucide-react';
+import Menubar from './Menuba';
 const Header = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
@@ -33,11 +34,7 @@ const Header = () => {
 				Try QikLine for Free
 			</Button>
 			<div onClick={() => setIsOpen(true)} className='md:hidden  p-2 rounded-md cursor-pointer'>
-				<div className='flex flex-col gap-1'>
-					<div className='w-4 h-[2px] bg-gray-700'></div>
-					<div className='w-5.5 h-[2px] bg-gray-700'></div>
-					<div className='w-3 h-[2px] bg-gray-700'></div>
-				</div>
+				<Menubar />
 			</div>
 		</div>
   );
@@ -107,7 +104,7 @@ const Navbar = ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (isOpen: boole
 							stiffness: 200,
 							damping: 10,
 						}}
-						className='hover:bg-gray-100 p-2 hover:text-blue-700'
+						className='hover:bg-gray-100 p-2 hover:text-blue-700 text-gray-700'
 					>
 						<Link href='/how-it-works'>How it Works</Link>
 					</motion.li>
@@ -131,7 +128,7 @@ const Navbar = ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (isOpen: boole
 							stiffness: 200,
 							damping: 10,
 						}}
-						className='hover:bg-gray-100 p-2 hover:text-blue-700'
+						className='hover:bg-gray-100 p-2 hover:text-blue-700 text-gray-700'
 					>
 						<Link href='/login'>For Business</Link>
 					</motion.li>
@@ -155,7 +152,7 @@ const Navbar = ({isOpen, setIsOpen}: {isOpen: boolean, setIsOpen: (isOpen: boole
 							stiffness: 200,
 							damping: 10,
 						}}
-						className='hover:bg-gray-100 p-2 hover:text-blue-700'
+						className='hover:bg-gray-100 p-2 hover:text-blue-700 text-gray-700'
 					>
 						<Link href='/customers'>For Customers</Link>
 					</motion.li>

@@ -187,16 +187,24 @@ const Add = ({
 				setOpen(false);
 				e.stopPropagation();
 			}}
-			className='fixed top-0 left-0 z-50 bg-black/20 h-screen w-screen md:p-4   flex items-end md:items-center justify-center gap-y-2 hover:shadow-md transition-all duration-300 group space-y-4'
+			className='fixed backdrop-blur top-0 left-0 z-50 bg-black/20 h-screen w-screen md:p-4   flex items-end md:items-center justify-center gap-y-2 hover:shadow-md transition-all duration-300 group space-y-4'
 		>
 			<motion.div
 				onClick={(e) => e.stopPropagation()}
-				initial={{ opacity: 0, y: 100, scale: 0.9 }}
-				whileInView={{ opacity: 1, y: 0, scale: 1 }}
-				exit={{ opacity: 0, y: 100, scale: 0.9 }}
-				transition={{ duration: 0.3, ease: 'easeInOut', delay: 0.05 }}
-				viewport={{ once: true, amount: 0.5 }}
-				className='bg-white w-full md:w-[700px] p-6 md:p-10 rounded-t-2xl md:rounded-md border h-[90%] md:h-auto border-gray-200 flex flex-col gap-y-2 shadow-md transition-all duration-300 cursor-pointer group space-y-4'
+				initial={{
+					y: 200,
+					opacity: 0,
+				}}
+				whileInView={{
+					y: 0,
+					opacity: 1,
+				}}
+				transition={{
+					duration: 0.2,
+					ease: 'easeIn',
+					delay: 0.2,
+				}}
+				className=' bg-white w-full md:w-[700px] p-6 md:p-10 rounded-t-2xl md:rounded-md border h-[90%] md:h-auto border-gray-200 flex flex-col gap-y-2 shadow-md transition-all duration-300 cursor-pointer group space-y-4'
 			>
 				<div className='flex items-center justify-between'>
 					<h2 className='text-gray-800 text-lg font-medium capitalize'>

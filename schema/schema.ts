@@ -130,3 +130,10 @@ export const bookFormSchema = z.object({
 	phone: z.string().min(10),
 	notes: z.string().min(1),
 });
+
+export const BusinessOwnerProfile = z.object({
+	name:z.string(),
+	email:z.string().email(),
+	phone:z.string(),
+	role:z.string()
+})

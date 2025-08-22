@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Button } from '../ui/button';
@@ -7,45 +7,23 @@ import { useRouter } from 'next/navigation';
 
 const BusinessSetupModal = ({ onClose }: { onClose: () => void }) => {
 	const router = useRouter();
-	const [isMobile, setIsMobile] = useState(false);
-
-	useEffect(() => {
-		const checkMobile = () => {
-			setIsMobile(window.innerWidth <= 768);
-		};
-
-		checkMobile();
-		window.addEventListener('resize', checkMobile);
-		return () => window.removeEventListener('resize', checkMobile);
-	}, []);
 	return (
-		<div className='fixed inset-0 bg-black/10  flex justify-center  md:items-center items-end z-50'>
+		<div className='fixed backdrop-blur inset-0 bg-black/10  flex justify-center  md:items-center items-end z-50'>
 			<motion.div
 				initial={{
+					y: 200,
 					opacity: 0,
-					scale: 0.8,
-					y: isMobile ? 0 : 100,
-					x: isMobile ? 0 : 100,
 				}}
-				whileInView={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+				whileInView={{
+					y: 0,
+					opacity: 1,
+				}}
 				transition={{
-					duration: 0.5,
+					duration: 0.2,
+					ease: 'easeIn',
 					delay: 0.2,
-					ease: 'easeInOut',
-					stiffness: 100,
-					type: 'spring',
 				}}
-				viewport={{
-					once: true,
-				}}
-				exit={{
-					opacity: 0,
-					scale: 0.8,
-					y: isMobile ? 0 : 100,
-					x: isMobile ? 0 : 100,
-				}}
-                
-				className='md:w-2/3 w-full bg-white p-10 md:rounded-xl rounded-t-2xl border border-gray-200 flex flex-col items-center  gap-y-2 hover:shadow-md transition-all duration-300 cursor-pointer  space-y-4 '
+				className=' md:w-2/3 w-full bg-white p-10 md:rounded-xl rounded-t-2xl border border-gray-200 flex flex-col items-center  gap-y-2 hover:shadow-md transition-all duration-300 cursor-pointer  space-y-4 '
 			>
 				<div className='flex justify-between items-center w-full'>
 					<h4 className='text-lg font-semibold'>Business Setup</h4>

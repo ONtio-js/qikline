@@ -7,6 +7,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { TimePickerModal } from '@/components/ui/time-picker-modal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {motion} from 'framer-motion'
 type CreateBookingFormProps = {
 	isOpen: boolean;
 	onClose: () => void;
@@ -16,14 +17,27 @@ const CreateBookingForm = ({ isOpen, onClose }: CreateBookingFormProps) => {
 	const [timePickerOpen, setTimePickerOpen] = useState(false);
 	return (
 		<div
-			className={`fixed top-0 left-0 w-full h-full bg-black/20 z-50 ${
+			className={` backdrop-blur fixed top-0 left-0 w-full h-full bg-black/20 z-50 ${
 				isOpen ? 'block' : 'hidden'
 			}`}
 			onClick={onClose}
 		>
-			<div
+			<motion.div
+				initial={{
+					y:200,
+					opacity:0
+				}}
+				whileInView={{
+					y:0,
+					opacity:1
+				}}
+				transition={{
+					duration:0.2,
+					ease:'easeIn',
+					delay:0.2
+				}}
 				onClick={(e) => e.stopPropagation()}
-				className='w-full h-[85%] bg-white rounded-3xl bottom-0 absolute p-6 space-y-6 overflow-y-auto no-scrollbar'
+				className='w-full h-[85%] bg-white rounded-t-3xl bottom-0 absolute p-6 space-y-6 overflow-y-auto no-scrollbar'
 			>
 				<div className='flex justify-between items-center '>
 					<h4 className='text-lg font-medium'>New Booking</h4>
@@ -67,9 +81,8 @@ const CreateBookingForm = ({ isOpen, onClose }: CreateBookingFormProps) => {
 					<div className='flex flex-col gap-y-4 mt-7'>
 						<h3 className='text-sm  text-gray-500'> Select Date</h3>
 						<Calendar
-							className='w-full  rounded-md shadow-2xl cursor-pointer'
+							className='w-full max-w-md rounded-md shadow-2xl cursor-pointer'
 							mode='single'
-							autoFocus={true}
 							selected={date}
 							onSelect={setDate}
 							onDayClick={(date) => setDate(date)}
@@ -117,7 +130,7 @@ const CreateBookingForm = ({ isOpen, onClose }: CreateBookingFormProps) => {
            </div>
 					</div>
 				</div>
-			</div>
+			</motion.div>
 		</div>
 	);
 };
