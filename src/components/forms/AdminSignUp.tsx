@@ -15,11 +15,12 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, X } from 'lucide-react';
 import Link from 'next/link';
 import { signup } from '@/actions/auth/businessOwner/route';
 import { useRouter } from 'next/navigation';
 import Logo from '../Logo';
+import { toast } from 'sonner';
 
 const AdminSignUp = () => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -47,11 +48,34 @@ const AdminSignUp = () => {
 			if (response?.status) {
 				router.push(`/auth/verify?email=${data.email}`);
 			} else {
-				console.log(response);
-				setError(response?.message || 'Failed to sign up');
+				toast.error(!response.error, {
+					duration: 3000,
+					icon: <X className='w-4 h-4' />,
+					position: 'top-right',
+					className: 'bg-red-500 text-white',
+					style: {
+						backgroundColor: '#ef4444',
+						color: 'white',
+						borderRadius: '10px',
+						padding: '10px',
+						height: '60px',
+					},
+				});
 			}
 		} catch (error) {
-			setError('An error occurred during sign up');
+			toast.error('An error occurred while creating Account', {
+				duration: 3000,
+				icon: <X className='w-4 h-4' />,
+				position: 'top-right',
+				className: 'bg-red-500 text-white',
+				style: {
+					backgroundColor: '#ef4444',
+					color: 'white',
+					borderRadius: '10px',
+					padding: '10px',
+					height: '60px',
+				},
+			});
 			console.error('Error signing up:', error);
 		}
 	};

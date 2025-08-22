@@ -7,7 +7,7 @@ import { resetPasswordSchema } from '../../../schema/schema';
 import { Form, FormField, FormLabel, FormControl, FormItem } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { Eye, EyeOff } from 'lucide-react';
+import { CheckCircle, Eye, EyeOff, X } from 'lucide-react';
 import Link from 'next/link';
 import { resetPassword } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
@@ -38,9 +38,16 @@ const ResetPassword = () => {
 						: 'Password reset successfully',
 					{
 						duration: 3000,
-						className: 'bg-green-50 text-green-700',
-						icon: '🎉',
+						icon: <CheckCircle className='w-4 h-4' />,
 						position: 'top-right',
+						className: 'bg-green-500 text-white',
+						style: {
+							backgroundColor: '#10b981',
+							color: 'white',
+							borderRadius: '10px',
+							padding: '10px',
+							height: '60px',
+						},
 					}
 				);
 			} else {
@@ -50,9 +57,16 @@ const ResetPassword = () => {
 						: 'Failed to reset password',
 					{
 						duration: 3000,
-						className: 'bg-destructive text-destructive-foreground',
-						icon: '🚨',
+						icon: <X className='w-4 h-4' />,
 						position: 'top-right',
+						className: 'bg-red-500 text-white',
+						style: {
+							backgroundColor: '#ef4444',
+							color: 'white',
+							borderRadius: '10px',
+							padding: '10px',
+							height: '60px',
+						},
 					}
 				);
 			}

@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { login } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
-import { EyeIcon } from 'lucide-react';
+import { EyeIcon, X } from 'lucide-react';
 import { debugStorage, setTokens } from '@/utils/token';
 import Logo from '../Logo';
 
@@ -66,9 +66,16 @@ const Login = () => {
 						: response.message || 'Login failed',
 					{
 						duration: 3000,
-						className: 'bg-destructive text-destructive-foreground',
-						icon: '🚨',
-						position: 'top-left',
+						icon: <X className='w-4 h-4' />,
+						position: 'top-right',
+						className: 'bg-red-500 text-white',
+						style: {
+							backgroundColor: '#ef4444',
+							color: 'white',
+							borderRadius: '10px',
+							padding: '10px',
+							height: '60px',
+						},
 					}
 				);
 			}
@@ -76,9 +83,16 @@ const Login = () => {
 			console.error('Login error:', error);
 			toast.error('An error occurred during login', {
 				duration: 3000,
-				className: 'bg-destructive text-destructive-foreground',
-				icon: '🚨',
-				position: 'top-left',
+				icon: <X className='w-4 h-4' />,
+				position: 'top-right',
+				className: 'bg-red-500 text-white',
+				style: {
+					backgroundColor: '#ef4444',
+					color: 'white',
+					borderRadius: '10px',
+					padding: '10px',
+					height: '60px',
+				},
 			});
 		}
 	};

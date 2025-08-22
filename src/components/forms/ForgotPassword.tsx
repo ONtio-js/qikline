@@ -18,6 +18,7 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 import { sendRequestPassword } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
+import { CheckCircle, X } from 'lucide-react';
 
 const ForgotPassword = () => {
 	const form = useForm<z.infer<typeof forgotPasswordSchema>>({
@@ -33,27 +34,58 @@ const ForgotPassword = () => {
 			const response = await sendRequestPassword(formData);
 			if (response?.status) {
 				form.reset();
-				toast.success(typeof response?.message === 'object' ? response?.message?.email?.[0] : response?.message || 'Reset link sent successfully', {
-					duration: 3000,
-					className: 'bg-green-50 text-green-700',
-					icon: '🎉',
-					position: 'top-right',
-				});
+				toast.success(
+					typeof response?.message === 'object'
+						? response?.message?.email?.[0]
+						: response?.message || 'Reset link sent successfully',
+					{
+						duration: 3000,
+						icon: <CheckCircle className='w-4 h-4' />,
+						position: 'top-right',
+						className: 'bg-green-500 text-white',
+						style: {
+							backgroundColor: '#10b981',
+							color: 'white',
+							borderRadius: '10px',
+							padding: '10px',
+							height: '60px',
+						},
+					}
+				);
 			} else {
 				console.log(response);
-				toast.error(typeof response?.message === 'object' ? response?.message?.email?.[0] : response?.message || 'Failed to send reset link', {
-					duration: 3000,
-					className: 'bg-destructive text-destructive-foreground',
-					icon: '🚨',
-					position: 'top-right',
-				});
+				toast.error(
+					typeof response?.message === 'object'
+						? response?.message?.email?.[0]
+						: response?.message || 'Failed to send reset link',
+					{
+						duration: 3000,
+						icon: <X className='w-4 h-4' />,
+						position: 'top-right',
+						className: 'bg-red-500 text-white',
+						style: {
+							backgroundColor: '#ef4444',
+							color: 'white',
+							borderRadius: '10px',
+							padding: '10px',
+							height: '60px',
+						},
+					}
+				);
 			}
 		} catch {
 			toast.error('An error occurred while sending the reset link', {
 				duration: 3000,
-				className: 'bg-destructive text-destructive-foreground',
-				icon: '🚨',
+				icon: <X className='w-4 h-4' />,
 				position: 'top-right',
+				className: 'bg-red-500 text-white',
+				style: {
+					backgroundColor: '#ef4444',
+					color: 'white',
+					borderRadius: '10px',
+					padding: '10px',
+					height: '60px',
+				},
 			});
 		}
 	};

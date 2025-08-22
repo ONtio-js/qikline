@@ -9,6 +9,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '../ui/input-otp';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { resendOTP, verifyEmail } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
+import { CheckCircle, X } from 'lucide-react';
 
 const Verify = () => {
 	const email = useSearchParams().get('email');
@@ -60,16 +61,30 @@ const Verify = () => {
 		if (response?.status) {
 			toast.success(response?.message || 'OTP sent successfully', {
 				duration: 3000,
-				className: 'bg-green-50 text-green-700',
-				icon: '🎉',
+				icon: <CheckCircle className='w-4 h-4' />,
 				position: 'top-right',
+				className: 'bg-green-500 text-white',
+				style: {
+					backgroundColor: '#10b981',
+					color: 'white',
+					borderRadius: '10px',
+					padding: '10px',
+					height: '60px',
+				},
 			});
 		} else {
 			toast.error(response?.message || 'Failed to send OTP', {
 				duration: 3000,
-				className: 'bg-destructive text-destructive-foreground',
-				icon: '🚨',
+				icon: <X className='w-4 h-4' />,
 				position: 'top-right',
+				className: 'bg-red-500 text-white',
+				style: {
+					backgroundColor: '#ef4444',
+					color: 'white',
+					borderRadius: '10px',
+					padding: '10px',
+					height: '60px',
+				},
 			});
 		}
 	};
