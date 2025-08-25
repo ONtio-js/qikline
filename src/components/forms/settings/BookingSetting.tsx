@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export const BookingSetting = () => {
 	return (
-		<div className='p-4 px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
+		<div className='p-4 md:px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
 			<div className='flex items-center justify-between my-6'>
 				<h4 className='text-lg font-semibold text-gray-800'>
 					Booking Preferences
@@ -38,7 +38,7 @@ export const BookingSetting = () => {
 						</h4>
 						<Button
 							variant='secondary'
-							className='text-white bg-amber-600 hover:bg-amber-700'
+							className='text-white bg-amber-600 hover:bg-amber-700 text-[12px] px-2 py-0.5 h-5'
 						>
 							coming soon
 						</Button>
@@ -99,7 +99,7 @@ export const BookingSetting = () => {
 					</p>
 				</div>
 				<div className='flex justify-start gap-4 my-10'>
-					<Button className='w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'>
+					<Button className='sm:w-xs w-full h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'>
 						Save Changes
 					</Button>
 				</div>

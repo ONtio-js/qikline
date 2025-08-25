@@ -31,16 +31,9 @@ import { useRouter } from 'next/navigation';
 const Page = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
-	const { businessData, isLoading, isInitialized, error } =
+	const { businessData, isLoading, isInitialized } =
 		useBusiness();
 
-	console.log('Dashboard - Business Data State:', {
-		businessData: businessData ? 'Found' : 'Not found',
-		isLoading,
-		isInitialized,
-		error,
-		hasBusiness: !!businessData,
-	});
 
 	if (isLoading) {
 		return (
@@ -58,7 +51,7 @@ const Page = () => {
 	return (
 		<>
 			<div className=''>
-				<div className='flex items-center justify-between p-6'>
+				<div className='flex items-center justify-between p-6 pb-0 md:pb-6'>
 					<div className='space-y-2 w-xs'>
 						<h4 className='text-2xl font-bold'>Dashboard</h4>
 						<p className='text-gray-500'>
@@ -76,7 +69,7 @@ const Page = () => {
 					</div>
 				</div>
 				<div className='overflow-x-auto no-scrollbar'>
-					<div className='grid grid-cols-4 gap-4 mt-6 border-b border-gray-200 pb-10 p-6 min-w-[1200px]'>
+					<div className='grid grid-cols-4 gap-4 md:mt-6 border-b border-gray-200 pb-10 p-6 min-w-[1200px]'>
 						<div className='bg-white p-8 px-4 rounded-lg  space-y-4 border border-gray-200 '>
 							<div className='flex items-center justify-between'>
 								<h5 className='text-lg font-semibold text-gray-800'>

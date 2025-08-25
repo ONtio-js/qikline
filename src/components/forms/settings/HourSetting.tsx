@@ -207,7 +207,7 @@ export const HourSetting = () => {
 							</div>
 						</div>
 						{day.isOpen ? (
-							<div className='flex items-center md:gap-5 gap-2 w-full md:w-auto justify-between px-10 md:px-0'>
+							<div className='flex items-center md:gap-5 gap-2 w-full md:w-auto justify-between '>
 								<div
 									className='flex items-center md:gap-2 gap-1 text-gray-500 border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors'
 									onClick={() =>
@@ -237,19 +237,19 @@ export const HourSetting = () => {
 						)}
 					</div>
 				))}
-				<div className='flex justify-center gap-4 my-10'>
+				<div className='flex flex-col-reverse md:flex-row justify-center gap-4 my-10'>
 					<Button
 						onClick={() => {
 							setIsEditing(false);
 						}}
 						variant={'outline'}
-						className='md:w-xs w-[200px] h-12 text-[16px] text-gray-600 hover:bg-gray-100'
+						className='md:w-xs w-full h-12 text-[16px] text-gray-600 hover:bg-gray-100'
 					>
 						Cancel
 					</Button>
 					<Button
 						onClick={handleSave}
-						className='md:w-xs w-[200px] h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
+						className='md:w-xs w-full h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
 					>
 						Save Changes
 					</Button>
