@@ -17,7 +17,7 @@ const CreateBookingForm = ({ isOpen, onClose }: CreateBookingFormProps) => {
 	const [timePickerOpen, setTimePickerOpen] = useState(false);
 	return (
 		<div
-			className={` backdrop-blur fixed top-0 left-0 w-full h-full bg-black/20 z-50 ${
+			className={` backdrop-blur flex justify-center items-center fixed top-0 left-0 w-full h-full bg-black/20 z-50 ${
 				isOpen ? 'block' : 'hidden'
 			}`}
 			onClick={onClose}
@@ -37,7 +37,7 @@ const CreateBookingForm = ({ isOpen, onClose }: CreateBookingFormProps) => {
 					delay:0.2
 				}}
 				onClick={(e) => e.stopPropagation()}
-				className='w-full h-[85%] bg-white rounded-t-3xl bottom-0 absolute p-6 space-y-6 overflow-y-auto no-scrollbar'
+				className='w-full md:w-[60%] h-[85%] bg-white rounded-t-3xl md:rounded-3xl bottom-0 md:bottom-auto absolute p-6 md:p-10 space-y-6 overflow-y-auto no-scrollbar'
 			>
 				<div className='flex justify-between items-center '>
 					<h4 className='text-lg font-medium'>New Booking</h4>
@@ -81,7 +81,7 @@ const CreateBookingForm = ({ isOpen, onClose }: CreateBookingFormProps) => {
 					<div className='flex flex-col gap-y-4 mt-7'>
 						<h3 className='text-sm  text-gray-500'> Select Date</h3>
 						<Calendar
-							className='w-full max-w-md rounded-md shadow-2xl cursor-pointer'
+							className='w-full max-w-md md:max-w-none rounded-md shadow-xl cursor-pointer'
 							mode='single'
 							selected={date}
 							onSelect={setDate}

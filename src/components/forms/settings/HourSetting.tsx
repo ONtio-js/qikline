@@ -179,30 +179,35 @@ export const HourSetting = () => {
 				{businessHours.map((day) => (
 					<div
 						key={day.day}
-						className='flex items-center justify-between border md:p-4 p-2 rounded-lg border-gray-200 pb-4'
+						className='flex items-center flex-col md:flex-row justify-between border p-4 rounded-lg gap-y-4 md:gap-y-0 border-gray-200 pb-4'
 					>
-						<h4 className='md:text-lg text-sm text-gray-600 md:max-w-[10px]'>
-							{day.day}
-						</h4>
-						<div className='flex items-center gap-2 ml-2'>
-							<Switch
-								checked={day.isOpen}
-								onCheckedChange={() =>
-									setBusinessHours((prev) =>
-										prev.map((d) =>
-											d.day === day.day
-												? { ...d, isOpen: !d.isOpen }
-												: d
+						<div className='flex items-center gap-2 justify-between w-full'>
+							<h4 className='md:text-lg text-sm text-gray-600 md:max-w-[10px]'>
+								{day.day}
+							</h4>
+							<div className='flex items-center gap-2 ml-2'>
+								<Switch
+									checked={day.isOpen}
+									onCheckedChange={() =>
+										setBusinessHours((prev) =>
+											prev.map((d) =>
+												d.day === day.day
+													? {
+															...d,
+															isOpen: !d.isOpen,
+													  }
+													: d
+											)
 										)
-									)
-								}
-							/>
-							<span className='capitalize md:text-base hidden sm:block text-gray-500 '>
-								{day.isOpen ? 'open' : 'closed'}
-							</span>
+									}
+								/>
+								<span className='capitalize md:text-base hidden sm:block text-gray-500 '>
+									{day.isOpen ? 'open' : 'closed'}
+								</span>
+							</div>
 						</div>
 						{day.isOpen ? (
-							<div className='flex items-center md:gap-5 gap-2'>
+							<div className='flex items-center md:gap-5 gap-2 w-full md:w-auto justify-between px-10 md:px-0'>
 								<div
 									className='flex items-center md:gap-2 gap-1 text-gray-500 border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors'
 									onClick={() =>

@@ -197,7 +197,7 @@ const BookForm = () => {
 
 					<Button
 						type='submit'
-						className='w-48 h-[50px] mt-2 bg-blue-700 text-white hover:bg-blue-800'
+						className='w-48 h-[50px] mt-2 bg-blue-700 text-white hover:bg-blue-800 mx-auto'
 						disabled={isPending || !form.formState.isValid}
 					>
 						{isPending ? 'Booking...' : 'Book Appointment'}

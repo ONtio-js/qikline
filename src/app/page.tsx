@@ -110,7 +110,7 @@ export default function Home() {
 						</Button>
 					</div>
 					<div className='overflow-hidden md:overflow-auto'>
-						<div className='overflow-x-scroll flex justify-center items-stretch mx-auto md:max-w-[50rem] gap-7 mt-20'>
+						<div className='overflow-x-scroll no-scrollbar flex justify-center items-stretch mx-auto md:max-w-[50rem] gap-7 mt-20'>
 							<div className='w-[60%] flex-shrink-0 hidden md:block'>
 								<Image
 									src={'/hero-3.jpg'}
@@ -385,7 +385,7 @@ export default function Home() {
 					))}
 				</div>
 			</section>
-			<section className='md:p-20 py-20 px-5 pb-0 mb-20 mt-14 bg-gradient-to-t from-[#F1D5FF]  to-[#EFF7FF]'>
+			<section className='md:p-20 md:pb-0 pt-20 px-5 pb-0 mb-20 mt-14 bg-gradient-to-t from-[#F1D5FF]  to-[#EFF7FF]'>
 				<div className='space-y-10 max-w-3xl mx-auto flex flex-col items-center'>
 					<h2 className='md:text-4xl text-3xl font-semibold capitalize'>
 						start booking{' '}
@@ -418,7 +418,7 @@ export default function Home() {
 						</Link>
 					</div>
 				</div>
-				<div className='flex items-end gap-10 justify-center mt-20 overflow-y-hidden'>
+				<div className='flex items-end gap-10 justify-center mt-20 overflow-y-hidden '>
 					<motion.img
 						initial={{ opacity: 0, x: -100, y: -20 }}
 						whileInView={{ opacity: 1, x: 0, y: 0 }}

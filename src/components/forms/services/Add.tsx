@@ -182,7 +182,7 @@ const Add = ({
 	if (!open) return null;
 
 	return (
-		<motion.div
+		<div
 			onClick={(e) => {
 				setOpen(false);
 				e.stopPropagation();
@@ -192,19 +192,18 @@ const Add = ({
 			<motion.div
 				onClick={(e) => e.stopPropagation()}
 				initial={{
-					y: 200,
-					opacity: 0,
+					y: 100,
+			
 				}}
 				whileInView={{
 					y: 0,
-					opacity: 1,
 				}}
 				transition={{
 					duration: 0.2,
 					ease: 'easeIn',
 					delay: 0.2,
 				}}
-				className=' bg-white w-full md:w-[700px] p-6 md:p-10 rounded-t-2xl md:rounded-md border h-[90%] md:h-auto border-gray-200 flex flex-col gap-y-2 shadow-md transition-all duration-300 cursor-pointer group space-y-4'
+				className=' bg-white w-full md:w-[700px] p-6 md:p-10 pt-20 rounded-t-2xl md:rounded-md border h-[90%] md:h-auto border-gray-200 flex flex-col gap-y-2 shadow-md transition-all duration-300 cursor-pointer group space-y-4'
 			>
 				<div className='flex items-center justify-between'>
 					<h2 className='text-gray-800 text-lg font-medium capitalize'>
@@ -399,7 +398,7 @@ const Add = ({
 					</form>
 				</Form>
 			</motion.div>
-		</motion.div>
+		</div>
 	);
 };
 

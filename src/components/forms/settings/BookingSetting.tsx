@@ -32,19 +32,22 @@ export const BookingSetting = () => {
 				</div>
 				<div className='flex items-center justify-between border-b border-gray-200 pb-4'>
 					<div>
+						<div className='flex items-center gap-2'>
 						<h4 className='text-lg font-semibold text-gray-600'>
 							Require Deposit
 						</h4>
+						<Button
+							variant='secondary'
+							className='text-white bg-amber-600 hover:bg-amber-700'
+						>
+							coming soon
+						</Button>
+						</div>
 						<p className='text-gray-500 mt-2 '>
 							Require customers to pay a deposit for all bookings
 						</p>
 					</div>
-					<Button
-						variant='secondary'
-						className='text-white bg-amber-600 hover:bg-amber-700'
-					>
-						coming soon
-					</Button>
+
 					<Switch />
 				</div>
 				<div className='pb-4 space-y-2'>
@@ -52,9 +55,12 @@ export const BookingSetting = () => {
 						Cancellation Notice
 					</h4>
 					<Select defaultValue='1'>
-						<SelectTrigger className='w-full h-12 border-gray-200' style={{
-							height: '50px',
-						}}>
+						<SelectTrigger
+							className='w-full h-12 border-gray-200'
+							style={{
+								height: '50px',
+							}}
+						>
 							<SelectValue placeholder='Select a cancellation notice' />
 						</SelectTrigger>
 						<SelectContent className='border-gray-200 '>
@@ -74,9 +80,12 @@ export const BookingSetting = () => {
 						Advance Booking Time
 					</h4>
 					<Select defaultValue=''>
-						<SelectTrigger className='w-full  border-gray-200' style={{
-							height: '50px',
-						}}>
+						<SelectTrigger
+							className='w-full  border-gray-200'
+							style={{
+								height: '50px',
+							}}
+						>
 							<SelectValue placeholder='Select a advance booking time' />
 						</SelectTrigger>
 						<SelectContent className='border-gray-200 '>
@@ -89,13 +98,12 @@ export const BookingSetting = () => {
 						Minimum time required between bookings and appointments
 					</p>
 				</div>
-                <div className='flex justify-start gap-4 my-10'>
-                   
-                    <Button className='w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'>
-                        Save Changes
-                    </Button>
-                </div>
+				<div className='flex justify-start gap-4 my-10'>
+					<Button className='w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'>
+						Save Changes
+					</Button>
+				</div>
 			</div>
 		</div>
-	)   ;
+	);
 };

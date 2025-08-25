@@ -4,7 +4,7 @@ import { Input } from '../ui/input';
 import { Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
-const SearchBox = ({ placeholder }: { placeholder: string }) => {
+const SearchBox = ({ placeholder, value, onChange }: { placeholder: string, value?: string, onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
 	const [isFocused, setIsFocused] = useState(false);
 	const pathname = usePathname();
 	let name = pathname.split('/').pop();
@@ -23,6 +23,8 @@ const SearchBox = ({ placeholder }: { placeholder: string }) => {
 				className='border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent'
 				onFocus={() => setIsFocused(true)}
 				onBlur={() => setIsFocused(false)}
+				value={value}
+				onChange={onChange}
 			/>
 		</div>
 	);
