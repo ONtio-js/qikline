@@ -29,7 +29,14 @@ const Verify = () => {
 				toast.success('Email verified successfully', {
 					duration: 3000,
 					className: 'bg-green-50 text-green-700',
-					icon: '🎉',
+					icon: <CheckCircle className='w-4 h-4' />,
+					style: {
+						backgroundColor: '#10b981',
+						color: 'white',
+						borderRadius: '10px',
+						padding: '10px',
+						height: '60px',
+					},
 					position: 'top-right',
 				});
 				router.push('/login');
@@ -41,7 +48,14 @@ const Verify = () => {
 					{
 						duration: 3000,
 						className: 'bg-destructive text-destructive-foreground',
-						icon: '🚨',
+						icon: <X className='w-4 h-4' />,
+						style: {
+							backgroundColor: '#ef4444',
+							color: 'white',
+							borderRadius: '10px',
+							padding: '10px',
+							height: '60px',
+						},
 						position: 'top-right',
 					}
 				);

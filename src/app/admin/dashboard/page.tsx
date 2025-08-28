@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, MoreHorizontal, ChevronDown, Users } from 'lucide-react';
 import {
 	Table,
@@ -27,13 +27,46 @@ import { useBusiness } from '@/hooks/useBusiness';
 import Pending from '@/components/status/Pending';
 import BookingCard from '@/components/admin/BookingCard';
 import { useRouter } from 'next/navigation';
-
+import { getAllBookings } from '@/actions/admin/Booking/route';
+interface Booking {
+	id: number;
+	business_name: string;
+	customer_email: string;
+	date: string;
+	time: string;
+	status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+	status_display: string;
+	created_at: string;
+	updated_at: string;
+	service: {
+		id: number;
+		name: string;
+		description: string;
+		price: string;
+		duration: number;
+	};
+}
 const Page = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const { businessData, isLoading, isInitialized } =
 		useBusiness();
-
+		const [bookings, setBookings] = useState<Booking[]>([]);
+		const [page] = useState(1);
+		const [limit] = useState(10);
+ useEffect(() => {
+		const fetchBookings = async () => {
+			const response = await getAllBookings(page, limit);
+			if (
+				response &&
+				typeof response === 'object' &&
+				'data' in response
+			) {
+				setBookings(response.data as Booking[]);
+			}
+		};
+		fetchBookings();
+ }, [page, limit]);
 
 	if (isLoading) {
 		return (
@@ -77,12 +110,12 @@ const Page = () => {
 								</h5>
 								<Calendar
 									size={30}
-									className='text-gray-400'
+									className='text-blue-700'
 								/>
 							</div>
 
 							<div>
-								<p className='text-lg font-semibold'>1000</p>
+								<p className='text-lg font-semibold'>{bookings.length}</p>
 								<p className='text-gray-500'>
 									+8% from last week
 								</p>
@@ -138,7 +171,7 @@ const Page = () => {
 								</h5>
 								<Users
 									size={30}
-									className='text-gray-400'
+									className='text-blue-700'
 								/>
 							</div>
 							<div>
@@ -216,28 +249,19 @@ const Page = () => {
 						</div>
 						<TabsContent value='upcoming'>
 							<div className='flex flex-col md:hidden gap-y-5'>
-								<BookingCard
-										id='1'
-										client_name='John Doe'
-										client_email='john.doe@example.com'
-										client_phone='1234567890'
-										service_name='Haircut'
-										service_duration={30}
-										booking_date='2025-01-01'
-										booking_time='10:00 AM'
-										status='PENDING'
-									/>
+								{bookings?.map((booking: Booking, index: number) => (
 									<BookingCard
-										id='1'
-										client_name='John Doe'
-										client_email='john.doe@example.com'
-										client_phone='1234567890'
-										service_name='Haircut'
-										service_duration={30}
-										booking_date='2025-01-01'
-										booking_time='10:00 AM'
-										status='PENDING'
+										key={index}
+										id={booking.id}
+										business_name={booking.business_name}
+										customer_email={booking.customer_email}
+										date={booking.date}
+										time={booking.time}
+										status={booking.status}
+										status_display={booking.status_display}
+										service={booking.service}
 									/>
+								))}
 							</div>
 							<Table className='hidden md:block mt-6 pl-6 w-full'>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
@@ -328,15 +352,20 @@ const Page = () => {
 						<TabsContent value='today'>
 							<div className='flex flex-col md:hidden gap-y-5'>
 								<BookingCard
-									id='1'
-									client_name='John Doe'
-									client_email='john.doe@example.com'
-									client_phone='1234567890'
-									service_name='Haircut'
-									service_duration={30}
-									booking_date='2025-01-01'
-									booking_time='10:00 AM'
+									id={1}
+									business_name='John Doe'
+									customer_email='john.doe@example.com'
+									date='2025-01-01'
+									time='10:00 AM'
 									status='PENDING'
+									status_display='Pending'
+									service={{
+										id: 1,
+										name: 'Haircut',
+										description: 'Haircut',
+										price: '100',
+										duration: 30,
+									}}
 								/>
 							</div>
 							<Table className='hidden md:block mt-6 pl-6 w-full'>
@@ -428,15 +457,20 @@ const Page = () => {
 						<TabsContent value='completed'>
 							<div className='flex flex-col md:hidden gap-y-5'>
 								<BookingCard
-									id='1'
-									client_name='John Doe'
-									client_email='john.doe@example.com'
-									client_phone='1234567890'
-									service_name='Haircut'
-									service_duration={30}
-									booking_date='2025-01-01'
-									booking_time='10:00 AM'
+									id={1}
+									business_name='John Doe'
+									customer_email='john.doe@example.com'
+									date='2025-01-01'
+									time='10:00 AM'
 									status='PENDING'
+									status_display='Pending'
+									service={{
+										id: 1,
+										name: 'Haircut',
+										description: 'Haircut',
+										price: '100',
+										duration: 30,
+									}}
 								/>
 							</div>
 							<Table className='hidden md:block mt-6 pl-6 w-full'>
@@ -528,7 +562,9 @@ const Page = () => {
 					</Tabs>
 					<div className='flex items-center justify-center mt-10'>
 						<Button
-							onClick={() => router.push('/admin/dashboard/bookings')}
+							onClick={() =>
+								router.push('/admin/dashboard/bookings')
+							}
 							className='bg-transparent font-medium text-lg text-gray-800 hover:bg-gray-100 w-xs border border-gray-200 h-12'
 						>
 							View all bookings

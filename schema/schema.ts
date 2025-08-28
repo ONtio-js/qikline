@@ -128,7 +128,7 @@ export const bookFormSchema = z.object({
 	name: z.string().min(1),
 	email: z.string().email({ message: 'Invalid email address' }),
 	phone: z.string().min(10),
-	notes: z.string().min(1),
+	notes: z.string().optional().nullable().default(''),
 });
 
 export const BusinessOwnerProfile = z.object({
@@ -137,3 +137,10 @@ export const BusinessOwnerProfile = z.object({
 	phone:z.string(),
 	role:z.string()
 })
+
+export const bookingSettingsSchema = z.object({
+	is_booking_enabled: z.boolean(),
+	is_deposit_required: z.boolean(),
+	cancellation_notice: z.number().min(1),
+	advance_booking_time: z.number().min(1),
+});

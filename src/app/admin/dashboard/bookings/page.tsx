@@ -23,24 +23,28 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { MdAddCard } from 'react-icons/md';
 import SearchBox from '@/components/admin/searchBox';
-import { getBookings } from '@/actions/admin/Booking/route';
+import { getAllBookings } from '@/actions/admin/Booking/route';
 import { useEffect, useState } from 'react';
-import { getAccessToken } from '@/utils/token';
 import BookingCard from '@/components/admin/BookingCard';
 import CreateBookingForm from '@/components/forms/booking/CreateBookingForm';
 
 interface Booking {
-	id: string;
-	client_name: string;
-	client_email: string;
-	client_phone: string;
-	service_name: string;
-	service_duration: number;
-	booking_date: string;
-	booking_time: string;
+	id: number;
+	business_name: string;
+	customer_email: string;
+	date: string;
+	time: string;
 	status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+	status_display: string;
 	created_at: string;
 	updated_at: string;
+	service: {
+		id: number;
+		name: string;
+		description: string;
+		price: string;
+		duration: number;
+	};
 }
 
 const Page = () => {
@@ -50,11 +54,7 @@ const Page = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	useEffect(() => {
 		const fetchBookings = async () => {
-			const response = await getBookings(
-				getAccessToken() || '',
-				page,
-				limit
-			);
+			const response = await getAllBookings(page, limit);
 			if (
 				response &&
 				typeof response === 'object' &&
@@ -134,7 +134,7 @@ const Page = () => {
 								value='alltransactions'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10 text-sm md:text-base'
 							>
-								All Bookings (104)
+								All Bookings ({bookings.length})
 							</TabsTrigger>
 							<TabsTrigger
 								value='completed'
@@ -158,28 +158,20 @@ const Page = () => {
 					</div>
 					<TabsContent value='alltransactions'>
 						<div className='flex flex-col md:hidden gap-y-5'>
-							<BookingCard
-								id='1'
-								client_name='John Doe'
-								client_email='john.doe@example.com'
-								client_phone='1234567890'
-								service_name='Haircut'
-								service_duration={30}
-								booking_date='2025-01-01'
-								booking_time='10:00 AM'
-								status='PENDING'
-							/>
-							<BookingCard
-								id='2'
-								client_name='Jane Doe'
-								client_email='jane.doe@example.com'
-								client_phone='1234567890'
-								service_name='Haircut'
-								service_duration={30}
-								booking_date='2025-01-01'
-								booking_time='10:00 AM'
-								status='PENDING'
-							/>
+							{bookings.map((booking) => (
+								<div key={booking.id}>
+									<BookingCard
+										id={booking.id}
+										business_name={booking.business_name}
+										customer_email={booking.customer_email}
+										date={booking.date}
+										time={booking.time}
+										status={booking.status}
+										status_display={booking.status_display}
+										service={booking.service}
+									/>
+								</div>
+							))}
 						</div>
 						<Table className='hidden md:block mt-6 pl-6 w-full'>
 							<TableHeader className='bg-gray-100 py-2  h-12'>
@@ -290,15 +282,20 @@ const Page = () => {
 					<TabsContent value='pending'>
 						<div className='flex flex-col md:hidden gap-y-5'>
 							<BookingCard
-								id='1'
-								client_name='John Doe'
-								client_email='john.doe@example.com'
-								client_phone='1234567890'
-								service_name='Haircut'
-								service_duration={30}
-								booking_date='2025-01-01'
-								booking_time='10:00 AM'
+								id={1}
+								business_name='Sample Business'
+								customer_email='john.doe@example.com'
+								date='2025-01-01'
+								time='10:00 AM'
 								status='PENDING'
+								status_display='Pending'
+								service={{
+									id: 1,
+									name: 'Haircut',
+									description: 'Professional haircut service',
+									price: '50.00',
+									duration: 30,
+								}}
 							/>
 						</div>
 						<Table className='hidden md:block mt-6 pl-6 w-full'>
@@ -380,15 +377,20 @@ const Page = () => {
 					<TabsContent value='completed'>
 						<div className='flex flex-col md:hidden gap-y-5'>
 							<BookingCard
-								id='1'
-								client_name='John Doe'
-								client_email='john.doe@example.com'
-								client_phone='1234567890'
-								service_name='Haircut'
-								service_duration={30}
-								booking_date='2025-01-01'
-								booking_time='10:00 AM'
-								status='PENDING'
+								id={1}
+								business_name='Sample Business'
+								customer_email='john.doe@example.com'
+								date='2025-01-01'
+								time='10:00 AM'
+								status='COMPLETED'
+								status_display='Completed'
+								service={{
+									id: 1,
+									name: 'Haircut',
+									description: 'Professional haircut service',
+									price: '50.00',
+									duration: 30,
+								}}
 							/>
 						</div>
 						<Table className='hidden md:block mt-6 pl-6 w-full'>
@@ -470,15 +472,20 @@ const Page = () => {
 					<TabsContent value='failed'>
 						<div className='flex flex-col md:hidden gap-y-5'>
 							<BookingCard
-								id='1'
-								client_name='John Doe'
-								client_email='john.doe@example.com'
-								client_phone='1234567890'
-								service_name='Haircut'
-								service_duration={30}
-								booking_date='2025-01-01'
-								booking_time='10:00 AM'
-								status='PENDING'
+								id={1}
+								business_name='Sample Business'
+								customer_email='john.doe@example.com'
+								date='2025-01-01'
+								time='10:00 AM'
+								status='FAILED'
+								status_display='Failed'
+								service={{
+									id: 1,
+									name: 'Haircut',
+									description: 'Professional haircut service',
+									price: '50.00',
+									duration: 30,
+								}}
 							/>
 						</div>
 						<Table className='hidden md:block mt-6 pl-6 w-full'>

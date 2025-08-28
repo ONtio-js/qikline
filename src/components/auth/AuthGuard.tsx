@@ -16,19 +16,15 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 	const pathname = usePathname();
 
 	const checkAuth = useCallback(async () => {
-		console.log('AuthGuard: Checking authentication...', {
-			pathname,
-			windowAvailable: typeof window !== 'undefined',
-			timestamp: new Date().toISOString(),
-		});
+	
 
 		try {
-			// Check if user is authenticated
+			
 			const authenticated = authService.isAuthenticated();
 
-			// Additional validation: check if token actually exists and has reasonable length
+			
 			const accessToken = getAccessToken();
-			const isValidToken = accessToken && accessToken.length > 20; // Basic validation
+			const isValidToken = accessToken && accessToken.length > 20; 
 
 			console.log('AuthGuard: Authentication result:', {
 				authenticated,
@@ -42,9 +38,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 				console.log(
 					'AuthGuard: Not authenticated or invalid token, redirecting to login'
 				);
-				// Clear any stale tokens
+				
 				removeTokens();
-				// Redirect to login with current path as redirect parameter
+				
 				router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
 				return;
 			}

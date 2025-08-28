@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { MapPin, Star } from 'lucide-react';
@@ -13,129 +13,142 @@ const CustomersPage = () => {
 		location: string;
 		category: string[];
 		rating: number;
+		address: string;
+		city: string;
+		state: string;
 	}
-	const businesses = [
-		{
-			id: 1,
-			name: 'Serenity Spa',
-			description:
-				'Serenity Spa is a luxurious spa that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus1.jpg',
-			location: 'Location 1, City 1',
-			category: ['Beauty', 'Health & Fitness'],
-			rating: 4.5,
-		},
-		{
-			id: 2,
-			name: 'Tech Wizard',
-			description:
-				'Tech Wizard is a tech store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus2.jpg',
-			location: 'Location 2, City 2',
-			category: ['BeautySpa', 'Fitness'],
-			rating: 4.5,
-		},
-		{
-			id: 3,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 4,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 5,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 6,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 7,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 8,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 9,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 10,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-		{
-			id: 11,
-			name: 'Cleaning Wizard',
-			description:
-				'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
-			image: '/cus3.jpg',
-			location: 'Location 3, City 3',
-			category: ['Beaut', 'Health'],
-			rating: 4.5,
-		},
-	];
+
+	// const businesses = [
+	// 	{
+	// 		id: 1,
+	// 		name: 'Serenity Spa',
+	// 		description:
+	// 			'Serenity Spa is a luxurious spa that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus1.jpg',
+	// 		location: 'Location 1, City 1',
+	// 		category: ['Beauty', 'Health & Fitness'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		name: 'Tech Wizard',
+	// 		description:
+	// 			'Tech Wizard is a tech store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus2.jpg',
+	// 		location: 'Location 2, City 2',
+	// 		category: ['BeautySpa', 'Fitness'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 4,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 5,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 6,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 7,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 8,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 9,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 10,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// 	{
+	// 		id: 11,
+	// 		name: 'Cleaning Wizard',
+	// 		description:
+	// 			'Cleaning Wizard is a cleaning store that offers a range of services to help you relax and rejuvenate.',
+	// 		image: '/cus3.jpg',
+	// 		location: 'Location 3, City 3',
+	// 		category: ['Beaut', 'Health'],
+	// 		rating: 4.5,
+	// 	},
+	// ];
+	const [businesses, setBusinesses] = useState<BusinessProps[]>([]);
+	useEffect(() => {
+		const fetchBusinesses = async () => {
+			const response = await fetch(process.env.NEXT_PUBLIC_API_URL + '/businesses/');
+			const data = await response.json();
+			setBusinesses(data.data);
+		};
+		fetchBusinesses();
+	}, []);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const businessesPerPage: number = 9;
 	const totalPages: number = Math.ceil(businesses.length / businessesPerPage);
 	const startIndex: number = (currentPage - 1) * businessesPerPage;
 	const endIndex: number = startIndex + businessesPerPage;
-	const currentBusinesses: BusinessProps[] = businesses.slice(
+	const currentBusinesses: BusinessProps[] = businesses?.slice(
 		startIndex,
 		endIndex
 	);
-
+ console.log(businesses + 'businesses');
 	const handlePreviousPage = () => {
 		if (currentPage > 1) {
 			setCurrentPage(currentPage - 1);
@@ -150,17 +163,21 @@ const CustomersPage = () => {
 	return (
 		<div className='p-6 grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-6 relative'>
 			{currentBusinesses.map((business) => (
+				
+				
 				<div
 					key={business.id}
-					className='border border-gray-200 rounded-lg p-4 flex flex-col md:flex-row gap-4'
+					className='border border-gray-200 rounded-lg p-4 flex flex-col  gap-4'
 				>
+					<div className='w-35 h-20 md:h-40 rounded-lg overflow-hidden bg-gray-100'>
 					<Image
-						src={business.image}
+						src={business.image??'/cus1.jpg'}
 						alt={business.name}
 						width={100}
 						height={100}
-						className='w-35 h-20 md:h-full object-cover rounded-lg'
+						className='w-35 h-20 md:h-40 object-cover rounded-lg'
 					/>
+					</div>
 					<div>
 						<div className='flex flex-col gap-y-2'>
 							<div className='flex items-center justify-between'>
@@ -175,25 +192,25 @@ const CustomersPage = () => {
 								</span>
 							</div>
 
-							<p className='text-gray-500 text-sm truncate w-50'>
+							<p className='text-gray-500 text-sm  line-clamp-4  md:w-50'>
 								{business.description}
 							</p>
 							<div className='flex flex-wrap gap-2 mt-2'>
-								{business.category.map((category: string) => (
+								
 									<span
-										key={category}
+										key={business.category[0]}
 										className='inline-block bg-gray-100 text-gray-600 text-xs px-3 py-2 rounded-md  mb-1'
 									>
-										{category}
+										{business.category}
 									</span>
-								))}
+								
 							</div>
 						</div>
-						<div className='flex md:flex-col items-center justify-between'>
+						<div className='flex  items-center justify-between'>
 							<div className='flex items-center gap-x-1 mt-4'>
 								<MapPin className='w-5 h-5 text-gray-500' />
 								<p className='text-gray-500 text-sm'>
-									{business.location}
+									{business.address}, {business.city}, {business.state} 
 								</p>
 							</div>
 							<Button

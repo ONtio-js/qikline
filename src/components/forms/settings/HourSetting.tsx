@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { Clock, Pencil, X } from 'lucide-react';
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { TimePickerModal } from '@/components/ui/time-picker-modal';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { setBusinessHours as setBusinessHoursAPI } from '@/actions/admin/businessMgt/route';
+import { useBusiness } from '@/hooks/useBusiness';
+import { useRouter } from 'next/navigation';
 
 interface DayHours {
 	day: string;
@@ -13,7 +15,19 @@ interface DayHours {
 	isOpen: boolean;
 }
 
+// Map day names to ensure consistent ordering
+const dayOrder = [
+	'Monday',
+	'Tuesday',
+	'Wednesday',
+	'Thursday',
+	'Friday',
+	'Saturday',
+	'Sunday',
+];
+
 export const HourSetting = () => {
+	const { businessData, isLoading } = useBusiness();
 	const [timePickerOpen, setTimePickerOpen] = useState(false);
 	const [selectedTimeType, setSelectedTimeType] = useState<
 		'opening' | 'closing'
@@ -21,50 +35,46 @@ export const HourSetting = () => {
 	const [selectedDay, setSelectedDay] = useState<string>('');
 	const [isEditing, setIsEditing] = useState(false);
 	const [, startTransition] = useTransition();
-	const [businessHours, setBusinessHours] = useState<DayHours[]>([
-		{
-			day: 'Monday',
-			openingTime: '09:00 AM',
-			closingTime: '05:00 PM',
-			isOpen: true,
-		},
-		{
-			day: 'Tuesday',
-			openingTime: '09:00 AM',
-			closingTime: '05:00 PM',
-			isOpen: true,
-		},
-		{
-			day: 'Wednesday',
-			openingTime: '09:00 AM',
-			closingTime: '05:00 PM',
-			isOpen: true,
-		},
-		{
-			day: 'Thursday',
-			openingTime: '09:00 AM',
-			closingTime: '05:00 PM',
-			isOpen: true,
-		},
-		{
-			day: 'Friday',
-			openingTime: '09:00 AM',
-			closingTime: '05:00 PM',
-			isOpen: true,
-		},
-		{
-			day: 'Saturday',
-			openingTime: '09:00 AM',
-			closingTime: '05:00 PM',
-			isOpen: true,
-		},
-		{
-			day: 'Sunday',
-			openingTime: '09:00 AM',
-			closingTime: '05:00 PM',
-			isOpen: false,
-		},
-	]);
+	const router = useRouter();
+	const [businessHours, setBusinessHours] = useState<DayHours[]>([]);
+
+	// Convert API business hours to component format
+	useEffect(() => {
+		const businessAPIHours = businessData?.business_hours || [];
+		if (businessAPIHours.length > 0) {
+			// Convert API format to component format
+			const convertedHours = dayOrder.map((dayName) => {
+				const apiDay = businessAPIHours.find(
+					(h) => h.day_name === dayName
+				);
+				if (apiDay) {
+					return {
+						day: dayName,
+						openingTime: apiDay.opening_time || '09:00',
+						closingTime: apiDay.closing_time || '17:00',
+						isOpen: !apiDay.is_closed,
+					};
+				}
+				// Default values if no data found for this day
+				return {
+					day: dayName,
+					openingTime: '09:00',
+					closingTime: '17:00',
+					isOpen: dayName !== 'Sunday', // Sunday is closed by default
+				};
+			});
+			setBusinessHours(convertedHours);
+		} else {
+			// Set default hours if no business hours exist
+			const defaultHours = dayOrder.map((dayName) => ({
+				day: dayName,
+				openingTime: '09:00',
+				closingTime: '17:00',
+				isOpen: dayName !== 'Sunday', // Sunday is closed by default
+			}));
+			setBusinessHours(defaultHours);
+		}
+	}, [businessData?.business_hours]);
 
 	const handleTimeClick = (day: string, timeType: 'opening' | 'closing') => {
 		setSelectedDay(day);
@@ -89,7 +99,7 @@ export const HourSetting = () => {
 
 	const getCurrentTime = () => {
 		const day = businessHours.find((d) => d.day === selectedDay);
-		if (!day) return '09:00 AM';
+		if (!day) return '09:00';
 		return selectedTimeType === 'opening'
 			? day.openingTime
 			: day.closingTime;
@@ -111,6 +121,7 @@ export const HourSetting = () => {
 				const response = await setBusinessHoursAPI(formattedHours);
 				console.log(response);
 				if (response.status) {
+					router.refresh();
 					toast.success(response.message, {
 						duration: 3000,
 						position: 'top-right',
@@ -170,91 +181,102 @@ export const HourSetting = () => {
 							: 'text-gray-500 hover:bg-gray-100'
 					}`}
 					onClick={() => setIsEditing(!isEditing)}
+					disabled={isLoading}
 				>
 					<Pencil className='w-4 h-4' />
 					Edit
 				</Button>
 			</div>
-			<div className='pt-8 space-y-4 '>
-				{businessHours.map((day) => (
-					<div
-						key={day.day}
-						className='flex items-center flex-col md:flex-row justify-between border p-4 rounded-lg gap-y-4 md:gap-y-0 border-gray-200 pb-4'
-					>
-						<div className='flex items-center gap-2 justify-between w-full'>
-							<h4 className='md:text-lg text-sm text-gray-600 md:max-w-[10px]'>
-								{day.day}
-							</h4>
-							<div className='flex items-center gap-2 ml-2'>
-								<Switch
-									checked={day.isOpen}
-									onCheckedChange={() =>
-										setBusinessHours((prev) =>
-											prev.map((d) =>
-												d.day === day.day
-													? {
-															...d,
-															isOpen: !d.isOpen,
-													  }
-													: d
-											)
-										)
-									}
-								/>
-								<span className='capitalize md:text-base hidden sm:block text-gray-500 '>
-									{day.isOpen ? 'open' : 'closed'}
-								</span>
-							</div>
-						</div>
-						{day.isOpen ? (
-							<div className='flex items-center md:gap-5 gap-2 w-full md:w-auto justify-between '>
-								<div
-									className='flex items-center md:gap-2 gap-1 text-gray-500 border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors'
-									onClick={() =>
-										handleTimeClick(day.day, 'opening')
-									}
-								>
-									{day.openingTime}{' '}
-									<Clock className='w-4 h-4' />
-								</div>
-								<span className='text-gray-500'>to</span>
-								<div
-									className='flex items-center gap-2 text-gray-500 border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors'
-									onClick={() =>
-										handleTimeClick(day.day, 'closing')
-									}
-								>
-									{day.closingTime}{' '}
-									<Clock className='w-4 h-4' />
-								</div>
-							</div>
-						) : (
-							<div className='flex items-center justify-end gap-5 min-w-[300px]'>
-								<span className='text-red-500 text-xl'>
-									closed
-								</span>
-							</div>
-						)}
-					</div>
-				))}
-				<div className='flex flex-col-reverse md:flex-row justify-center gap-4 my-10'>
-					<Button
-						onClick={() => {
-							setIsEditing(false);
-						}}
-						variant={'outline'}
-						className='md:w-xs w-full h-12 text-[16px] text-gray-600 hover:bg-gray-100'
-					>
-						Cancel
-					</Button>
-					<Button
-						onClick={handleSave}
-						className='md:w-xs w-full h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
-					>
-						Save Changes
-					</Button>
+
+			{isLoading ? (
+				<div className='flex items-center justify-center py-8'>
+					<div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700'></div>
+					<span className='ml-2 text-gray-600'>
+						Loading business hours...
+					</span>
 				</div>
-			</div>
+			) : (
+				<div className='pt-8 space-y-4 '>
+					{businessHours.map((day) => (
+						<div
+							key={day.day}
+							className='flex items-center flex-col md:flex-row justify-between border p-4 rounded-lg gap-y-4 md:gap-y-0 border-gray-200 pb-4'
+						>
+							<div className='flex items-center gap-2 justify-between w-full'>
+								<h4 className='md:text-lg text-sm text-gray-600 md:max-w-[10px]'>
+									{day.day}
+								</h4>
+								<div className='flex items-center gap-2 ml-2'>
+									<Switch
+										checked={day.isOpen}
+										onCheckedChange={() =>
+											setBusinessHours((prev) =>
+												prev.map((d) =>
+													d.day === day.day
+														? {
+																...d,
+																isOpen: !d.isOpen,
+														  }
+														: d
+												)
+											)
+										}
+									/>
+									<span className='capitalize md:text-base hidden sm:block text-gray-500 '>
+										{day.isOpen ? 'open' : 'closed'}
+									</span>
+								</div>
+							</div>
+							{day.isOpen ? (
+								<div className='flex items-center md:gap-5 gap-2 w-full md:w-auto justify-between '>
+									<div
+										className='flex items-center md:gap-2 gap-1 text-gray-500 border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors'
+										onClick={() =>
+											handleTimeClick(day.day, 'opening')
+										}
+									>
+										{day.openingTime}{' '}
+										<Clock className='w-4 h-4' />
+									</div>
+									<span className='text-gray-500'>to</span>
+									<div
+										className='flex items-center gap-2 text-gray-500 border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors'
+										onClick={() =>
+											handleTimeClick(day.day, 'closing')
+										}
+									>
+										{day.closingTime}{' '}
+										<Clock className='w-4 h-4' />
+									</div>
+								</div>
+							) : (
+								<div className='flex items-center justify-end gap-5 min-w-[300px]'>
+									<span className='text-red-500 text-xl'>
+										closed
+									</span>
+								</div>
+							)}
+						</div>
+					))}
+					<div className='flex flex-col-reverse md:flex-row justify-center gap-4 my-10'>
+						<Button
+							onClick={() => {
+								setIsEditing(false);
+							}}
+							variant={'outline'}
+							className='md:w-xs w-full h-12 text-[16px] text-gray-600 hover:bg-gray-100'
+						>
+							Cancel
+						</Button>
+						<Button
+							onClick={handleSave}
+							className='md:w-xs w-full h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
+						>
+							Save Changes
+						</Button>
+					</div>
+				</div>
+			)}
 
 			<TimePickerModal
 				open={timePickerOpen}

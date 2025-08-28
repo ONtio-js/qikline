@@ -1,12 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	createBusinessSchema,
-	updateBusinessSchema,
 } from '../../../../schema/schema';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Pencil, X, Upload, Trash2 } from 'lucide-react';
+import { Pencil, X, Upload, Trash2, Check } from 'lucide-react';
 import {
 	Form,
 	FormField,
@@ -193,11 +192,37 @@ export const Business = () => {
 						formData.append(`banner`, image.file);
 					}
 				});
-
-				const response = await createBusiness(formData);
+				let response;
+				if (businessData) {
+					response = await updateBusiness({
+						name: data.name,
+						category: data.category,
+						description: data.description,
+						address: data.address,
+						city: data.city,
+						state: data.state,
+						country: data.country,
+						phone_number: data.phone_number,
+						email: data.email,
+						website: data.website,
+						// banner: uploadedImages.map((image) => image.image),
+						// is_active: true,
+					});
+				} else {
+					response = await createBusiness(formData);
+				}
 
 				if (response.status) {
-					toast.success(response.message);
+					toast.success(response.message,{
+						duration: 3000,
+						className: 'bg-green-500 text-white',
+						icon: <Check className='w-4 h-4' />,
+						style: {
+							backgroundColor: '#10b981',
+							color: '#fff',
+						},
+						position: 'top-right',
+					});
 					form.reset();
 					setUploadedImages([]);
 					// Refresh business data to update the store
@@ -223,21 +248,6 @@ export const Business = () => {
 		});
 	};
 
-	const onUpdate = async (data: z.infer<typeof updateBusinessSchema>) => {
-		console.log(data);
-		if (businessData) {
-			const response = await updateBusiness(data);
-			if (response.status) {
-				toast.success(response.message);
-				form.reset();
-				setUploadedImages([]);
-				// Refresh business data to update the store
-				await fetchBusinessData();
-			} else {
-				toast.error(response.message);
-			}
-		}
-	};
 	return (
 		<Form {...form}>
 			<div className='p-4 px-2 md:px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
@@ -261,11 +271,7 @@ export const Business = () => {
 					</Button>
 				</div>
 
-				<form
-					onSubmit={form.handleSubmit(
-						businessData ? onUpdate : onSubmit
-					)}
-				>
+				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<div className='pt-8 space-y-8 '>
 						<div className='grid grid-cols-1 md:grid-cols-2 gap-4 gap-y-8'>
 							<FormField
@@ -304,6 +310,7 @@ export const Business = () => {
 											<Select
 												value={field.value}
 												onValueChange={field.onChange}
+												defaultValue={field.value}
 											>
 												<SelectTrigger
 													className='h-12 w-full'
@@ -617,8 +624,8 @@ export const Business = () => {
 							>
 								{isPending
 									? businessData
-										? 'Saving...'
-										: 'Updating...'
+										? 'Updating...'
+										: 'Saving...'
 									: businessData
 									? 'Update Changes'
 									: 'Save Changes'}

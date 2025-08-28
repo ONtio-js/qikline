@@ -13,22 +13,18 @@ export const TimePickerModal = ({
 	open,
 	setOpen,
 	onTimeSelect,
-	currentTime = '09:00 AM',
+	currentTime = '09:00',
 }: TimePickerModalProps) => {
 	const [selectedTime, setSelectedTime] = useState(currentTime);
 
-	// Generate time options from 00:00 to 23:59
+	// Generate time options from 00:00 to 23:59 in 24-hour format
 	const generateTimeOptions = () => {
 		const times = [];
 		for (let hour = 0; hour < 24; hour++) {
 			for (let minute = 0; minute < 60; minute += 30) {
-				const time = new Date();
-				time.setHours(hour, minute, 0, 0);
-				const timeString = time.toLocaleTimeString('en-US', {
-					hour: '2-digit',
-					minute: '2-digit',
-					hour12: true,
-				});
+				const timeString = `${hour.toString().padStart(2, '0')}:${minute
+					.toString()
+					.padStart(2, '0')}`;
 				times.push(timeString);
 			}
 		}
