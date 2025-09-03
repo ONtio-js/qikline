@@ -130,11 +130,11 @@ const TrackingLanding = ({
 				!isAppointmentDetailsOpen &&
 				!isRescheduleConfirmationOpen && (
 					<div
-						className='w-[90%] md:w-2xl bg-white rounded-lg p-8 max-h-[80vh]'
+						className='w-[90%] md:w-2xl bg-white rounded-lg md:p-8 p-4 max-h-[80vh] h-fit'
 						onClick={(e) => e.stopPropagation()}
 					>
 						<div className='flex items-center justify-between'>
-							<div>
+							<div className='w-[87%] md:w-full'>
 								<h1 className='text-xl font-semibold'>
 									Track Your Booking
 								</h1>
@@ -160,7 +160,7 @@ const TrackingLanding = ({
 							<input
 								type='text'
 								placeholder='Enter your booking ID'
-								className='w-full h-14 rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
+								className='w-full md:h-14 h-10 rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
 								id='booking-id'
 								ref={trackingIdRef}
 								value={inputValue}
@@ -176,7 +176,7 @@ const TrackingLanding = ({
 							} items-center justify-center`}
 						>
 							<Button
-								className='w-full mt-5 max-w-xs mx-auto h-14 rounded-md bg-blue-700 hover:bg-blue-800 text-white'
+								className='w-full mt-5 max-w-xs mx-auto md:h-14 h-10 rounded-md bg-blue-700 hover:bg-blue-800 text-white'
 								onClick={onTrackBooking}
 								disabled={isPending}
 							>
@@ -188,13 +188,13 @@ const TrackingLanding = ({
 							</Button>
 						</div>
 
-						<div className='mt-5 border border-blue-600 p-5 rounded-lg bg-blue-400/10'>
-							<h4 className='text-gray-800 font-semibold text-lg mb-2'>
+						<div className='mt-5 border border-blue-600 p-4  md:p-5 rounded-lg bg-blue-400/10'>
+							<h4 className='text-gray-800 font-semibold md:text-lg text-sm mb-2'>
 								Need help finding your booking ID?
 							</h4>
 							<ul className='list-disc list-inside text-gray-700 text-sm space-y-2'>
-								<li>Checcck your confirmation email</li>
-								<li>Look for 6-digit booking code</li>
+								<li className='text-xs font-medium md:text-sm'>Checcck your confirmation email</li>
+								<li className='text-xs font-medium md:text-sm'>Look for 6-digit booking code</li>
 							</ul>
 						</div>
 					</div>

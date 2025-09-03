@@ -3,20 +3,22 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Title from '@/components/Title';
 import { useRouter } from 'next/navigation';
-import {
-	Star,
-} from 'lucide-react';
+import { Star } from 'lucide-react';
 import HowItWorks from '@/components/HowItWorks';
 import Link from 'next/link';
 import { servicesFeatures, testmonials } from './Constants';
 import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
-import SearchBox from '@/components/admin/searchBox';
 import { howItWorks, features, businesses } from '../constants';
 import BusinessCard from '@/components/customer/BusinessCard';
 import Header from '@/components/Header';
+import dynamic from 'next/dynamic';
+
+const SearchBox = dynamic(() => import('@/components/SearchBusinessBox'), {
+	loading: () => '',
+	ssr: false, 
+});
 export default function Home() {
-	
 	const router = useRouter();
 	return (
 		<div className='overflow-x-hidden pt-10 md:pt-20'>
@@ -41,21 +43,13 @@ export default function Home() {
 						</motion.span>
 					</h1>
 
-					<p className='text-center  text-gray-700 max-w-[570px] mx-auto'>
+					<p className='text-center  text-gray-700 max-w-[570px] mx-auto mb-10'>
 						Skip the wait. Discover businesses near you and book
 						appointments instantly, no calls, no stress.
 					</p>
-					<div className='  max-w-md mx-auto space-y-2 '>
-						<div className='bg-white rounded-md'>
-							<SearchBox placeholder='Search for a business by name, location, or category' />
-						</div>
-						<p className='text-sm md:text-base text-center text-gray-700'>
-							Discover and Book appointments with businesses near
-							you.
-						</p>
-					</div>
+					<SearchBox />
 					<div className='overflow-hidden md:overflow-auto'>
-						<div className='overflow-x-scroll no-scrollbar flex justify-center items-stretch mx-auto md:max-w-[50rem] gap-7 mt-20'>
+						<div className='overflow-x-scroll no-scrollbar flex justify-center items-stretch mx-auto md:max-w-[50rem] gap-7 mt-10'>
 							<div className='w-[60%] flex-shrink-0 hidden md:block'>
 								<Image
 									src={'/hero-3.jpg'}
@@ -395,7 +389,7 @@ export default function Home() {
 					</p>
 					<div className='flex flex-col md:flex-row gap-10'>
 						<Link
-							href={'/customers'}
+							href={'/businesses'}
 							className='bg-blue-700 hover:bg-blue-800 text-white px-10 py-4 text-lg rounded-md font-medium min-w-3xs text-center'
 						>
 							Explore All Businesses

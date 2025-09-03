@@ -54,7 +54,7 @@ const CustomersPage = () => {
 
 	const fetchSearchResults = useCallback((searchTerm: string) => {
 		setSearchIsLoading(true);
-		setSearchIsError(false); // Reset error state
+		setSearchIsError(false); 
 
 		fetch(
 			process.env.NEXT_PUBLIC_API_URL +
@@ -102,12 +102,10 @@ const CustomersPage = () => {
 			return;
 		}
 
-		// Batch state updates to reduce re-renders
 		setIsOpen(true);
 		fetchSearchResults(debouncedSearchTerm);
 	}, [debouncedSearchTerm, fetchSearchResults]);
 
-	// Debounce search term updates to reduce re-renders
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setDebouncedSearchTerm(searchTerm);
@@ -130,7 +128,6 @@ const CustomersPage = () => {
 				}
 
 				const data = await response.json();
-				console.log(data);
 				if (data.results) {
 					setBusinesses(data.results);
 				} else if (Array.isArray(data)) {
@@ -164,7 +161,6 @@ const CustomersPage = () => {
 		}
 	};
 
-	// Memoize pagination calculations to prevent unnecessary recalculations
 	const paginationData = useMemo(() => {
 		const totalPages = Math.ceil(businesses?.length / businessesPerPage);
 		const startIndex = (currentPage - 1) * businessesPerPage;
@@ -267,7 +263,7 @@ const CustomersPage = () => {
 					</div>
 				)}
 
-				{isError && (
+				{isError && !isLoading && (
 					<div className='col-span-full flex justify-center items-center h-full py-20'>
 						<EmptyState
 							title='Error loading businesses'

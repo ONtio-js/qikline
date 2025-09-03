@@ -69,20 +69,23 @@ const Page = () => {
 	const [businesses, setBusinesses] = useState<BusinessProps[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [reviews, setReviews] = useState<ReviewProps[]>([]);
+
+
+
+	const handleBookingClick = () => {
+		setIsOpen(true);
+	};
+
 	useEffect(() => {
 		const fetchBusinesses = async () => {
 			try {
 				setIsLoading(true);
-				const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-				console.log('API URL:', apiUrl);
-
-				if (!apiUrl) {
-					console.error('NEXT_PUBLIC_API_URL is not defined');
-					return;
-				}
-
-				const response = await fetch(apiUrl + '/businesses/');
-				const response2 = await fetch(apiUrl + `/businesses/${id}/reviews/`);
+				const response = await fetch(
+					process.env.NEXT_PUBLIC_API_URL + '/businesses/'
+				);
+				const response2 = await fetch(
+					process.env.NEXT_PUBLIC_API_URL + `/businesses/${id}/reviews/`
+				);
 
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
@@ -90,7 +93,6 @@ const Page = () => {
 
 				const data = await response.json();
 				const data2 = await response2.json();
-				console.log('API response:', data2);
 				setBusinesses(data.results || []);
 				setReviews(data2.data || []);
 			} catch (error) {
@@ -104,8 +106,7 @@ const Page = () => {
 	const business = businesses?.find(
 		(business: BusinessProps) => business.id === parseInt(id)
 	);
-	console.log('Business data:', business);
-	console.log('Business hours:', business?.business_hours);
+
 
 	if (isLoading) {
 		return (
@@ -155,9 +156,17 @@ const Page = () => {
 						Back
 					</Link>
 					<Button
-						onClick={() => setIsOpen(true)}
+						onClick={handleBookingClick}
+						onTouchEnd={(e) => {
+							e.preventDefault();
+							handleBookingClick();
+						}}
 						variant='default'
 						className=' md:hidden rounded-md border-none bg-blue-700 text-white hover:bg-blue-800'
+						style={{
+							WebkitAppearance: 'none',
+							WebkitTapHighlightColor: 'transparent',
+						}}
 					>
 						Book an Appointment
 					</Button>
@@ -254,14 +263,28 @@ const Page = () => {
 														{service.name}
 													</h3>
 													<p className='text-gray-500 text-sm'>
-														{service.duration} mins | NGN {service.price}
+														{service.duration} mins
+														| NGN {service.price}
 													</p>
 												</div>
 												<p className='text-gray-500 text-sm  line-clamp-2'>
 													{service.description}
 												</p>
 											</div>
-											<Button onClick={() => setIsOpen(true)} className=' border-gray-200 border text-gray-500  bg-transparent  hover:bg-blue-800 hover:text-white rounded-md mt-4'>
+											<Button
+												onClick={handleBookingClick}
+												onTouchEnd={(e) => {
+													e.preventDefault();
+													handleBookingClick();
+												}}
+												className=' border-gray-200 border text-gray-500  bg-transparent  hover:bg-blue-800 hover:text-white rounded-md mt-4'
+												style={{
+													// Safari-specific button fixes
+													WebkitAppearance: 'none',
+													WebkitTapHighlightColor:
+														'transparent',
+												}}
+											>
 												Book Now
 											</Button>
 										</div>
@@ -383,7 +406,9 @@ const Page = () => {
 								</div>
 							</div>
 							<div className='mt-6 border border-gray-200 p-4 rounded-lg'>
-								<Customer business_id={business?.id.toString() ?? ''} />
+								<Customer
+									business_id={business?.id.toString() ?? ''}
+								/>
 							</div>
 						</TabsContent>
 					</Tabs>

@@ -203,7 +203,7 @@ const Navbar = ({isOpen, setIsOpen, setIsTrackingOpen}: {isOpen: boolean, setIsO
 				</ul>
 				<Button
 					variant='outline'
-					className='mt-10 font-medium   transition-all duration-300 bg-blue-700 text-white border border-blue-700 cursor-pointer hover:bg-blue-800 hover:border-blue-800'
+					className='mt-10 font-medium hover:text-white  transition-all duration-300 bg-blue-700 text-white border border-blue-700 cursor-pointer hover:bg-blue-800 hover:border-blue-800'
 					size='lg'
 					onClick={() => router.push('/admin')}
 				>

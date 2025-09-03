@@ -80,7 +80,7 @@ const AppointmentDetails = ({
 				<div className='flex items-center justify-between'>
 					<h3 className='text-gray-600'>Booking ID</h3>
 					<CopyIcon
-						className='w-5 h-5 cursor-pointer'
+						className='w-4 h-4 md:w-5 md:h-5 cursor-pointer'
 						onClick={() => {
 							navigator.clipboard.writeText(
 								bookingData?.tracking_id || ''
