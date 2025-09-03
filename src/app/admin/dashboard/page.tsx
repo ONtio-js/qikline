@@ -49,12 +49,11 @@ interface Booking {
 const Page = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
-	const { businessData, isLoading, isInitialized } =
-		useBusiness();
-		const [bookings, setBookings] = useState<Booking[]>([]);
-		const [page] = useState(1);
-		const [limit] = useState(10);
- useEffect(() => {
+	const { businessData, isLoading, isInitialized } = useBusiness();
+	const [bookings, setBookings] = useState<Booking[]>([]);
+	const [page] = useState(1);
+	const [limit] = useState(10);
+	useEffect(() => {
 		const fetchBookings = async () => {
 			const response = await getAllBookings(page, limit);
 			if (
@@ -62,11 +61,84 @@ const Page = () => {
 				typeof response === 'object' &&
 				'data' in response
 			) {
-				setBookings(response.data as Booking[]);
+				// Transform API data to match Booking interface
+				const transformedBookings = response.data.map(
+					(item: {
+						id: number;
+						service:
+							| string
+							| {
+									id: number;
+									name: string;
+									description: string;
+									price: string;
+									duration: number;
+							  };
+						name: string;
+						phone_number: string;
+						email: string;
+						date: string;
+						time: string;
+						status: string;
+						created_at: string;
+						updated_at: string;
+						business_name?: string;
+						customer_email?: string;
+						status_display?: string;
+						service_id?: number;
+						service_name?: string;
+						service_description?: string;
+						service_price?: string;
+						service_duration?: number;
+					}) => ({
+						id: item.id,
+						business_name: item.business_name || 'Unknown Business',
+						customer_email:
+							item.email || item.customer_email || 'No Email',
+						date: item.date,
+						time: item.time,
+						status: item.status as
+							| 'PENDING'
+							| 'COMPLETED'
+							| 'FAILED'
+							| 'CANCELLED',
+						status_display: item.status_display || item.status,
+						created_at: item.created_at,
+						updated_at: item.updated_at,
+						service: {
+							id:
+								item.service_id ||
+								(typeof item.service === 'object'
+									? item.service.id
+									: 0),
+							name:
+								item.service_name ||
+								(typeof item.service === 'object'
+									? item.service.name
+									: 'Unknown Service'),
+							description:
+								item.service_description ||
+								(typeof item.service === 'object'
+									? item.service.description
+									: ''),
+							price:
+								item.service_price ||
+								(typeof item.service === 'object'
+									? item.service.price
+									: '0'),
+							duration:
+								item.service_duration ||
+								(typeof item.service === 'object'
+									? item.service.duration
+									: 0),
+						},
+					})
+				);
+				setBookings(transformedBookings);
 			}
 		};
 		fetchBookings();
- }, [page, limit]);
+	}, [page, limit]);
 
 	if (isLoading) {
 		return (
@@ -76,7 +148,6 @@ const Page = () => {
 		);
 	}
 
-	// Show business setup modal if no business data and not loading
 	if (!businessData && !isOpen && isInitialized) {
 		return <BusinessSetupModal onClose={() => setIsOpen(true)} />;
 	}
@@ -115,7 +186,9 @@ const Page = () => {
 							</div>
 
 							<div>
-								<p className='text-lg font-semibold'>{bookings.length}</p>
+								<p className='text-lg font-semibold'>
+									{bookings.length}
+								</p>
 								<p className='text-gray-500'>
 									+8% from last week
 								</p>
@@ -247,36 +320,43 @@ const Page = () => {
 								</DropdownMenu>
 							</div>
 						</div>
-						<TabsContent value='upcoming'>
-							<div className='flex flex-col md:hidden gap-y-5'>
-								{bookings?.map((booking: Booking, index: number) => (
-									<BookingCard
-										key={index}
-										id={booking.id}
-										business_name={booking.business_name}
-										customer_email={booking.customer_email}
-										date={booking.date}
-										time={booking.time}
-										status={booking.status}
-										status_display={booking.status_display}
-										service={booking.service}
-									/>
-								))}
+						<TabsContent
+							value='upcoming'
+							className=''
+						>
+							<div className='flex flex-col md:hidden gap-y-5 '>
+								{bookings?.map(
+									(booking: Booking, index: number) => (
+										<BookingCard
+											key={index}
+											id={booking.id}
+											business_name={
+												booking.business_name
+											}
+											customer_email={
+												booking.customer_email
+											}
+											date={booking.date}
+											time={booking.time}
+											status={booking.status}
+											status_display={
+												booking.status_display
+											}
+											service={booking.service}
+										/>
+									)
+								)}
 							</div>
-							<Table className='hidden md:block mt-6 pl-6 w-full'>
+							<Table className='hidden md:block mt-6 pl-6'>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
-									<TableRow>
-										<TableHead className='pl-12'>
-											S/N
-										</TableHead>
-										<TableHead>Client</TableHead>
-										<TableHead>Status</TableHead>
-										<TableHead>Time</TableHead>
-										<TableHead>Service</TableHead>
-										<TableHead>Service Duration </TableHead>
+									<TableHead className='pl-12'>S/N</TableHead>
+									<TableHead>Client</TableHead>
+									<TableHead>Status</TableHead>
+									<TableHead>Time</TableHead>
+									<TableHead>Service</TableHead>
+									<TableHead>Service Duration </TableHead>
 
-										<TableHead>Action</TableHead>
-									</TableRow>
+									<TableHead>Action</TableHead>
 								</TableHeader>
 								<TableBody className='space-y-2 '>
 									<TableRow className='h-12 mt-4'>

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { adminSchema } from '../../../schema/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,7 +15,7 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import { Eye, EyeOff, X } from 'lucide-react';
+import { Eye, EyeOff, Loader, X } from 'lucide-react';
 import Link from 'next/link';
 import { signup } from '@/actions/auth/businessOwner/route';
 import { useRouter } from 'next/navigation';
@@ -27,6 +27,7 @@ const AdminSignUp = () => {
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const router = useRouter();
 	const [error, setError] = useState<string>('');
+	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof adminSchema>>({
 		resolver: zodResolver(adminSchema),
 		defaultValues: {
@@ -38,6 +39,7 @@ const AdminSignUp = () => {
 		},
 	});
 	const onSubmit = async (data: z.infer<typeof adminSchema>) => {
+		startTransition(async () => {
 		try {
 			setError('');
 			const formData = new FormData();
@@ -77,7 +79,8 @@ const AdminSignUp = () => {
 				},
 			});
 			console.error('Error signing up:', error);
-		}
+			}
+		});
 	};
 	return (
 		<Form {...form}>
@@ -255,15 +258,15 @@ const AdminSignUp = () => {
 				</div>
 				<Button
 					disabled={
-						form.formState.isSubmitting || !form.formState.isValid
+						isPending || !form.formState.isValid
 					}
 					type='submit'
 					className={cn(
 						'w-xs h-12 font-semibold text-base rounded-md hover:bg-blue-800 bg-blue-700 text-white'
 					)}
 				>
-					{form.formState.isSubmitting
-						? 'Signing Up...'
+					{isPending
+						? <Loader className='w-4 h-4 animate-spin' />
 						: 'Register Business'}
 				</Button>
 				<p className='text-sm text-gray-500'>

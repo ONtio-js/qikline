@@ -129,13 +129,14 @@ export const bookFormSchema = z.object({
 	email: z.string().email({ message: 'Invalid email address' }),
 	phone: z.string().min(10),
 	notes: z.string().optional().nullable().default(''),
+	payNow: z.boolean().optional().nullable().default(false),
+	payLater: z.boolean().optional().nullable().default(false),
 });
 
 export const BusinessOwnerProfile = z.object({
 	name:z.string(),
 	email:z.string().email(),
 	phone:z.string(),
-	role:z.string()
 })
 
 export const bookingSettingsSchema = z.object({
@@ -143,4 +144,39 @@ export const bookingSettingsSchema = z.object({
 	is_deposit_required: z.boolean(),
 	cancellation_notice: z.number().min(1),
 	advance_booking_time: z.number().min(1),
+});
+
+export const securitySettingSchema = z.object({
+	two_factor_enabled: z.boolean(),
+	two_factor_secret: z.string().optional().nullable(),
+	two_factor_recovery_codes: z.string().optional().nullable(),
+	password: z.string().min(1),
+	confirm_password: z.string().min(1),
+	old_password: z.string().min(1),
+});
+
+export const kycSettingSchema = z.object({
+	kyc_document: z.string().optional().nullable(),
+	kyc_document_type: z.enum(['PASSPORT', 'DRIVING_LICENSE', 'NATIONAL_ID', 'OTHER']),
+	kyc_document_number: z.string().optional().nullable(),
+	kyc_document_expiration_date: z.string().optional().nullable(),
+	kyc_document_front: z.string().optional().nullable(),
+	kyc_document_back: z.string().optional().nullable(),
+	kyc_document_selfie: z.string().optional().nullable(),
+	kyc_document_status: z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional().nullable(),
+});
+
+export const rescheduleFormSchema = z.object({
+	bookingId: z.string().min(1),
+	date: z.string().min(1),
+	time: z.string().min(1),
+	email: z.string().email({ message: 'Invalid email address' }),
+});
+
+export const reviewSchema = z.object({
+	rating: z.number().min(1).max(5),
+	title: z.string().min(1),
+	email: z.string().email({ message: 'Invalid email address' }),
+	comment: z.string().min(1),
+	business_id: z.string().min(1),
 });

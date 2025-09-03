@@ -30,6 +30,7 @@ import { toast } from 'sonner';
 import { FormatDateDuration } from '@/lib/utils';
 import { useBusiness } from '@/hooks/useBusiness';
 import { getAccessToken } from '@/utils/token';
+import EmptyState from '@/components/status/EmptyState';
 type Service = {
 	id: string;
 	name: string;
@@ -259,6 +260,14 @@ const Page = () => {
 							)
 						</TabsTrigger>
 					</TabsList>
+					{services.length === 0 && (
+						<div className='col-span-full flex justify-center items-center h-full mt-10'>
+							<EmptyState
+								title='No services recorded yet'
+								description='No services recorded yet, list your services to get started'
+							/>
+						</div>
+					)}
 					<TabsContent value='active'>
 						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10'>
 							{services.map(

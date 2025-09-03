@@ -3,6 +3,8 @@ import { LogOut, Bell, Settings } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import {jwtDecode} from 'jwt-decode';
+import { getAccessToken } from '@/utils/token';
 
 import {
 	Sidebar,
@@ -83,6 +85,9 @@ export function AppSidebar() {
 	const pathname = usePathname();
 	const { setOpenMobile } = useSidebar();
 
+	const accessToken = getAccessToken();
+	const decodedToken : {email: string[]} = jwtDecode(accessToken as string);
+
 	const handleLogout = () => {
 		authService.logout();
 	};
@@ -144,12 +149,11 @@ export function AppSidebar() {
 						>
 							<Avatar className=' bg-blue-700'>
 								<AvatarImage src={'/admin/icons/user.svg'} />
-								<AvatarFallback>JD</AvatarFallback>
+								<AvatarFallback>{decodedToken.email[0].toUpperCase()}</AvatarFallback>
 							</Avatar>
 							<div>
-								<p className='text-sm font-medium'>John Doe</p>
 								<p className='text-xs text-gray-500'>
-									john@gmail.com
+									{decodedToken.email}
 								</p>
 							</div>
 						</Link>

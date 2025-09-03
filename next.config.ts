@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+	images: {
+		domains: ['qikline-backend.onrender.com', 'localhost'],
+	},
 	async headers() {
 		return [
 			{

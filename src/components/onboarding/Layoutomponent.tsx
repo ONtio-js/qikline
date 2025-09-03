@@ -8,7 +8,6 @@ const Layoutomponent = () => {
 	const pathname = usePathname();
 
 	const isLogin = pathname.includes('login');
-	console.log(isLogin);
 	return (
 		<div
 			className={`w-1/2 bg-gray-100 ${isLogin ? 'bg-[url("/onboarding/auth.jpg")]' : 'bg-[url("/onboarding/auth-bg.jpg")]'} bg-cover bg-center flex flex-col items-end justify-end ${

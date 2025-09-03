@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import BookingForm from '@/components/customer/BookingForm';
 import { useParams } from 'next/navigation';
+import Customer from '@/components/forms/Reviews/Customer';
 
 interface BusinessProps {
 	id: number;
@@ -25,9 +26,15 @@ interface BusinessProps {
 	services: {
 		id: number;
 		name: string;
+		description: string;
+		price: number;
+		duration: number;
+		category: string;
+		category_display: string;
+		is_active: boolean;
 	}[];
 	phone_number: string;
-	reviews: number;
+	reviews_count: number;
 	email: string;
 	website: string;
 	business_hours: {
@@ -38,6 +45,21 @@ interface BusinessProps {
 		day_name: string;
 		is_closed: boolean;
 	}[];
+	images: {
+		id: number;
+		image: string;
+	}[];
+	reviews: {
+		id: number;
+		name: string;
+		review: string;
+	}[];
+}
+
+interface ReviewProps {
+	id: number;
+	name: string;
+	review: string;
 }
 
 const Page = () => {
@@ -46,6 +68,7 @@ const Page = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [businesses, setBusinesses] = useState<BusinessProps[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [reviews, setReviews] = useState<ReviewProps[]>([]);
 	useEffect(() => {
 		const fetchBusinesses = async () => {
 			try {
@@ -59,15 +82,17 @@ const Page = () => {
 				}
 
 				const response = await fetch(apiUrl + '/businesses/');
-				console.log('Response status:', response.status);
+				const response2 = await fetch(apiUrl + `/businesses/${id}/reviews/`);
 
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 
 				const data = await response.json();
-				console.log('API response:', data);
-				setBusinesses(data.data || []);
+				const data2 = await response2.json();
+				console.log('API response:', data2);
+				setBusinesses(data.results || []);
+				setReviews(data2.data || []);
 			} catch (error) {
 				console.error('Error fetching businesses:', error);
 			} finally {
@@ -123,7 +148,7 @@ const Page = () => {
 			<div className='w-full  space-y-4 p-6 border-b border-gray-200'>
 				<div className='flex items-center gap-x-2 justify-between'>
 					<Link
-						href={'/customers'}
+						href={'/businesses'}
 						className='text-gray-500  font-medium flex items-center gap-x-2'
 					>
 						<ArrowLeft className='w-5 h-5 text-blue-700' />
@@ -132,7 +157,7 @@ const Page = () => {
 					<Button
 						onClick={() => setIsOpen(true)}
 						variant='default'
-						className=' md:hidden rounded-md border-none bg-blue-700 text-white'
+						className=' md:hidden rounded-md border-none bg-blue-700 text-white hover:bg-blue-800'
 					>
 						Book an Appointment
 					</Button>
@@ -141,7 +166,7 @@ const Page = () => {
 			<div className='p-6 space-y-4 flex flex-col md:flex-row gap-x-10'>
 				<div className='w-full md:w-[60%] space-y-4'>
 					<Image
-						src={'/cus3.jpg'}
+						src={business?.images[0]?.image ?? '/cus3.jpg'}
 						alt='customer'
 						width={500}
 						height={500}
@@ -156,7 +181,7 @@ const Page = () => {
 							</p>
 						</span>
 						<p className='text-gray-500 text-base font-medium'>
-							({business?.reviews ?? '123'} reviews)
+							({business?.reviews_count ?? '123'} reviews)
 						</p>
 						<div className='flex items-center gap-x-2'>
 							<span className=' bg-gray-100 text-gray-600 text-xs px-3 py-2 rounded-md  mb-1 flex items-center gap-x-1 lowercase'>
@@ -175,10 +200,16 @@ const Page = () => {
 						)}
 					</p>
 					<Tabs
-						defaultValue='about'
+						defaultValue='services'
 						className='w-full mt-10'
 					>
 						<TabsList className='w-full max-w-xs h-12 p-1'>
+							<TabsTrigger
+								value='services'
+								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white'
+							>
+								Services
+							</TabsTrigger>
 							<TabsTrigger
 								value='about'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white'
@@ -186,12 +217,58 @@ const Page = () => {
 								About
 							</TabsTrigger>
 							<TabsTrigger
-								value='services'
+								value='reviews'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white'
 							>
-								Services
+								Reviews
 							</TabsTrigger>
 						</TabsList>
+						<TabsContent
+							value='services'
+							className='space-y-4 border border-gray-200 p-4 rounded-lg'
+						>
+							<div className='space-y-2'>
+								<h2 className='text-xl font-medium capitalize  text-gray-700'>
+									Available Services
+								</h2>
+								<h2 className='text-gray-600 text-sm  capitalize '>
+									Services Offered by {business?.name}
+								</h2>
+							</div>
+							<div className='grid  gap-4'>
+								{business?.services.length === 0 ? (
+									<div className='flex items-center justify-center min-h-40 w-full'>
+										<p className='text-gray-500 text-sm text-center'>
+											No services available
+										</p>
+									</div>
+								) : (
+									business?.services.map((service) => (
+										<div
+											key={service.id}
+											className='border-gray-200 border-b p-4 pl-0 flex items-center justify-between'
+										>
+											<div className='w-2/3 space-y-2'>
+												<div className='flex items-center justify-between gap-x-3'>
+													<h3 className='text-gray-700 text-base font-medium'>
+														{service.name}
+													</h3>
+													<p className='text-gray-500 text-sm'>
+														{service.duration} mins | NGN {service.price}
+													</p>
+												</div>
+												<p className='text-gray-500 text-sm  line-clamp-2'>
+													{service.description}
+												</p>
+											</div>
+											<Button onClick={() => setIsOpen(true)} className=' border-gray-200 border text-gray-500  bg-transparent  hover:bg-blue-800 hover:text-white rounded-md mt-4'>
+												Book Now
+											</Button>
+										</div>
+									))
+								)}
+							</div>
+						</TabsContent>
 						<TabsContent value='about'>
 							<div className='grid grid- gap-4'>
 								<h2 className='text-xl font-medium capitalize '>
@@ -246,9 +323,20 @@ const Page = () => {
 															{hour.day_name}
 														</span>
 														<span className='text-gray-500 text-base font-medium group-hover:text-blue-700 transition-all duration-300 ease-in-out group-hover:translate-x-1'>
-															{hour.is_closed
-																? <span className='text-red-500'> Closed</span>
-																: `${hour.opening_time.slice(0, 5)} - ${hour.closing_time.slice(0, 5)}`}
+															{hour.is_closed ? (
+																<span className='text-red-500'>
+																	{' '}
+																	Closed
+																</span>
+															) : (
+																`${hour.opening_time.slice(
+																	0,
+																	5
+																)} - ${hour.closing_time.slice(
+																	0,
+																	5
+																)}`
+															)}
 														</span>
 													</div>
 												)
@@ -262,13 +350,40 @@ const Page = () => {
 								</div>
 							</div>
 						</TabsContent>
-						<TabsContent value='services'>
-							<div className='grid grid-cols-2 gap-4'>
-								<div className='bg-gray-100 p-4 rounded-lg'>
-									<h3 className='text-lg font-bold'>
-										Reviews
-									</h3>
+						<TabsContent value='reviews'>
+							<div className='border border-gray-200 p-4 rounded-lg'>
+								<h2 className='text-xl font-medium capitalize  text-gray-700'>
+									Customer Reviews
+								</h2>
+								<h2 className='text-gray-600 text-sm  capitalize '>
+									What customers are saying about{' '}
+									{business?.name}
+								</h2>
+								<div className='space-y-4'>
+									<div className='flex items-center gap-x-2 min-h-40'>
+										{reviews.length === 0 ? (
+											<div className='flex items-center justify-center min-h-40 w-full'>
+												<p className='text-gray-500 text-sm text-center'>
+													No reviews yet
+												</p>
+											</div>
+										) : (
+											reviews.map((review) => (
+												<div
+													key={review.id}
+													className='border-b border-gray-200 p-4 rounded-lg'
+												>
+													<h3 className='text-gray-700 text-base font-medium'>
+														{review.name}
+													</h3>
+												</div>
+											))
+										)}
+									</div>
 								</div>
+							</div>
+							<div className='mt-6 border border-gray-200 p-4 rounded-lg'>
+								<Customer business_id={business?.id.toString() ?? ''} />
 							</div>
 						</TabsContent>
 					</Tabs>

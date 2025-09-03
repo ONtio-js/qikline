@@ -24,6 +24,7 @@ import {
 	TooltipTrigger,
 } from '@/components/ui/tooltip';
 import Menubar from '../Menuba';
+import { MenuIcon } from 'lucide-react';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -279,8 +280,9 @@ function Sidebar({
 function SidebarTrigger({
 	className,
 	onClick,
+	menubar = true,
 	...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & { menubar?: boolean }) {
 	const { toggleSidebar } = useSidebar();
 
 	return (
@@ -288,15 +290,15 @@ function SidebarTrigger({
 			data-sidebar='trigger'
 			data-slot='sidebar-trigger'
 			size={'icon'}
-			className={cn('size-12 md:hidden p-0', className)}
+			className={cn('size-12  p-0', className)}
 			onClick={(event) => {
 				onClick?.(event);
 				toggleSidebar();
 			}}
 			{...props}
 		>
-			<Menubar />
-			<span className='sr-only'>Toggle Sidebar</span>
+			{menubar ? <Menubar /> : <MenuIcon className='w-5 h-5' color='blue' />}
+			<span className='sr-only'>{menubar ? 'Toggle Menubar' : 'Toggle Sidebar'}</span>
 		</button>
 	);
 }

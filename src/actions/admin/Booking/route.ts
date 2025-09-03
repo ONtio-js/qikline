@@ -2,6 +2,21 @@ import { apiWrapper } from '@/actions/wrapper';
 import { z } from 'zod';
 import { bookFormSchema } from '../../../../schema/schema';
 
+interface BookingResponse {
+	results: {
+		id: number;
+		service: string;
+		name: string;
+		phone_number: string;
+		email: string;
+		date: string;
+		time: string;
+		status: string;
+		created_at: string;
+		updated_at: string;
+	}[];
+}
+
 export const getBookings = async (
 	accessToken: string,
 	page: number,
@@ -64,16 +79,13 @@ export const createBooking = async (data: z.infer<typeof bookFormSchema>) => {
 
 export const getAllBookings = async (page: number, limit: number) => {
 	const response = await apiWrapper.get(
-		`${process.env.NEXT_PUBLIC_API_URL}/bookings/business-bookings/`,
-		{
-			params: {
-				page,
-				limit,
-			},
-		}
+		`${process.env.NEXT_PUBLIC_API_URL}/bookings/business-bookings/?page=${page}&page_size=${limit}`
 	);
-	console.log(response.data);
-	return response.data;
+	return {
+		status: true,
+		message: 'Bookings fetched successfully',
+		data: (response?.data as BookingResponse)?.results || [],
+	};
 };
 
 export const updateBooking = async (
@@ -108,6 +120,7 @@ export const updateBooking = async (
 				},
 			}
 		);
+
 		return {
 			status: true,
 			message: response.data,

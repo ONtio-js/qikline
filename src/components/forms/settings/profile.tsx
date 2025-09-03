@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Pencil } from 'lucide-react';
+import { Loader, Pencil, CheckIcon, XIcon } from 'lucide-react';
 import {
 	Form,
 	FormField,
@@ -14,16 +14,59 @@ import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BusinessOwnerProfile } from '../../../../schema/schema';
+import { getAccessToken } from '@/utils/token';
+import { jwtDecode } from 'jwt-decode';
+import { z } from 'zod';
+import { useTransition } from 'react';
+import { updateProfile } from '@/actions/admin/profile/route';
+import { toast } from 'sonner';
 const Profilesetting = () => {
+	const accessToken = getAccessToken();
+	const decodedToken: { email: string } = jwtDecode(accessToken as string);
+	console.log(decodedToken);
+	const [isPending, startTransition] = useTransition();
 	const form = useForm({
 		defaultValues: {
 			name: '',
-			email: '',
+			email: decodedToken.email,
 			phone: '',
-			role: '',
 		},
 		resolver: zodResolver(BusinessOwnerProfile),
 	});
+
+	const onSubmit = (data: z.infer<typeof BusinessOwnerProfile>) => {
+		const formData = new FormData();
+		formData.append('phone', data.phone);
+		formData.append('name', data.name);
+		formData.append('email', decodedToken.email);
+		startTransition(async () => {
+			const response = await updateProfile(formData);
+			if (response?.status) {
+				toast.success(response.message as string,{
+					duration: 3000,
+					className: 'bg-green-500 text-white',
+					position: 'top-right',
+					icon: <CheckIcon className='w-4 h-4' />,
+					style: {
+						backgroundColor: 'green',
+						color: 'white',
+					},
+				});
+			} else {
+				toast.error(response?.message as string || 'Failed to update profile',{
+					duration: 3000,
+					className: 'bg-red-500 text-white',
+					position: 'top-right',
+					icon: <XIcon className='w-4 h-4' />,
+					style: {
+						backgroundColor: 'red',
+						color: 'white',
+					},
+				});
+			}
+		});
+	};
+
 	return (
 		<Form {...form}>
 			<div className='p-4 px-2 sm:px-4 md:px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
@@ -38,7 +81,7 @@ const Profilesetting = () => {
 					</Button>
 				</div>
 
-				<form>
+				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<div className='pt-8  '>
 						<div className='space-y-8 '>
 							<FormField
@@ -77,6 +120,8 @@ const Profilesetting = () => {
 											<Input
 												{...field}
 												className='h-12'
+												readOnly
+												disabled
 												placeholder='Enter email address'
 											/>
 										</FormControl>
@@ -105,34 +150,26 @@ const Profilesetting = () => {
 									</FormItem>
 								)}
 							/>
-							<FormField
-								control={form.control}
-								name='role'
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>
-											Role{' '}
-											<span className='text-red-500'>
-												*
-											</span>
-										</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												className='h-12'
-												placeholder='Enter your Role'
-											/>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
 						</div>
 						<Separator className=' bg-gray-200 mt-8' />
 						<div className='flex flex-col md:flex-row gap-4 mt-6 w-full items-center justify-center'>
-							<Button className='bg-blue-700 hover:bg-blue-800 max-w-xs h-12 w-full font-medium'>
-								Save Changes
+							<Button
+								disabled={isPending}
+								type='submit'
+								className='bg-blue-700 hover:bg-blue-800 max-w-xs h-12 w-full font-medium'
+							>
+								{isPending ? (
+									<Loader className='w-4 h-4 animate-spin' />
+								) : (
+									'Save Changes'
+								)}
 							</Button>
 							<Button
+								onClick={() => {
+									form.reset();
+								}}
+								type='button'
+								disabled={isPending}
 								variant={'outline'}
 								className='max-w-xs w-full h-12 font-medium'
 							>

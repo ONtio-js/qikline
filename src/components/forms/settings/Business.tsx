@@ -1,7 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-	createBusinessSchema,
-} from '../../../../schema/schema';
+import { createBusinessSchema } from '../../../../schema/schema';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -85,6 +83,23 @@ export const Business = () => {
 				website: businessData.website,
 				banner: businessData.banner,
 			});
+
+			if (businessData.banner && Array.isArray(businessData.banner)) {
+				const existingImages = businessData.banner.map(
+					(
+						imageItem: { image?: string; url?: string } | string,
+						index: number
+					) => ({
+						id: `existing-${index}`,
+						image:
+							typeof imageItem === 'string'
+								? imageItem
+								: imageItem.image || imageItem.url || '',
+						file: undefined, 
+					})
+				);
+				setUploadedImages(existingImages);
+			}
 		}
 	}, [businessData, form]);
 	const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,7 +187,7 @@ export const Business = () => {
 		}
 		startTransition(async () => {
 			try {
-				// Create FormData for file upload
+				
 				const formData = new FormData();
 				formData.append('name', data.name);
 				formData.append('category', data.category);
@@ -186,34 +201,38 @@ export const Business = () => {
 				formData.append('website', data.website || '');
 				formData.append('is_active', 'true');
 
-				// Append banner images
-				uploadedImages.forEach((image) => {
+				
+				const newImages = uploadedImages.filter((image) => image.file);
+				newImages.forEach((image) => {
 					if (image.file) {
-						formData.append(`banner`, image.file);
+						formData.append(`uploaded_images`, image.file);
 					}
 				});
+
+				for (const [key, value] of formData.entries()) {
+					console.log(key, value);
+				}
+
+				newImages.forEach((image, index) => {
+					console.log(`File ${index}:`, {
+						name: image.file?.name,
+						size: image.file?.size,
+						type: image.file?.type,
+						isFile: image.file instanceof File,
+					});
+				});
+
 				let response;
 				if (businessData) {
-					response = await updateBusiness({
-						name: data.name,
-						category: data.category,
-						description: data.description,
-						address: data.address,
-						city: data.city,
-						state: data.state,
-						country: data.country,
-						phone_number: data.phone_number,
-						email: data.email,
-						website: data.website,
-						// banner: uploadedImages.map((image) => image.image),
-						// is_active: true,
-					});
+					
+					response = await updateBusiness(formData);
 				} else {
+					
 					response = await createBusiness(formData);
 				}
 
 				if (response.status) {
-					toast.success(response.message,{
+					toast.success(response.message, {
 						duration: 3000,
 						className: 'bg-green-500 text-white',
 						icon: <Check className='w-4 h-4' />,
@@ -225,7 +244,7 @@ export const Business = () => {
 					});
 					form.reset();
 					setUploadedImages([]);
-					// Refresh business data to update the store
+					
 					await fetchBusinessData();
 				} else {
 					toast.error(response.message, {
@@ -526,7 +545,7 @@ export const Business = () => {
 								Business Images
 							</h4>
 
-							{/* Hidden file input */}
+							
 							<input
 								ref={fileInputRef}
 								type='file'
@@ -536,7 +555,7 @@ export const Business = () => {
 								className='hidden'
 							/>
 
-							{/* Upload button */}
+							
 							<div className='flex justify-center mb-6'>
 								<Button
 									type='button'
@@ -555,7 +574,7 @@ export const Business = () => {
 							</div>
 						</div>
 
-						{/* Image grid */}
+						
 						<div className='grid md:grid-cols-3 gap-4 pb-3'>
 							{uploadedImages.length > 0
 								? uploadedImages.map((image, index) => (
@@ -585,7 +604,7 @@ export const Business = () => {
 								  ))
 								: null}
 
-							{/* Show placeholder slots for remaining images */}
+							
 							{Array.from({
 								length: 3 - uploadedImages.length,
 							}).map((_, index) => (

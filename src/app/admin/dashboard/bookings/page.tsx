@@ -8,7 +8,16 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Calendar, ChevronDown } from 'lucide-react';
+import {
+	Calendar,
+	CheckCircleIcon,
+	ChevronDown,
+	MoreVertical,
+	Pencil,
+	XCircleIcon,
+} from 'lucide-react';
+import { Trash } from 'lucide-react';
+import { CircleCheck } from 'lucide-react';
 import {
 	Table,
 	TableHeader,
@@ -18,8 +27,7 @@ import {
 	TableCell,
 } from '@/components/ui/table';
 import { Tabs, TabsTrigger, TabsList, TabsContent } from '@/components/ui/tabs';
-import { MoreHorizontal } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { MdAddCard } from 'react-icons/md';
 import SearchBox from '@/components/admin/searchBox';
@@ -27,6 +35,10 @@ import { getAllBookings } from '@/actions/admin/Booking/route';
 import { useEffect, useState } from 'react';
 import BookingCard from '@/components/admin/BookingCard';
 import CreateBookingForm from '@/components/forms/booking/CreateBookingForm';
+import EmptyState from '@/components/status/EmptyState';
+import { toast } from 'sonner';
+import { updateBooking } from '@/actions/admin/Booking/route';
+import Approved from '@/components/status/Approved';
 
 interface Booking {
 	id: number;
@@ -60,12 +72,116 @@ const Page = () => {
 				typeof response === 'object' &&
 				'data' in response
 			) {
-				setBookings(response.data as Booking[]);
+				// Transform API data to match Booking interface
+				const transformedBookings = response.data.map(
+					(item: {
+						id: number;
+						service:
+							| string
+							| {
+									id: number;
+									name: string;
+									description: string;
+									price: string;
+									duration: number;
+							  };
+						name: string;
+						phone_number: string;
+						email: string;
+						date: string;
+						time: string;
+						status: string;
+						created_at: string;
+						updated_at: string;
+						business_name?: string;
+						customer_email?: string;
+						status_display?: string;
+						service_id?: number;
+						service_name?: string;
+						service_description?: string;
+						service_price?: string;
+						service_duration?: number;
+					}) => ({
+						id: item.id,
+						business_name: item.business_name || 'Unknown Business',
+						customer_email:
+							item.email || item.customer_email || 'No Email',
+						date: item.date,
+						time: item.time,
+						status: item.status as
+							| 'PENDING'
+							| 'COMPLETED'
+							| 'FAILED'
+							| 'CANCELLED',
+						status_display: item.status_display || item.status,
+						created_at: item.created_at,
+						updated_at: item.updated_at,
+						service: {
+							id:
+								item.service_id ||
+								(typeof item.service === 'object'
+									? item.service.id
+									: 0),
+							name:
+								item.service_name ||
+								(typeof item.service === 'object'
+									? item.service.name
+									: 'Unknown Service'),
+							description:
+								item.service_description ||
+								(typeof item.service === 'object'
+									? item.service.description
+									: ''),
+							price:
+								item.service_price ||
+								(typeof item.service === 'object'
+									? item.service.price
+									: '0'),
+							duration:
+								item.service_duration ||
+								(typeof item.service === 'object'
+									? item.service.duration
+									: 0),
+						},
+					})
+				);
+				setBookings(transformedBookings);
 			}
 		};
 		fetchBookings();
 	}, [page, limit]);
-	console.log(bookings);
+	const handleUpdateBooking = async (
+		id: number,
+		data: {
+			status: string;
+			reason?: string;
+		}
+	) => {
+		const response = await updateBooking(id, data);
+		if (response.status) {
+			toast.success('Booking Status updated successfully', {
+				duration: 3000,
+				position: 'top-right',
+				className: 'bg-green-500 text-white',
+				icon: <CheckCircleIcon className='w-4 h-4' />,
+				style: {
+					backgroundColor: 'green',
+					color: 'white',
+				},
+			});
+		} else {
+			toast.error('Error updating booking', {
+				duration: 3000,
+				position: 'top-right',
+				className: 'bg-red-500 text-white',
+				icon: <XCircleIcon className='w-4 h-4' />,
+				style: {
+					backgroundColor: 'red',
+					color: 'white',
+				},
+			});
+		}
+	};
 	return (
 		<>
 			<div className='flex flex-col md:flex-row items-center justify-between mt-6 px-6 gap-y-5'>
@@ -140,430 +256,723 @@ const Page = () => {
 								value='completed'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10 text-sm md:text-base'
 							>
-								Upcoming (10)
+								Completed (
+								{
+									bookings.filter(
+										(booking) =>
+											booking.status === 'COMPLETED'
+									).length
+								}
+								)
 							</TabsTrigger>
 							<TabsTrigger
 								value='pending'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10 text-sm md:text-base'
 							>
-								Today (10)
+								Pending (
+								{
+									bookings.filter(
+										(booking) =>
+											booking.status === 'PENDING'
+									).length
+								}
+								)
 							</TabsTrigger>
 							<TabsTrigger
 								value='failed'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10 text-sm md:text-base'
 							>
-								Completed (1306)
+								Cancelled (
+								{
+									bookings.filter(
+										(booking) =>
+											booking.status === 'CANCELLED'
+									).length
+								}
+								)
 							</TabsTrigger>
 						</TabsList>
 					</div>
-					<TabsContent value='alltransactions'>
-						<div className='flex flex-col md:hidden gap-y-5'>
-							{bookings.map((booking) => (
-								<div key={booking.id}>
+					{bookings.length === 0 && (
+						<div className='col-span-full flex justify-center items-center h-full mt-10'>
+							<EmptyState
+								title='No bookings recorded yet'
+								description='No bookings recorded yet, list your services and create a new booking to get started'
+							/>
+						</div>
+					)}
+					{bookings.length > 0 && (
+						<>
+							<TabsContent
+								value='alltransactions'
+								className='w-full'
+							>
+								<div className='flex flex-col md:hidden gap-y-5'>
+									{bookings.map((booking) => (
+										<div key={booking.id}>
+											<BookingCard
+												id={booking.id}
+												business_name={
+													booking.business_name
+												}
+												customer_email={
+													booking.customer_email
+												}
+												date={booking.date}
+												time={booking.time}
+												status={booking.status}
+												status_display={
+													booking.status_display
+												}
+												service={booking.service}
+											/>
+										</div>
+									))}
+								</div>
+								<Table className='hidden md:block mt-6 pl-6 w-full'>
+									<TableHeader className='bg-gray-100 py-2  h-12'>
+										<TableRow>
+											<TableHead className='pl-12'>
+												S/N
+											</TableHead>
+											<TableHead>Client</TableHead>
+											<TableHead>Status</TableHead>
+											<TableHead>Time</TableHead>
+											<TableHead>Service</TableHead>
+											<TableHead>
+												Service Duration{' '}
+											</TableHead>
+
+											<TableHead>Action</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody className='space-y-2 '>
+										{bookings.map((booking, index) => (
+											<TableRow
+												key={booking.id}
+												className='h-12 mt-4'
+											>
+												<TableCell className='pl-12'>
+													{index + 1}
+												</TableCell>
+												<TableCell className='font-medium flex items-center gap-x-3 '>
+													<Avatar className='w-10 h-10 bg-gray-100 text-gray-800'>
+														<AvatarFallback>
+															{booking.customer_email
+																.charAt(0)
+																.toUpperCase()}
+														</AvatarFallback>
+													</Avatar>
+												</TableCell>
+												<TableCell>
+													{booking.status ===
+													'COMPLETED' ? (
+														<Completed />
+													) : booking.status ===
+													  'PENDING' ? (
+														<Pending />
+													) : booking.status ===
+													  'CANCELLED' ? (
+														<Failed />
+													) : (
+														<Approved />
+													)}
+												</TableCell>
+												<TableCell>
+													{booking.date} at{' '}
+													{booking.time.slice(0, 5)}{' '}
+													{booking.time.slice(0, 2) >=
+													'12'
+														? 'PM'
+														: 'AM'}
+												</TableCell>
+												<TableCell>
+													<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+														{booking.service.name}
+													</span>
+												</TableCell>
+												<TableCell>
+													{booking.service.duration}{' '}
+													mins
+												</TableCell>
+												<TableCell className=''>
+													<DropdownMenu>
+														<DropdownMenuTrigger className='bg-gray-100 h-10 w-10 text-gray-800  rounded-full flex items-center justify-center  hover:bg-gray-200 cursor-pointer border border-gray-200 group '>
+															<MoreVertical
+																size={24}
+																className='text-gray-700 rotate-90 group-hover:text-gray-800'
+															/>
+														</DropdownMenuTrigger>
+														<DropdownMenuContent
+															side='bottom'
+															align='end'
+														>
+															<DropdownMenuItem
+																className='flex items-center gap-x-2 text-blue-500'
+																onClick={() =>
+																	handleUpdateBooking(
+																		booking.id,
+																		{
+																			status: 'CONFIRMED',
+																		}
+																	)
+																}
+															>
+																<Pencil
+																	size={24}
+																	className='text-blue-500'
+																/>
+																Approve
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																className='flex items-center gap-x-2 text-red-500'
+																onClick={() =>
+																	handleUpdateBooking(
+																		booking.id,
+																		{
+																			status: 'CANCELLED',
+																			reason: 'Customer cancelled the booking',
+																		}
+																	)
+																}
+															>
+																<Trash
+																	size={24}
+																	className='text-red-500'
+																/>
+																Cancel
+															</DropdownMenuItem>
+															<DropdownMenuItem
+																className='flex items-center gap-x-2 text-green-500'
+																onClick={() =>
+																	handleUpdateBooking(
+																		booking.id,
+																		{
+																			status: 'COMPLETED',
+																		}
+																	)
+																}
+															>
+																<CircleCheck
+																	className='text-green-500'
+																	size={24}
+																/>
+																Mark Done
+															</DropdownMenuItem>
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							</TabsContent>
+							<TabsContent value='pending'>
+								<div className='flex flex-col md:hidden gap-y-5'>
 									<BookingCard
-										id={booking.id}
-										business_name={booking.business_name}
-										customer_email={booking.customer_email}
-										date={booking.date}
-										time={booking.time}
-										status={booking.status}
-										status_display={booking.status_display}
-										service={booking.service}
+										id={1}
+										business_name='Sample Business'
+										customer_email='john.doe@example.com'
+										date='2025-01-01'
+										time='10:00 AM'
+										status='COMPLETED'
+										status_display='Completed'
+										service={{
+											id: 1,
+											name: 'Haircut',
+											description:
+												'Professional haircut service',
+											price: '50.00',
+											duration: 30,
+										}}
 									/>
 								</div>
-							))}
-						</div>
-						<Table className='hidden md:block mt-6 pl-6 w-full'>
-							<TableHeader className='bg-gray-100 py-2  h-12'>
-								<TableRow>
-									<TableHead className='pl-12'>S/N</TableHead>
-									<TableHead>Client</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead>Time</TableHead>
-									<TableHead>Service</TableHead>
-									<TableHead>Service Duration </TableHead>
+								<Table className='hidden md:block mt-6 pl-6 w-full'>
+									<TableHeader className='bg-gray-100 py-2  h-12'>
+										<TableRow>
+											<TableHead className='pl-12'>
+												S/N
+											</TableHead>
+											<TableHead>Client</TableHead>
+											<TableHead>Status</TableHead>
+											<TableHead>Time</TableHead>
+											<TableHead>Service</TableHead>
+											<TableHead>
+												Service Duration{' '}
+											</TableHead>
 
-									<TableHead>Action</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody className='space-y-2 '>
-								<TableRow className='h-12 mt-4'>
-									<TableCell className='pl-12'>01</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarImage src='https://github.com/shadcn.png' />
-											<AvatarFallback>JD</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												John Doe
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Completed />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-								<TableRow className='h-14 mt-4'>
-									<TableCell className='pl-12'>02</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarFallback>JF</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												Jane Fray
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Failed />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-								<TableRow className='h-14 mt-4'>
-									<TableCell className='pl-12'>03</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarImage src='https://github.com/shadcn.png' />
-											<AvatarFallback>JD</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												John Doe
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Pending />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 09:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Massage
-										</span>{' '}
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-							</TableBody>
-						</Table>
-					</TabsContent>
-					<TabsContent value='pending'>
-						<div className='flex flex-col md:hidden gap-y-5'>
-							<BookingCard
-								id={1}
-								business_name='Sample Business'
-								customer_email='john.doe@example.com'
-								date='2025-01-01'
-								time='10:00 AM'
-								status='PENDING'
-								status_display='Pending'
-								service={{
-									id: 1,
-									name: 'Haircut',
-									description: 'Professional haircut service',
-									price: '50.00',
-									duration: 30,
-								}}
-							/>
-						</div>
-						<Table className='hidden md:block mt-6 pl-6 w-full'>
-							<TableHeader className='bg-gray-100 py-2  h-12'>
-								<TableRow>
-									<TableHead className='pl-12'>S/N</TableHead>
-									<TableHead>Client</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead>Time</TableHead>
-									<TableHead>Service</TableHead>
-									<TableHead>Service Duration </TableHead>
+											<TableHead>Action</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody className='space-y-2 '>
+										{bookings
+											.filter(
+												(booking) =>
+													booking.status === 'PENDING'
+											)
+											.map((booking, index) => (
+												<TableRow
+													key={booking.id}
+													className='h-12 mt-4'
+												>
+													<TableCell className='pl-12'>
+														{index + 1}
+													</TableCell>
+													<TableCell className='font-medium flex items-center gap-x-3 '>
+														<Avatar className='w-10 h-10 bg-gray-100 text-gray-800'>
+															<AvatarFallback>
+																{booking.customer_email
+																	.charAt(0)
+																	.toUpperCase()}
+															</AvatarFallback>
+														</Avatar>
+													</TableCell>
+													<TableCell>
+														{booking.status ===
+														'COMPLETED' ? (
+															<Completed />
+														) : booking.status ===
+														  'PENDING' ? (
+															<Pending />
+														) : booking.status ===
+														  'CANCELLED' ? (
+															<Failed />
+														) : (
+															<Approved />
+														)}
+													</TableCell>
+													<TableCell>
+														{booking.date} at{' '}
+														{booking.time.slice(
+															0,
+															5
+														)}{' '}
+														{booking.time.slice(
+															0,
+															2
+														) >= '12'
+															? 'PM'
+															: 'AM'}
+													</TableCell>
+													<TableCell>
+														<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+															{
+																booking.service
+																	.name
+															}
+														</span>
+													</TableCell>
+													<TableCell>
+														{
+															booking.service
+																.duration
+														}{' '}
+														mins
+													</TableCell>
+													<TableCell className=''>
+														<DropdownMenu>
+															<DropdownMenuTrigger className='bg-gray-100 h-10 w-10 text-gray-800  rounded-full flex items-center justify-center  hover:bg-gray-200 cursor-pointer border border-gray-200 group '>
+																<MoreVertical
+																	size={24}
+																	className='text-gray-700 rotate-90 group-hover:text-gray-800'
+																/>
+															</DropdownMenuTrigger>
+															<DropdownMenuContent
+																side='bottom'
+																align='end'
+															>
+																<DropdownMenuItem
+																	className='flex items-center gap-x-2 text-red-500'
+																	onClick={() =>
+																		handleUpdateBooking(
+																			booking.id,
+																			{
+																				status: 'CANCELLED',
+																				reason: 'Customer cancelled the booking',
+																			}
+																		)
+																	}
+																>
+																	<Trash
+																		size={
+																			24
+																		}
+																		className='text-red-500'
+																	/>
+																	Cancel
+																</DropdownMenuItem>
+																<DropdownMenuItem
+																	className='flex items-center gap-x-2 text-green-500'
+																	onClick={() =>
+																		handleUpdateBooking(
+																			booking.id,
+																			{
+																				status: 'COMPLETED',
+																			}
+																		)
+																	}
+																>
+																	<CircleCheck
+																		className='text-green-500'
+																		size={
+																			24
+																		}
+																	/>
+																	Mark Done
+																</DropdownMenuItem>
+															</DropdownMenuContent>
+														</DropdownMenu>
+													</TableCell>
+												</TableRow>
+											))}
+									</TableBody>
+								</Table>
+							</TabsContent>
+							<TabsContent value='completed'>
+								<div className='flex flex-col md:hidden gap-y-5'>
+									<BookingCard
+										id={1}
+										business_name='Sample Business'
+										customer_email='john.doe@example.com'
+										date='2025-01-01'
+										time='10:00 AM'
+										status='COMPLETED'
+										status_display='Completed'
+										service={{
+											id: 1,
+											name: 'Haircut',
+											description:
+												'Professional haircut service',
+											price: '50.00',
+											duration: 30,
+										}}
+									/>
+								</div>
+								<Table className='hidden md:block mt-6 pl-6 w-full'>
+									<TableHeader className='bg-gray-100 py-2  h-12'>
+										<TableRow>
+											<TableHead className='pl-12'>
+												S/N
+											</TableHead>
+											<TableHead>Client</TableHead>
+											<TableHead>Status</TableHead>
+											<TableHead>Time</TableHead>
+											<TableHead>Service</TableHead>
+											<TableHead>
+												Service Duration{' '}
+											</TableHead>
 
-									<TableHead>Action</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody className='space-y-2 '>
-								<TableRow className='h-12 mt-4'>
-									<TableCell className='pl-12'>01</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarImage src='https://github.com/shadcn.png' />
-											<AvatarFallback>JD</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												John Doe
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Pending />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-								<TableRow className='h-14 mt-4'>
-									<TableCell className='pl-12'>02</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarFallback>JF</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												Jane Fray
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Pending />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-							</TableBody>
-						</Table>
-					</TabsContent>
-					<TabsContent value='completed'>
-						<div className='flex flex-col md:hidden gap-y-5'>
-							<BookingCard
-								id={1}
-								business_name='Sample Business'
-								customer_email='john.doe@example.com'
-								date='2025-01-01'
-								time='10:00 AM'
-								status='COMPLETED'
-								status_display='Completed'
-								service={{
-									id: 1,
-									name: 'Haircut',
-									description: 'Professional haircut service',
-									price: '50.00',
-									duration: 30,
-								}}
-							/>
-						</div>
-						<Table className='hidden md:block mt-6 pl-6 w-full'>
-							<TableHeader className='bg-gray-100 py-2  h-12'>
-								<TableRow>
-									<TableHead className='pl-12'>S/N</TableHead>
-									<TableHead>Client</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead>Time</TableHead>
-									<TableHead>Service</TableHead>
-									<TableHead>Service Duration </TableHead>
+											<TableHead>Action</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody className='space-y-2 '>
+										{bookings
+											.filter(
+												(booking) =>
+													booking.status ===
+													'COMPLETED'
+											)
+											.map((booking, index) => (
+												<TableRow
+													key={booking.id}
+													className='h-12 mt-4'
+												>
+													<TableCell className='pl-12'>
+														{index + 1}
+													</TableCell>
+													<TableCell className='font-medium flex items-center gap-x-3 '>
+														<Avatar className='w-10 h-10 bg-gray-100 text-gray-800'>
+															<AvatarFallback>
+																{booking.customer_email
+																	.charAt(0)
+																	.toUpperCase()}
+															</AvatarFallback>
+														</Avatar>
+													</TableCell>
+													<TableCell>
+														{booking.status ===
+														'COMPLETED' ? (
+															<Completed />
+														) : booking.status ===
+														  'PENDING' ? (
+															<Pending />
+														) : booking.status ===
+														  'CANCELLED' ? (
+															<Failed />
+														) : (
+															<Approved />
+														)}
+													</TableCell>
+													<TableCell>
+														{booking.date} at{' '}
+														{booking.time.slice(
+															0,
+															5
+														)}{' '}
+														{booking.time.slice(
+															0,
+															2
+														) >= '12'
+															? 'PM'
+															: 'AM'}
+													</TableCell>
+													<TableCell>
+														<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+															{
+																booking.service
+																	.name
+															}
+														</span>
+													</TableCell>
+													<TableCell>
+														{
+															booking.service
+																.duration
+														}{' '}
+														mins
+													</TableCell>
+													<TableCell className=''>
+														<DropdownMenu>
+															<DropdownMenuTrigger className='bg-gray-100 h-10 w-10 text-gray-800  rounded-full flex items-center justify-center  hover:bg-gray-200 cursor-pointer border border-gray-200 group '>
+																<MoreVertical
+																	size={24}
+																	className='text-gray-700 rotate-90 group-hover:text-gray-800'
+																/>
+															</DropdownMenuTrigger>
+															<DropdownMenuContent
+																side='bottom'
+																align='end'
+															>
+																<DropdownMenuItem
+																	className='flex items-center gap-x-2 text-red-500'
+																	onClick={() =>
+																		handleUpdateBooking(
+																			booking.id,
+																			{
+																				status: 'CANCELLED',
+																				reason: 'Customer cancelled the booking',
+																			}
+																		)
+																	}
+																>
+																	<Trash
+																		size={
+																			24
+																		}
+																		className='text-red-500'
+																	/>
+																	Cancel
+																</DropdownMenuItem>
+																<DropdownMenuItem
+																	className='flex items-center gap-x-2 text-green-500'
+																	onClick={() =>
+																		handleUpdateBooking(
+																			booking.id,
+																			{
+																				status: 'COMPLETED',
+																			}
+																		)
+																	}
+																>
+																	<CircleCheck
+																		className='text-green-500'
+																		size={
+																			24
+																		}
+																	/>
+																	Mark Done
+																</DropdownMenuItem>
+															</DropdownMenuContent>
+														</DropdownMenu>
+													</TableCell>
+												</TableRow>
+											))}
+									</TableBody>
+								</Table>
+							</TabsContent>
+							<TabsContent value='failed'>
+								<div className='flex flex-col md:hidden gap-y-5'>
+									<BookingCard
+										id={1}
+										business_name='Sample Business'
+										customer_email='john.doe@example.com'
+										date='2025-01-01'
+										time='10:00 AM'
+										status='FAILED'
+										status_display='Failed'
+										service={{
+											id: 1,
+											name: 'Haircut',
+											description:
+												'Professional haircut service',
+											price: '50.00',
+											duration: 30,
+										}}
+									/>
+								</div>
+								<Table className='hidden md:block mt-6 pl-6 w-full'>
+									<TableHeader className='bg-gray-100 py-2  h-12'>
+										<TableRow>
+											<TableHead className='pl-12'>
+												S/N
+											</TableHead>
+											<TableHead>Client</TableHead>
+											<TableHead>Status</TableHead>
+											<TableHead>Time</TableHead>
+											<TableHead>Service</TableHead>
+											<TableHead>
+												Service Duration{' '}
+											</TableHead>
 
-									<TableHead>Action</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody className='space-y-2 '>
-								<TableRow className='h-12 mt-4'>
-									<TableCell className='pl-12'>01</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarImage src='https://github.com/shadcn.png' />
-											<AvatarFallback>JD</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												John Doe
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Pending />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-								<TableRow className='h-14 mt-4'>
-									<TableCell className='pl-12'>02</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarFallback>JF</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												Jane Fray
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Pending />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-							</TableBody>
-						</Table>
-					</TabsContent>
-					<TabsContent value='failed'>
-						<div className='flex flex-col md:hidden gap-y-5'>
-							<BookingCard
-								id={1}
-								business_name='Sample Business'
-								customer_email='john.doe@example.com'
-								date='2025-01-01'
-								time='10:00 AM'
-								status='FAILED'
-								status_display='Failed'
-								service={{
-									id: 1,
-									name: 'Haircut',
-									description: 'Professional haircut service',
-									price: '50.00',
-									duration: 30,
-								}}
-							/>
-						</div>
-						<Table className='hidden md:block mt-6 pl-6 w-full'>
-							<TableHeader className='bg-gray-100 py-2  h-12'>
-								<TableRow>
-									<TableHead className='pl-12'>S/N</TableHead>
-									<TableHead>Client</TableHead>
-									<TableHead>Status</TableHead>
-									<TableHead>Time</TableHead>
-									<TableHead>Service</TableHead>
-									<TableHead>Service Duration </TableHead>
-
-									<TableHead>Action</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody className='space-y-2 '>
-								<TableRow className='h-12 mt-4'>
-									<TableCell className='pl-12'>01</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarImage src='https://github.com/shadcn.png' />
-											<AvatarFallback>JD</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												John Doe
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Pending />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-								<TableRow className='h-14 mt-4'>
-									<TableCell className='pl-12'>02</TableCell>
-									<TableCell className='font-medium flex items-center gap-x-3 '>
-										<Avatar className='w-10 h-10'>
-											<AvatarFallback>JF</AvatarFallback>
-										</Avatar>
-										<div className='flex flex-col gap-y-1'>
-											<p className='text-base font-medium'>
-												Jane Fray
-											</p>
-										</div>
-									</TableCell>
-									<TableCell>
-										<Pending />
-									</TableCell>
-									<TableCell>
-										2025-01-01 at 10:00 AM
-									</TableCell>
-									<TableCell>
-										{' '}
-										<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-											Haircut
-										</span>
-									</TableCell>
-									<TableCell>30 mins</TableCell>
-									<TableCell className=''>
-										<MoreHorizontal size={24} />
-									</TableCell>
-								</TableRow>
-							</TableBody>
-						</Table>
-					</TabsContent>
+											<TableHead>Action</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody className='space-y-2 '>
+										{bookings
+											.filter(
+												(booking) =>
+													booking.status ===
+													'CANCELLED'
+											)
+											.map((booking, index) => (
+												<TableRow
+													key={booking.id}
+													className='h-12 mt-4'
+												>
+													<TableCell className='pl-12'>
+														{index + 1}
+													</TableCell>
+													<TableCell className='font-medium flex items-center gap-x-3 '>
+														<Avatar className='w-10 h-10 bg-gray-100 text-gray-800'>
+															<AvatarFallback>
+																{booking.customer_email
+																	.charAt(0)
+																	.toUpperCase()}
+															</AvatarFallback>
+														</Avatar>
+													</TableCell>
+													<TableCell>
+														{booking.status ===
+														'COMPLETED' ? (
+															<Completed />
+														) : booking.status ===
+														  'PENDING' ? (
+															<Pending />
+														) : booking.status ===
+														  'CANCELLED' ? (
+															<Failed />
+														) : (
+															<Approved />
+														)}
+													</TableCell>
+													<TableCell>
+														{booking.date} at{' '}
+														{booking.time.slice(
+															0,
+															5
+														)}{' '}
+														{booking.time.slice(
+															0,
+															2
+														) >= '12'
+															? 'PM'
+															: 'AM'}
+													</TableCell>
+													<TableCell>
+														<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+															{
+																booking.service
+																	.name
+															}
+														</span>
+													</TableCell>
+													<TableCell>
+														{
+															booking.service
+																.duration
+														}{' '}
+														mins
+													</TableCell>
+													<TableCell className=''>
+														<DropdownMenu>
+															<DropdownMenuTrigger className='bg-gray-100 h-10 w-10 text-gray-800  rounded-full flex items-center justify-center  hover:bg-gray-200 cursor-pointer border border-gray-200 group '>
+																<MoreVertical
+																	size={24}
+																	className='text-gray-700 rotate-90 group-hover:text-gray-800'
+																/>
+															</DropdownMenuTrigger>
+															<DropdownMenuContent
+																side='bottom'
+																align='end'
+															>
+																<DropdownMenuItem
+																	className='flex items-center gap-x-2 text-blue-500'
+																	onClick={() =>
+																		handleUpdateBooking(
+																			booking.id,
+																			{
+																				status: 'CONFIRMED',
+																			}
+																		)
+																	}
+																>
+																	<Pencil
+																		size={
+																			24
+																		}
+																		className='text-blue-500'
+																	/>
+																	Approve
+																</DropdownMenuItem>
+																<DropdownMenuItem
+																	className='flex items-center gap-x-2 text-red-500'
+																	onClick={() =>
+																		handleUpdateBooking(
+																			booking.id,
+																			{
+																				status: 'CANCELLED',
+																				reason: 'Customer cancelled the booking',
+																			}
+																		)
+																	}
+																>
+																	<Trash
+																		size={
+																			24
+																		}
+																		className='text-red-500'
+																	/>
+																	Cancel
+																</DropdownMenuItem>
+																<DropdownMenuItem
+																	className='flex items-center gap-x-2 text-green-500'
+																	onClick={() =>
+																		handleUpdateBooking(
+																			booking.id,
+																			{
+																				status: 'COMPLETED',
+																			}
+																		)
+																	}
+																>
+																	<CircleCheck
+																		className='text-green-500'
+																		size={
+																			24
+																		}
+																	/>
+																	Mark Done
+																</DropdownMenuItem>
+															</DropdownMenuContent>
+														</DropdownMenu>
+													</TableCell>
+												</TableRow>
+											))}
+									</TableBody>
+								</Table>
+							</TabsContent>
+						</>
+					)}
 				</Tabs>
 			</div>
 			<CreateBookingForm

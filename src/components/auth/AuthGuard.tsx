@@ -26,18 +26,10 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 			const accessToken = getAccessToken();
 			const isValidToken = accessToken && accessToken.length > 20; 
 
-			console.log('AuthGuard: Authentication result:', {
-				authenticated,
-				hasToken: !!accessToken,
-				tokenLength: accessToken?.length,
-				isValidToken,
-				timestamp: new Date().toISOString(),
-			});
+		
 
 			if (!authenticated || !isValidToken) {
-				console.log(
-					'AuthGuard: Not authenticated or invalid token, redirecting to login'
-				);
+				
 				
 				removeTokens();
 				

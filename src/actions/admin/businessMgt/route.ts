@@ -83,16 +83,20 @@ export const createBusiness = async (
 	}
 
 	try {
+		// Debug: Log FormData contents
+		console.log('API Route - FormData contents:');
+		for (const [key, value] of formData.entries()) {
+			console.log(key, value);
+		}
+
 		const response = await apiWrapper.post(
 			`${process.env.NEXT_PUBLIC_API_URL}/businesses/create/`,
 			formData,
 			{
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
+				transformRequest: (data) => data, // Prevent axios from transforming FormData
 			}
 		);
-		console.log(response);
+
 		if (response.success) {
 			return {
 				status: true,
@@ -102,7 +106,7 @@ export const createBusiness = async (
 		}
 		return {
 			status: false,
-			message: response.error,
+			message: response.error || 'Failed to create business',
 			data: null,
 		};
 	} catch (error) {
@@ -119,32 +123,51 @@ export const createBusiness = async (
 };
 
 export const updateBusiness = async (
-	data: z.infer<typeof updateBusinessSchema>
+	data: z.infer<typeof updateBusinessSchema> | FormData
 ) => {
-	const validatedData = updateBusinessSchema.parse(data);
-	if (!validatedData) {
-		return {
-			status: false,
-			message: 'Invalid data',
-		};
+	let formData: FormData;
+
+	// Check if data is FormData (for file uploads) or schema data
+	if (data instanceof FormData) {
+		formData = data;
+	} else {
+		// Validate schema data
+		const validatedData = updateBusinessSchema.parse(data);
+		if (!validatedData) {
+			return {
+				status: false,
+				message: 'Invalid data',
+			};
+		}
+
+		// Create FormData from validated data
+		formData = new FormData();
+		formData.append('name', validatedData.name);
+		formData.append('description', validatedData.description);
+		formData.append('address', validatedData.address);
+		formData.append('phone_number', validatedData.phone_number);
+		formData.append('email', validatedData.email);
+		formData.append('website', validatedData.website || '');
+		formData.append('category', validatedData.category);
+		formData.append('city', validatedData.city);
+		formData.append('state', validatedData.state);
+		formData.append('country', validatedData.country);
+		formData.append('is_active', 'true');
 	}
-	const formData = new FormData();
-	formData.append('name', validatedData.name);
-	formData.append('description', validatedData.description);
-	formData.append('address', validatedData.address);
-	formData.append('phone_number', validatedData.phone_number);
-	formData.append('email', validatedData.email);
-	formData.append('website', validatedData.website || '');
-	formData.append('category', validatedData.category);
-	formData.append('city', validatedData.city);
-	formData.append('state', validatedData.state);
-	formData.append('country', validatedData.country);
-	formData.append('is_active', 'true');
 
 	try {
+		// Debug: Log FormData contents
+		console.log('API Route - Update FormData contents:');
+		for (const [key, value] of formData.entries()) {
+			console.log(key, value);
+		}
+
 		const response = await apiWrapper.patch(
 			`${process.env.NEXT_PUBLIC_API_URL}/businesses/update/`,
-			formData
+			formData,
+			{
+				transformRequest: (data) => data, // Prevent axios from transforming FormData
+			}
 		);
 		return {
 			status: true,
@@ -318,14 +341,26 @@ export const updateBookingSettings = async (
 		};
 	}
 	const formData = new FormData();
-	formData.append('is_booking_enabled', validatedData.is_booking_enabled.toString());
-	formData.append('is_deposit_required', validatedData.is_deposit_required.toString());
-	formData.append('cancellation_notice', validatedData.cancellation_notice.toString());
-	formData.append('advance_booking_time', validatedData.advance_booking_time.toString());
+	formData.append(
+		'is_booking_enabled',
+		validatedData.is_booking_enabled.toString()
+	);
+	formData.append(
+		'is_deposit_required',
+		validatedData.is_deposit_required.toString()
+	);
+	formData.append(
+		'cancellation_notice',
+		validatedData.cancellation_notice.toString()
+	);
+	formData.append(
+		'advance_booking_time',
+		validatedData.advance_booking_time.toString()
+	);
 	formData.append('created_at', new Date().toISOString());
 	formData.append('updated_at', new Date().toISOString());
-	
-	try{
+
+	try {
 		const response = await apiWrapper.patch(
 			`${process.env.NEXT_PUBLIC_API_URL}/businesses/settings/booking/`,
 			formData
@@ -342,8 +377,7 @@ export const updateBookingSettings = async (
 			message: response.error,
 			data: null,
 		};
-	}
-	catch (error) {
+	} catch (error) {
 		console.log(error);
 		return {
 			status: false,

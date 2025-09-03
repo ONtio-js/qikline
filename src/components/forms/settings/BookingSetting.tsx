@@ -37,16 +37,16 @@ export const BookingSetting = () => {
 	>({
 		is_booking_enabled: true,
 		is_deposit_required: true,
-		cancellation_notice: 240,
-		advance_booking_time: 60,
+		cancellation_notice: 0.25,
+		advance_booking_time: 0.25,
 	});
 	const form = useForm<z.infer<typeof bookingSettingsSchema>>({
 		resolver: zodResolver(bookingSettingsSchema),
 		defaultValues: {
 			is_booking_enabled: bookingSettings.is_booking_enabled || true,
 			is_deposit_required: bookingSettings.is_deposit_required || true,
-			cancellation_notice: bookingSettings.cancellation_notice || 240,
-			advance_booking_time:  60,
+			cancellation_notice: bookingSettings.cancellation_notice || 0.25,
+			advance_booking_time:  bookingSettings.advance_booking_time || 0.25,
 		},
 	});
 
@@ -167,7 +167,7 @@ export const BookingSetting = () => {
 									<FormItem className='flex flex-col  justify-between w-full'>
 										<div className='flex flex-col gap-2'>
 											<FormLabel className='text-lg font-semibold text-gray-600'>
-												Cancellation Notice
+												Reschedule Notice
 											</FormLabel>
 											<p className='text-gray-500 mt-2 '>
 												Send a cancellation notice to
@@ -193,46 +193,46 @@ export const BookingSetting = () => {
 													<SelectValue placeholder='Select a cancellation notice' />
 												</SelectTrigger>
 												<SelectContent className='border-gray-200 '>
-													<SelectItem value='15'>
+													<SelectItem value='0.25'>
 														15 minutes
 													</SelectItem>
-													<SelectItem value='30'>
+													<SelectItem value='0.5'>
 														30 minutes
 													</SelectItem>
-													<SelectItem value='45'>
+													<SelectItem value='0.75'>
 														45 minutes
 													</SelectItem>
-													<SelectItem value='60'>
+													<SelectItem value='1'>
 														1 hour
 													</SelectItem>
-													<SelectItem value='90'>
+													<SelectItem value='1.5'>
 														1.5 hours
 													</SelectItem>
-													<SelectItem value='120'>
+													<SelectItem value='2'>
 														2 hours
 													</SelectItem>
-													<SelectItem value='150'>
+													<SelectItem value='2.5'>
 														2.5 hours
 													</SelectItem>
-													<SelectItem value='180'>
+													<SelectItem value='3'>
 														3 hours
 													</SelectItem>
-													<SelectItem value='210'>
+													<SelectItem value='3.5'>
 														3.5 hours
 													</SelectItem>
-													<SelectItem value='240'>
+													<SelectItem value='4'>
 														4 hours
 													</SelectItem>
-													<SelectItem value='270'>
+													<SelectItem value='4.5'>
 														4.5 hours
 													</SelectItem>
-													<SelectItem value='300'>
+													<SelectItem value='5'>
 														5 hours
 													</SelectItem>
-													<SelectItem value='330'>
+													<SelectItem value='5.5'>
 														5.5 hours
 													</SelectItem>
-													<SelectItem value='360'>
+													<SelectItem value='6'>
 														6 hours
 													</SelectItem>
 												</SelectContent>
@@ -276,46 +276,46 @@ export const BookingSetting = () => {
 													<SelectValue placeholder='Select a advance booking time' />
 												</SelectTrigger>
 												<SelectContent className='border-gray-200 '>
-													<SelectItem value='15'>
+													<SelectItem value='0.25'>
 														15 Minutes
 													</SelectItem>
-													<SelectItem value='30'>
+													<SelectItem value='0.5'>
 														30 Minutes
 													</SelectItem>
-													<SelectItem value='45'>
+													<SelectItem value='0.75'>
 														45 Minutes
 													</SelectItem>
-													<SelectItem value='60'>
+													<SelectItem value='1'>
 														1 Hour
 													</SelectItem>
-													<SelectItem value='90'>
+													<SelectItem value='1.5'>
 														1.5 Hours
 													</SelectItem>
-													<SelectItem value='120'>
+													<SelectItem value='2'>
 														2 Hours
 													</SelectItem>
-													<SelectItem value='150'>
+													<SelectItem value='2.5'>
 														2.5 Hours
 													</SelectItem>
-													<SelectItem value='180'>
+													<SelectItem value='3'>
 														3 Hours
 													</SelectItem>
-													<SelectItem value='210'>
+													<SelectItem value='3.5'>
 														3.5 Hours
 													</SelectItem>
-													<SelectItem value='240'>
+														<SelectItem value='4'>
 														4 Hours
 													</SelectItem>
-													<SelectItem value='270'>
+													<SelectItem value='4.5'>
 														4.5 Hours
 													</SelectItem>
-													<SelectItem value='300'>
+													<SelectItem value='5'>
 														5 Hours
 													</SelectItem>
-													<SelectItem value='330'>
+													<SelectItem value='5.5'>
 														5.5 Hours
 													</SelectItem>
-													<SelectItem value='360'>
+													<SelectItem value='6'>
 														6 Hours
 													</SelectItem>
 												</SelectContent>

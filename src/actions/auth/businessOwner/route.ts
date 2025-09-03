@@ -71,11 +71,13 @@ export const login = async (email: string, password: string) => {
 			email: validatedFields.data.email,
 			password: validatedFields.data.password,
 		});
+		console.log(response);
 		if (response.success && response.data) {
 			// Set tokens using the wrapper
 			const responseData = response.data as {
-				data: { access: string; refresh: string };
+				data: { access: string; refresh: string; email: string };
 			};
+
 			apiWrapper.setTokens(
 				responseData.data.access,
 				responseData.data.refresh
@@ -83,13 +85,12 @@ export const login = async (email: string, password: string) => {
 
 			return {
 				status: true,
-				message: 'Login successful',
+				message: responseData.data.email,
 				data: {
 					access_token: responseData.data.access,
 					refresh_token: responseData.data.refresh,
 				},
 			};
-			
 		} else {
 			return {
 				status: false,
@@ -199,7 +200,7 @@ export const sendRequestPassword = async (formData: FormData) => {
 		const response = await apiWrapper.post('/auth/forgot-password/', {
 			email: validatedFields.data.email,
 		});
-console.log(response);
+		console.log(response);
 		if (response.success) {
 			return {
 				status: true,
@@ -241,3 +242,5 @@ export const resendOTP = async (email: string) => {
 		};
 	}
 };
+
+

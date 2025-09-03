@@ -1,74 +1,22 @@
 'use client';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import Header from '@/components/Header';
 import Title from '@/components/Title';
 import { useRouter } from 'next/navigation';
 import {
-	Calendar1Icon,
-	FlashlightIcon,
-	LucideLayoutDashboard,
-	SearchIcon,
 	Star,
-	TrendingUp,
-	Users,
 } from 'lucide-react';
 import HowItWorks from '@/components/HowItWorks';
 import Link from 'next/link';
 import { servicesFeatures, testmonials } from './Constants';
 import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
-
+import SearchBox from '@/components/admin/searchBox';
+import { howItWorks, features, businesses } from '../constants';
+import BusinessCard from '@/components/customer/BusinessCard';
+import Header from '@/components/Header';
 export default function Home() {
-	const howItWorks = [
-		{
-			id: 1,
-			title: 'Find a Service',
-			description:
-				'Browse local service providers and read reviews from real customers.',
-			icon: <SearchIcon />,
-		},
-		{
-			id: 2,
-			title: 'Choose a Time',
-			description:
-				'Select from available time slots that work with your schedule.',
-			icon: <Calendar1Icon />,
-		},
-		{
-			id: 3,
-			title: 'Book Instantly',
-			description:
-				'Browse local service providers and read reviews from real customers.',
-			icon: <FlashlightIcon />,
-		},
-	];
-	const features = [
-		{
-			id: 1,
-			title: 'Smart Scheduling',
-			description: 'Sync  booking system that works with your calendar',
-			icon: <Calendar1Icon />,
-		},
-		{
-			id: 2,
-			title: 'Customer Management',
-			description: 'Track customer history and preferences in one place',
-			icon: <Users />,
-		},
-		{
-			id: 3,
-			title: 'Grow Revenue',
-			description: 'Increase bookings by up to 40% with our platform',
-			icon: <TrendingUp />,
-		},
-		{
-			id: 4,
-			title: 'Analytics Dashboard',
-			description: 'Insights to help optimize your business operations',
-			icon: <LucideLayoutDashboard />,
-		},
-	];
+	
 	const router = useRouter();
 	return (
 		<div className='overflow-x-hidden pt-10 md:pt-20'>
@@ -80,34 +28,31 @@ export default function Home() {
 						<motion.span
 							initial={{ opacity: 0, x: -10, y: -10 }}
 							whileInView={{ opacity: 1, x: 0, y: 0 }}
-							transition={{ duration: 0.3, delay: 0.1, type: 'spring', stiffness: 200, damping: 10 }}
+							transition={{
+								duration: 0.3,
+								delay: 0.1,
+								type: 'spring',
+								stiffness: 200,
+								damping: 10,
+							}}
 							className='text-blue-700 inline-block'
 						>
-							Ease</motion.span>
-							
+							Ease
+						</motion.span>
 					</h1>
 
 					<p className='text-center  text-gray-700 max-w-[570px] mx-auto'>
 						Skip the wait. Discover businesses near you and book
 						appointments instantly, no calls, no stress.
 					</p>
-					<div className='flex flex-col mt-10  md:flex-row items-center gap-5 justify-center'>
-						<Button
-							variant='outline'
-							className='text-lg text-white bg-blue-700 w-[18rem] transition-all duration-300 hover:bg-blue-800 hover:text-white h-14  font-medium'
-							size='lg'
-							onClick={() => router.push('/customers')}
-						>
-							Find a Service
-						</Button>
-						<Button
-							variant='outline'
-							className=' text-lg bg-transparent h-14 text-blue-700 font-medium w-[18rem] transition-all duration-300 hover:bg-blue-700 hover:text-white border border-blue-700  px-5'
-							size='lg'
-							onClick={() => router.push('/login')}
-						>
-							List Your Business
-						</Button>
+					<div className='  max-w-md mx-auto space-y-2 '>
+						<div className='bg-white rounded-md'>
+							<SearchBox placeholder='Search for a business by name, location, or category' />
+						</div>
+						<p className='text-sm md:text-base text-center text-gray-700'>
+							Discover and Book appointments with businesses near
+							you.
+						</p>
 					</div>
 					<div className='overflow-hidden md:overflow-auto'>
 						<div className='overflow-x-scroll no-scrollbar flex justify-center items-stretch mx-auto md:max-w-[50rem] gap-7 mt-20'>
@@ -146,6 +91,33 @@ export default function Home() {
 							</div>
 						</div>
 					</div>
+				</div>
+			</section>
+			<section className='py-10 md:p-20 md:pb-10 px-5 '>
+				<Title
+					title='Trusted by Local Businesses'
+					description='Getting your service appointment has never been easier. Follow these simple steps to get started.'
+				/>
+				<div className='overflow-x-scroll no-scrollbar'>
+					<div className='grid grid-cols-3 gap-x-10 justify-items-center mt-15 min-w-[1000px] overflow-hidden '>
+						{businesses.map((business) => {
+							return (
+								<BusinessCard
+									style={{ width: '100%' }}
+									key={business.id}
+									business={business}
+								/>
+							);
+						})}
+					</div>
+				</div>
+				<div className='flex justify-center mt-10'>
+					<Button
+						className='bg-blue-700 hover:bg-blue-800 text-white px-10 py-4 text-lg h-12 rounded-md font-medium min-w-3xs text-center'
+						onClick={() => router.push('/businesses')}
+					>
+						Explore All Businesses
+					</Button>
 				</div>
 			</section>
 			<section className='py-20 md:p-20 px-5 '>
@@ -222,7 +194,7 @@ export default function Home() {
 								);
 							})}
 						</div>
-						<Button className='bg-blue-700  h-14 w-[20rem] font-medium text-lg '>
+						<Button className='bg-blue-700 hover:bg-blue-800  h-12 w-[20rem] font-medium text-lg '>
 							<Link href={'/admin'}>Register Your Business</Link>
 						</Button>
 					</div>
@@ -242,7 +214,13 @@ export default function Home() {
 								opacity: 1,
 								x: 0,
 								y: 0,
-								transition: { duration: 0.3, delay: 0.2, type: 'spring', stiffness: 200, damping: 10 },
+								transition: {
+									duration: 0.3,
+									delay: 0.2,
+									type: 'spring',
+									stiffness: 200,
+									damping: 10,
+								},
 							}}
 							src={'/dashboard.svg'}
 							width={2000}
@@ -252,7 +230,7 @@ export default function Home() {
 						/>
 					</motion.div>
 				</div>
-				<div className='grid md:grid-cols-2 gap-20 mt-32 md:px-10'>
+				<div className='flex flex-col-reverse md:flex-row gap-20 mt-32 md:px-10'>
 					<motion.div
 						initial={{ opacity: 0, x: 100, y: 20 }}
 						whileInView={{
@@ -261,7 +239,7 @@ export default function Home() {
 							y: 0,
 							transition: { duration: 0.5, delay: 0.1 },
 						}}
-						className='bg-[#F1D9FF] hidden  pl-20 my-auto py-10 md:flex justify-end rounded-2xl'
+						className='bg-[#F1D9FF]   pl-20 my-auto md:py-24 py-10 flex justify-end rounded-2xl w-full'
 					>
 						<motion.img
 							initial={{ opacity: 0, x: -100, y: -20 }}
@@ -269,14 +247,20 @@ export default function Home() {
 								opacity: 1,
 								x: 0,
 								y: 0,
-								transition: { duration: 0.5, delay: 0.1, type: 'spring', stiffness: 200, damping: 10 },
+								transition: {
+									duration: 0.5,
+									delay: 0.1,
+									type: 'spring',
+									stiffness: 200,
+									damping: 10,
+								},
 							}}
 							exit={{ opacity: 0, x: -100, y: -20 }}
-							src={'/dashboard.svg'}
+							src={'/businesses.svg'}
 							width={2000}
 							height={1000}
 							alt='dashboard'
-							className='w-[87%] h-[80%]'
+							className='md:w-[87%] md:h-[80%] w-full h-full'
 						/>
 					</motion.div>
 					<div className='space-y-10'>
@@ -327,7 +311,7 @@ export default function Home() {
 								);
 							})}
 						</div>
-						<Button className='bg-blue-700  h-14 w-[20rem] font-medium text-lg '>
+						<Button className='bg-blue-700 hover:bg-blue-800  h-12 w-[20rem] font-medium text-lg '>
 							<Link href={'/admin'}>Find a service</Link>
 						</Button>
 					</div>
@@ -392,7 +376,13 @@ export default function Home() {
 						<motion.span
 							initial={{ opacity: 0, scale: 1.5 }}
 							whileInView={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.3, delay: 0.1, type: 'spring', stiffness: 200, damping: 10 }}
+							transition={{
+								duration: 0.3,
+								delay: 0.1,
+								type: 'spring',
+								stiffness: 200,
+								damping: 10,
+							}}
 							className='text-blue-700'
 						>
 							smarter
@@ -408,13 +398,13 @@ export default function Home() {
 							href={'/customers'}
 							className='bg-blue-700 hover:bg-blue-800 text-white px-10 py-4 text-lg rounded-md font-medium min-w-3xs text-center'
 						>
-							Get Started Now
+							Explore All Businesses
 						</Link>
 						<Link
-							href={'/customers'}
+							href={'/admin'}
 							className='border-blue-700 border text-lg hover:bg-blue-800 hover:text-white px-10 text-blue-700 py-4 rounded-md font-medium min-w-3xs text-center'
 						>
-							Schedule a Demo
+							Register Your Business
 						</Link>
 					</div>
 				</div>

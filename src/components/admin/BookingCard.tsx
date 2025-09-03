@@ -4,7 +4,6 @@ import {
 	CheckCircleIcon,
 	CircleCheck,
 	MoreVertical,
-	Pencil,
 	Trash,
 	XCircleIcon,
 } from 'lucide-react';
@@ -41,6 +40,7 @@ const BookingCard = ({
 	date,
 	time,
 	service,
+	status,
 }: BookingCardProps) => {
 	const handleUpdateBooking = async (
 		id: number,
@@ -86,7 +86,7 @@ const BookingCard = ({
 			<div className='flex w-[87%] justify-between items-start'>
 				<div className='flex flex-col justify-between gap-2'>
 					<div className='flex flex-col gap-y-2'>
-						<h4 className='text-lg font-medium'>
+						<h4 className='text-lg font-medium truncate max-w-[200px]'>
 							{customer_email}
 						</h4>
 						<p className='text-sm text-gray-500 capitalize border border-gray-200 rounded-full px-4 py-1 w-fit'>
@@ -96,7 +96,7 @@ const BookingCard = ({
 					</div>
 					<div>
 						<p>
-							{date} at {time}
+							{date} at {time.slice(0, 5)} {time.slice(0, 2) >= '12' ? 'PM' : 'AM'}
 						</p>
 						<div className='flex items-center gap-x-2'>
 							<p>Duration: {service?.duration || 0} mins</p>
@@ -106,7 +106,7 @@ const BookingCard = ({
 						</div>
 					</div>
 				</div>
-				<div>
+				<div className='flex flex-col justify-between items-center gap-y-2 h-full'>
 					<DropdownMenu>
 						<DropdownMenuTrigger className='bg-gray-100 h-10 w-10 text-gray-800  rounded-full flex items-center justify-center  hover:bg-gray-200 cursor-pointer border border-gray-200 group '>
 							<MoreVertical
@@ -118,20 +118,7 @@ const BookingCard = ({
 							side='bottom'
 							align='end'
 						>
-							<DropdownMenuItem
-								className='flex items-center gap-x-2 text-blue-500'
-								onClick={() =>
-									handleUpdateBooking(id, {
-										status: 'CONFIRMED',
-									})
-								}
-							>
-								<Pencil
-									size={24}
-									className='text-blue-500'
-								/>
-								Approve
-							</DropdownMenuItem>
+							
 							<DropdownMenuItem
 								className='flex items-center gap-x-2 text-red-500'
 								onClick={() =>
@@ -163,6 +150,9 @@ const BookingCard = ({
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
+					<p className={`text-[10px] md:text-sm text-gray-500 capitalize border  rounded-full px-2 md:px-4 py-1 w-fit ${status === 'COMPLETED' ? 'bg-green-500 text-white' : status === 'CANCELLED' ? 'bg-red-500 text-white' : 'bg-blue-700 text-white'}`}>
+						{status}
+					</p>
 				</div>
 			</div>
 		</div>

@@ -1,4 +1,6 @@
 import Profilesetting from "@/components/forms/settings/profile";
+import SeccuritySetting from "@/components/forms/settings/SeccuritySetting";
+import KycSettings from "@/components/forms/settings/KycSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const ProfilePage = () => {
@@ -23,7 +25,7 @@ const ProfilePage = () => {
 									value='profile'
 									className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
 								>
-									 Profile
+									Profile
 								</TabsTrigger>
 								<TabsTrigger
 									value='security'
@@ -31,10 +33,15 @@ const ProfilePage = () => {
 								>
 									Security
 								</TabsTrigger>
-								
+								<TabsTrigger
+									value='kyc'
+									className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
+								>
+									KYC
+								</TabsTrigger>
 							</TabsList>
 						</div>
-						
+
 						<TabsContent
 							value='profile'
 							className='p-6'
@@ -45,9 +52,14 @@ const ProfilePage = () => {
 							value='security'
 							className='p-6'
 						>
-							
+							<SeccuritySetting />
 						</TabsContent>
-						
+						<TabsContent
+							value='kyc'
+							className='p-6'
+						>
+							<KycSettings />
+						</TabsContent>
 					</Tabs>
 				</div>
 			</div>

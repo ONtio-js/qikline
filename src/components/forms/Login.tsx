@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { loginSchema } from '../../../schema/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,14 +21,15 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { login } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
-import { EyeIcon, X } from 'lucide-react';
-import { debugStorage, setTokens } from '@/utils/token';
+import { EyeIcon, Loader, X } from 'lucide-react';
+import { setTokens } from '@/utils/token';
 import Logo from '../Logo';
 
 const Login = () => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [showPassword, setShowPassword] = useState(false);
+	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof loginSchema>>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
@@ -38,19 +39,13 @@ const Login = () => {
 	});
 
 	const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+		startTransition(async () => {
 		try {
-			console.log('Starting login process...');
 			const response = await login(data.email, data.password);
 
 			if (response.status) {
-				console.log('Login successful, checking storage...');
-				// Debug storage after login
-				setTimeout(() => {
-					debugStorage();
-				}, 100);
-
 				form.reset();
-				// Get the redirect URL from search params, default to admin dashboard
+
 				const redirectUrl =
 					searchParams.get('redirect') || '/admin/dashboard';
 				router.push(redirectUrl);
@@ -59,7 +54,6 @@ const Login = () => {
 					response.data?.refresh_token || ''
 				);
 			} else {
-				console.log('Login failed:', response.message);
 				toast.error(
 					typeof response.message === 'object'
 						? response.message?.email?.[0]
@@ -95,6 +89,7 @@ const Login = () => {
 				},
 			});
 		}
+		});
 	};
 
 	return (
@@ -184,15 +179,15 @@ const Login = () => {
 				</div>
 				<Button
 					disabled={
-						form.formState.isSubmitting || !form.formState.isValid
+						isPending || !form.formState.isValid
 					}
 					type='submit'
 					className={cn(
 						'w-xs h-12 font-semibold text-base rounded-md hover:bg-blue-800 bg-blue-700 text-white '
 					)}
 				>
-					{form.formState.isSubmitting
-						? 'Logging in...'
+					{isPending
+						? <Loader className='w-4 h-4 animate-spin' />
 						: 'Login to Dashboard'}
 				</Button>
 				<p className='text-sm text-gray-500'>

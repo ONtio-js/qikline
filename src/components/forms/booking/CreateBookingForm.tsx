@@ -52,6 +52,8 @@ const CreateBookingForm = ({ isOpen, onClose }: CreateBookingFormProps) => {
 			phone: '',
 			email: '',
 			notes: '',
+			payNow: false,
+			payLater: false,
 		},
 	});
 

@@ -12,6 +12,8 @@ interface TimeSelectionProps {
 			email: string;
 			phone: string;
 			notes: string | null;
+			payNow: boolean | null;
+			payLater: boolean | null;
 		},
 		'time'
 	>;
@@ -23,6 +25,8 @@ interface TimeSelectionProps {
 		email: string;
 		phone: string;
 		notes: string | null;
+		payNow: boolean | null;
+		payLater: boolean | null;
 	}>;
 }
 
