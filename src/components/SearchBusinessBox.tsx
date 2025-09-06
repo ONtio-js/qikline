@@ -38,7 +38,7 @@ const SearchBusinessBox = () => {
 					/>
 					<Input
 						type='text'
-						placeholder='search business near you'
+						placeholder='Search businesses near you'
 						className='border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent'
 						onFocus={() => setIsFocused(true)}
 						onBlur={() => setIsFocused(false)}

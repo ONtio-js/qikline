@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { login } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
-import { EyeIcon, Loader, X } from 'lucide-react';
+import {  ArrowLeftIcon, EyeIcon, Loader, X } from 'lucide-react';
 import { setTokens } from '@/utils/token';
 import Logo from '../Logo';
 
@@ -94,6 +94,11 @@ const Login = () => {
 
 	return (
 		<Form {...form}>
+			<div className='items-center gap-x-2 mb-6 hidden md:flex w-fit cursor-pointer' onClick={() => router.back()}>
+				<ArrowLeftIcon
+					className='w-5 h-5 text-blue-700 cursor-pointer'
+				/> Back
+			</div>
 			<div className='flex items-center  mb-6 md:hidden'>
 				<Logo />
 			</div>

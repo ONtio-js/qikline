@@ -303,7 +303,23 @@ const BookForm = ({
 																		}
 																	>
 																		<Clock className='w-5 h-5 text-gray-400' />
-																		{time}
+																		{`${String(
+																			Number(
+																				time.split(
+																					':'
+																				)[0]
+																			) %
+																				12 ||
+																				12
+																		).padStart(
+																			2,
+																			'0'
+																		)}:${
+																			time.split(
+																				':'
+																			)[1]
+																		}`}
+																		{Number(time.split(':')[0]) > 11 ? 'PM' : 'AM'}
 																	</div>
 																)
 															)}

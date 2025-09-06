@@ -60,13 +60,13 @@ const TimeSelection = ({ field, form }: TimeSelectionProps) => {
 						field.onChange(time);
 						form.setValue('time', time);
 					}}
-					className={`p-2  rounded-md transition-colors border flex items-center gap-x-2 justify-center ${
+					className={`p-[2px]  rounded-md transition-colors text-sm border flex items-center gap-x-1 justify-center cursor-pointer ${
 						field.value === time
 							? 'bg-blue-700 text-white'
 							: 'text-gray-700 hover:bg-gray-100'
 					}`}
 				>
-					<Clock className='w-6 h-6 text-gray-400' /> {time}
+					<Clock className='w-5 h-5 text-gray-400' /> {time}
 				</button>
 			))}
 		</div>

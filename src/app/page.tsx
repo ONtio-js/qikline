@@ -114,7 +114,7 @@ export default function Home() {
 					</Button>
 				</div>
 			</section>
-			<section className='py-20 md:p-20 px-5 '>
+			<section id='how-it-works' className='py-20 md:p-20 px-5 '>
 				<Title
 					title='How it works'
 					description='Getting your service appointment has never been easier. Follow these simple steps to get started.'

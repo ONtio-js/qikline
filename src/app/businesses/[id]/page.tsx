@@ -121,7 +121,7 @@ const Page = () => {
 		);
 	}
 
-	if (!business) {
+	if (!business ) {
 		return (
 			<div className='w-full h-screen flex items-center justify-center'>
 				<div className='text-center'>

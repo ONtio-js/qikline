@@ -5,7 +5,7 @@ import EmptyState from '@/components/status/EmptyState';
 import BusinessCard from '@/components/customer/BusinessCard';
 import { usePathname } from 'next/navigation';
 import { toast } from 'sonner';
-import { ChevronDown, ChevronRight, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronUp, X } from 'lucide-react';
 import SearchResult from '@/components/SearchResult';
 import SearchBox from '@/components/admin/searchBox';
 import Link from 'next/link';
@@ -16,6 +16,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Header from '@/components/Header';
+import { Checkbox } from '@/components/ui/checkbox';
 const CustomersPage = () => {
 	interface BusinessProps {
 		id: number;
@@ -39,12 +40,12 @@ const CustomersPage = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const [isError, setIsError] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchIsLoading, setSearchIsLoading] = useState(false);
 	const [searchIsError, setSearchIsError] = useState(false);
-
+	const [categoriesIsOpen, setCategoriesIsOpen] = useState(false);
 	const pathname = usePathname();
 	const id = pathname.split('/').pop();
 
@@ -212,31 +213,58 @@ const CustomersPage = () => {
 						>
 							Search
 						</Button>
-						<DropdownMenu>
-							<DropdownMenuTrigger>
-								<div className='flex items-center gap-x-2 bg-white h-12 text-gray-800 px-5 rounded-md cursor-pointer font-semibold '>
+						<DropdownMenu
+							onOpenChange={() =>
+								setCategoriesIsOpen(!categoriesIsOpen)
+							}
+						>
+							<DropdownMenuTrigger className='focus:outline-none'>
+								<div
+									className={`flex items-center gap-x-2 bg-white h-12  px-5 rounded-md cursor-pointer font-semibold ${
+										categoriesIsOpen
+											? ' text-blue-700'
+											: 'text-gray-800'
+									}`}
+								>
 									Categories
-									<ChevronDown
-										size={24}
-										className='text-gray-700'
-									/>
+									{categoriesIsOpen ? (
+										<ChevronUp
+											size={24}
+											className={`${
+												categoriesIsOpen
+													? 'text-blue-700'
+													: 'text-gray-700'
+											}`}
+										/>
+									) : (
+										<ChevronDown
+											size={24}
+											className={`${
+												categoriesIsOpen
+													? 'text-blue-700'
+													: 'text-gray-700'
+											}`}
+										/>
+									)}
 								</div>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent
 								side='bottom'
 								align='end'
+							
 							>
-								<DropdownMenuItem>Beauty</DropdownMenuItem>
+								<DropdownMenuItem className='flex items-center gap-x-2'><Checkbox onClick={(e) => (e.stopPropagation())} onChange={() => {}} className='cursor-pointer w-5 h-5' /> <p>Beauty</p></DropdownMenuItem>
 
-								<DropdownMenuItem> Health</DropdownMenuItem>
-								<DropdownMenuItem> Food</DropdownMenuItem>
-								<DropdownMenuItem>
+								<DropdownMenuItem  className='flex items-center gap-x-2'><Checkbox onClick={(e) => (e.stopPropagation())} onChange={() => {}} className='cursor-pointer w-5 h-5' /> <p> Health</p></DropdownMenuItem>
+								<DropdownMenuItem className='flex items-center gap-x-2'	><Checkbox onClick={(e) => (e.stopPropagation())} onChange={() => {}} className='cursor-pointer w-5 h-5 text-white' /> <p> Food</p></DropdownMenuItem>
+								<DropdownMenuItem className='flex items-center gap-x-2'>
 									{' '}
-									Entertainment
+									<Checkbox onClick={(e) => (e.stopPropagation())} onChange={() => {}} className='cursor-pointer w-5 h-5'/> <p>Entertainment</p>
 								</DropdownMenuItem>
-								<DropdownMenuItem> Education</DropdownMenuItem>
-								<DropdownMenuItem> Cleaning</DropdownMenuItem>
-								<DropdownMenuItem> Other</DropdownMenuItem>
+								<DropdownMenuItem className='flex items-center gap-x-2'> <Checkbox onClick={(e) => (e.stopPropagation())} onChange={() => {}} className='cursor-pointer w-5 h-5' /> <p> Education</p></DropdownMenuItem>
+								<DropdownMenuItem className='flex items-center gap-x-2'> <Checkbox onChange={() => {}} className='cursor-pointer w-5 h-5' /> <p> Education</p></DropdownMenuItem>
+								<DropdownMenuItem className='flex items-center gap-x-2'> <Checkbox onClick={(e) => (e.stopPropagation())} onChange={() => {}} className='cursor-pointer w-5 h-5' /> <p> Cleaning</p></DropdownMenuItem>
+								<DropdownMenuItem className='flex items-center gap-x-2'> <Checkbox onClick={(e) => (e.stopPropagation())} onChange={() => {}} className='cursor-pointer w-5 h-5' /> <p> Other</p></DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
 					</div>
@@ -272,14 +300,17 @@ const CustomersPage = () => {
 					</div>
 				)}
 
-				{!isError && businesses && businesses.length === 0 && (
-					<div className='col-span-full flex justify-center items-center h-full py-20'>
-						<EmptyState
-							title='No businesses available'
-							description='No businesses found at the moment.'
-						/>
-					</div>
-				)}
+				{!isLoading &&
+					!isError &&
+					businesses &&
+					businesses.length === 0 && (
+						<div className='col-span-full flex justify-center items-center h-full py-20'>
+							<EmptyState
+								title='No businesses available'
+								description='No businesses found at the moment.'
+							/>
+						</div>
+					)}
 
 				{!isError &&
 					currentBusinesses &&

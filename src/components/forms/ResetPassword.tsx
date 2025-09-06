@@ -7,15 +7,16 @@ import { resetPasswordSchema } from '../../../schema/schema';
 import { Form, FormField, FormLabel, FormControl, FormItem } from '../ui/form';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { CheckCircle, Eye, EyeOff, X } from 'lucide-react';
+import { ArrowLeftIcon, CheckCircle, Eye, EyeOff, X } from 'lucide-react';
 import Link from 'next/link';
 import { resetPassword } from '@/actions/auth/businessOwner/route';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const ResetPassword = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+	const router = useRouter();
 	const form = useForm<z.infer<typeof resetPasswordSchema>>({
 		resolver: zodResolver(resetPasswordSchema),
 		defaultValues: {
@@ -76,6 +77,11 @@ const ResetPassword = () => {
 	};
 	return (
 		<div className='w-full px-10 md:px-0'>
+			<div className='items-center gap-x-2 mb-6 hidden md:flex w-fit cursor-pointer' onClick={() => router.back()}>
+				<ArrowLeftIcon
+					className='w-5 h-5 text-blue-700 cursor-pointer'
+				/> Back
+			</div>
 			<h2 className='text-2xl font-semibold mb-2 text-center '>
 				Establish a Strong, Secure Password
 			</h2>

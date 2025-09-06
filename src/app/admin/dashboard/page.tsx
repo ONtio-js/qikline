@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Calendar, MoreHorizontal, ChevronDown, Users } from 'lucide-react';
+import { Calendar, ChevronDown, Users, MoreVertical, CircleCheck, Trash } from 'lucide-react';
 import {
 	Table,
 	TableBody,
@@ -28,6 +28,10 @@ import Pending from '@/components/status/Pending';
 import BookingCard from '@/components/admin/BookingCard';
 import { useRouter } from 'next/navigation';
 import { getAllBookings } from '@/actions/admin/Booking/route';
+import CreateBookingForm from '@/components/forms/booking/CreateBookingForm';
+import Completed from '@/components/status/completed';
+import Failed from '@/components/status/Failed';
+import Approved from '@/components/status/Approved';
 interface Booking {
 	id: number;
 	business_name: string;
@@ -46,6 +50,7 @@ interface Booking {
 		duration: number;
 	};
 }
+
 const Page = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
@@ -154,6 +159,10 @@ const Page = () => {
 
 	return (
 		<>
+			<CreateBookingForm
+				isOpen={isOpen}
+				onClose={() => setIsOpen(false)}
+			/>
 			<div className=''>
 				<div className='flex items-center justify-between p-6 pb-0 md:pb-6'>
 					<div className='space-y-2 w-xs'>
@@ -166,6 +175,7 @@ const Page = () => {
 						<Button
 							className='bg-blue-700 text-white hover:bg-blue-800 w-xs h-12 hidden md:flex'
 							size='lg'
+							onClick={() => setIsOpen(true)}
 						>
 							<MdAddCard size={24} />
 							<span>New Booking</span>
@@ -272,7 +282,7 @@ const Page = () => {
 									value='upcoming'
 									className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
 								>
-									upcoming
+									Upcoming
 								</TabsTrigger>
 								<TabsTrigger
 									value='today'
@@ -325,8 +335,12 @@ const Page = () => {
 							className=''
 						>
 							<div className='flex flex-col md:hidden gap-y-5 '>
-								{bookings?.map(
-									(booking: Booking, index: number) => (
+								{bookings
+									?.filter(
+										(booking: Booking) =>
+											booking.status === 'PENDING'
+									)
+									.map((booking: Booking, index: number) => (
 										<BookingCard
 											key={index}
 											id={booking.id}
@@ -344,10 +358,9 @@ const Page = () => {
 											}
 											service={booking.service}
 										/>
-									)
-								)}
+									))}
 							</div>
-							<Table className='hidden md:block mt-6 pl-6'>
+							<Table className='hidden md:table mt-6 pl-6 min-w-full w-full'>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
 									<TableHead className='pl-12'>S/N</TableHead>
 									<TableHead>Client</TableHead>
@@ -359,73 +372,91 @@ const Page = () => {
 									<TableHead>Action</TableHead>
 								</TableHeader>
 								<TableBody className='space-y-2 '>
-									<TableRow className='h-12 mt-4'>
-										<TableCell className='pl-12'>
-											01
-										</TableCell>
-										<TableCell className='font-medium flex items-center gap-x-3 '>
-											<Avatar className='w-10 h-10'>
-												<AvatarImage src='https://github.com/shadcn.png' />
-												<AvatarFallback>
-													JD
-												</AvatarFallback>
-											</Avatar>
-											<div className='flex flex-col gap-y-1'>
-												<p className='text-base font-medium'>
-													John Doe
-												</p>
-											</div>
-										</TableCell>
-										<TableCell>
-											<Pending />
-										</TableCell>
-										<TableCell>
-											2025-01-01 at 10:00 AM
-										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-												Haircut
-											</span>
-										</TableCell>
-										<TableCell>30 mins</TableCell>
-										<TableCell className=''>
-											<MoreHorizontal size={24} />
-										</TableCell>
-									</TableRow>
-									<TableRow className='h-14 mt-4'>
-										<TableCell className='pl-12'>
-											02
-										</TableCell>
-										<TableCell className='font-medium flex items-center gap-x-3 '>
-											<Avatar className='w-10 h-10'>
-												<AvatarFallback>
-													JF
-												</AvatarFallback>
-											</Avatar>
-											<div className='flex flex-col gap-y-1'>
-												<p className='text-base font-medium'>
-													Jane Fray
-												</p>
-											</div>
-										</TableCell>
-										<TableCell>
-											<Pending />
-										</TableCell>
-										<TableCell>
-											2025-01-01 at 10:00 AM
-										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-												Haircut
-											</span>
-										</TableCell>
-										<TableCell>30 mins</TableCell>
-										<TableCell className=''>
-											<MoreHorizontal size={24} />
-										</TableCell>
-									</TableRow>
+									{bookings?.map(
+										(booking: Booking, index: number) => (
+											<TableRow
+												className='h-12 mt-4'
+												key={booking.id}
+											>
+												<TableCell className='pl-12'>
+													{index + 1}
+												</TableCell>
+												<TableCell className='font-medium flex items-center gap-x-3 '>
+													<Avatar className='w-10 h-10'>
+														<AvatarFallback>
+															{booking.customer_email
+																.charAt(0)
+																.toUpperCase()}
+														</AvatarFallback>
+													</Avatar>
+													<div className='flex flex-col gap-y-1'>
+														<p className='text-base font-medium'>
+															{
+																booking.customer_email
+															}
+														</p>
+													</div>
+												</TableCell>
+												<TableCell>
+													{booking.status ===
+													'PENDING' ? (
+														<Pending />
+													) : booking.status ===
+													  'COMPLETED' ? (
+														<Completed />
+													) : booking.status ===
+													  'CANCELLED' ? (
+														<Failed />
+													) : (
+														<Approved />
+													)}
+												</TableCell>
+												<TableCell>
+													{booking.time}
+												</TableCell>
+												<TableCell>
+													{' '}
+													<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+														{booking.service.name}
+													</span>
+												</TableCell>
+												<TableCell>
+													{booking.service.duration}{' '}
+													mins
+												</TableCell>
+												<TableCell className=''>
+													<DropdownMenu>
+														{' '}
+														<DropdownMenuTrigger>
+															<MoreVertical
+																size={24}
+																className='text-gray-700 rotate-90 group-hover:text-gray-800 cursor-pointer'
+															/>
+														</DropdownMenuTrigger>
+														<DropdownMenuContent
+															side='bottom'
+															align='end'
+														>
+															<DropdownMenuItem className='flex items-center gap-x-2 text-red-500'>
+																<Trash
+																	size={24}
+																	className='text-red-500'
+																/>
+																Cancel
+															</DropdownMenuItem>
+															<DropdownMenuItem className='flex items-center gap-x-2 text-green-500'>
+																<CircleCheck
+																	size={24}
+																	className='text-green-500'
+																/>
+																Complete
+															</DropdownMenuItem>
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</TableCell>
+											</TableRow>
+										)
+									)}
 								</TableBody>
 							</Table>
 						</TabsContent>
@@ -448,7 +479,7 @@ const Page = () => {
 									}}
 								/>
 							</div>
-							<Table className='hidden md:block mt-6 pl-6 w-full'>
+							<Table className='hidden md:table mt-6 pl-6 min-w-full '>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
 									<TableRow>
 										<TableHead className='pl-12'>
@@ -464,96 +495,157 @@ const Page = () => {
 									</TableRow>
 								</TableHeader>
 								<TableBody className='space-y-2 '>
-									<TableRow className='h-12 mt-4'>
-										<TableCell className='pl-12'>
-											01
-										</TableCell>
-										<TableCell className='font-medium flex items-center gap-x-3 '>
-											<Avatar className='w-10 h-10'>
-												<AvatarImage src='https://github.com/shadcn.png' />
-												<AvatarFallback>
-													JD
-												</AvatarFallback>
-											</Avatar>
-											<div className='flex flex-col gap-y-1'>
-												<p className='text-base font-medium'>
-													John Doe
-												</p>
-											</div>
-										</TableCell>
-										<TableCell>
-											<Pending />
-										</TableCell>
-										<TableCell>
-											2025-01-01 at 10:00 AM
-										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-												Haircut
-											</span>
-										</TableCell>
-										<TableCell>30 mins</TableCell>
-										<TableCell className=''>
-											<MoreHorizontal size={24} />
-										</TableCell>
-									</TableRow>
-									<TableRow className='h-14 mt-4'>
-										<TableCell className='pl-12'>
-											02
-										</TableCell>
-										<TableCell className='font-medium flex items-center gap-x-3 '>
-											<Avatar className='w-10 h-10'>
-												<AvatarFallback>
-													JF
-												</AvatarFallback>
-											</Avatar>
-											<div className='flex flex-col gap-y-1'>
-												<p className='text-base font-medium'>
-													Jane Fray
-												</p>
-											</div>
-										</TableCell>
-										<TableCell>
-											<Pending />
-										</TableCell>
-										<TableCell>
-											2025-01-01 at 10:00 AM
-										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-												Haircut
-											</span>
-										</TableCell>
-										<TableCell>30 mins</TableCell>
-										<TableCell className=''>
-											<MoreHorizontal size={24} />
-										</TableCell>
-									</TableRow>
+									{bookings
+										?.filter(
+											(booking: Booking) =>
+												booking.date ===
+												new Date()
+													.toISOString()
+													.split('T')[0]
+										)
+										.map(
+											(
+												booking: Booking,
+												index: number
+											) => (
+												<TableRow
+													className='h-12 mt-4'
+													key={booking.id}
+												>
+													<TableCell className='pl-12'>
+														{index + 1}
+													</TableCell>
+													<TableCell className='font-medium flex items-center gap-x-3 '>
+														<Avatar className='w-10 h-10'>
+															<AvatarImage
+																src={
+																	booking.customer_email
+																}
+															/>
+															<AvatarFallback>
+																{booking.customer_email
+																	.charAt(0)
+																	.toUpperCase()}
+															</AvatarFallback>
+														</Avatar>
+														<div className='flex flex-col gap-y-1'>
+															<p className='text-base font-medium'>
+																{
+																	booking.customer_email
+																}
+															</p>
+														</div>
+													</TableCell>
+													<TableCell>
+														{booking.status ===
+														'PENDING' ? (
+															<Pending />
+														) : booking.status ===
+														  'COMPLETED' ? (
+															<Completed />
+														) : booking.status ===
+														  'CANCELLED' ? (
+															<Failed />
+														) : (
+															<Approved />
+														)}
+													</TableCell>
+													<TableCell>
+														{booking.date} at{' '}
+														{booking.time}
+													</TableCell>
+													<TableCell>
+														{' '}
+														<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+															{
+																booking.service
+																	.name
+															}
+														</span>
+													</TableCell>
+													<TableCell>
+														{
+															booking.service
+																.duration
+														}{' '}
+														mins
+													</TableCell>
+													<TableCell className=''>
+														<DropdownMenu>
+															{' '}
+															<DropdownMenuTrigger>
+																<MoreVertical
+																	size={24}
+																	className='text-gray-700 rotate-90 group-hover:text-gray-800 cursor-pointer'
+																/>
+															</DropdownMenuTrigger>
+															<DropdownMenuContent
+																side='bottom'
+																align='end'
+															>
+																<DropdownMenuItem className='flex items-center gap-x-2 text-red-500'>
+																	<Trash
+																		size={
+																			24
+																		}
+																		className='text-red-500'
+																	/>
+																	Cancel
+																</DropdownMenuItem>
+																<DropdownMenuItem className='flex items-center gap-x-2 text-green-500'>
+																	<CircleCheck
+																		size={
+																			24
+																		}
+																		className='text-green-500'
+																	/>
+																	Complete
+																</DropdownMenuItem>
+															</DropdownMenuContent>
+														</DropdownMenu>
+													</TableCell>
+												</TableRow>
+											)
+										)}
 								</TableBody>
 							</Table>
 						</TabsContent>
 						<TabsContent value='completed'>
 							<div className='flex flex-col md:hidden gap-y-5'>
-								<BookingCard
-									id={1}
-									business_name='John Doe'
-									customer_email='john.doe@example.com'
-									date='2025-01-01'
-									time='10:00 AM'
-									status='PENDING'
-									status_display='Pending'
-									service={{
-										id: 1,
-										name: 'Haircut',
-										description: 'Haircut',
-										price: '100',
-										duration: 30,
-									}}
-								/>
+								{bookings
+									?.filter(
+										(booking: Booking) =>
+											booking.status === 'COMPLETED'
+									)
+									.map((booking: Booking) => (
+										<BookingCard
+											key={booking.id}
+											id={booking.id}
+											business_name={
+												booking.business_name
+											}
+											customer_email={
+												booking.customer_email
+											}
+											date={booking.date}
+											time={booking.time}
+											status={booking.status}
+											status_display={
+												booking.status_display
+											}
+											service={{
+												id: booking.service.id,
+												name: booking.service.name,
+												description:
+													booking.service.description,
+												price: booking.service.price,
+												duration:
+													booking.service.duration,
+											}}
+										/>
+									))}
 							</div>
-							<Table className='hidden md:block mt-6 pl-6 w-full'>
+							<Table className='hidden md:table mt-6 pl-6 min-w-full w-full'>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
 									<TableRow>
 										<TableHead className='pl-12'>
@@ -569,86 +661,129 @@ const Page = () => {
 									</TableRow>
 								</TableHeader>
 								<TableBody className='space-y-2 '>
-									<TableRow className='h-12 mt-4'>
-										<TableCell className='pl-12'>
-											01
-										</TableCell>
-										<TableCell className='font-medium flex items-center gap-x-3 '>
-											<Avatar className='w-10 h-10'>
-												<AvatarImage src='https://github.com/shadcn.png' />
-												<AvatarFallback>
-													JD
-												</AvatarFallback>
-											</Avatar>
-											<div className='flex flex-col gap-y-1'>
-												<p className='text-base font-medium'>
-													John Doe
-												</p>
-											</div>
-										</TableCell>
-										<TableCell>
-											<Pending />
-										</TableCell>
-										<TableCell>
-											2025-01-01 at 10:00 AM
-										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-												Haircut
-											</span>
-										</TableCell>
-										<TableCell>30 mins</TableCell>
-										<TableCell className=''>
-											<MoreHorizontal size={24} />
-										</TableCell>
-									</TableRow>
-									<TableRow className='h-14 mt-4'>
-										<TableCell className='pl-12'>
-											02
-										</TableCell>
-										<TableCell className='font-medium flex items-center gap-x-3 '>
-											<Avatar className='w-10 h-10'>
-												<AvatarFallback>
-													JF
-												</AvatarFallback>
-											</Avatar>
-											<div className='flex flex-col gap-y-1'>
-												<p className='text-base font-medium'>
-													Jane Fray
-												</p>
-											</div>
-										</TableCell>
-										<TableCell>
-											<Pending />
-										</TableCell>
-										<TableCell>
-											2025-01-01 at 10:00 AM
-										</TableCell>
-										<TableCell>
-											{' '}
-											<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
-												Haircut
-											</span>
-										</TableCell>
-										<TableCell>30 mins</TableCell>
-										<TableCell className=''>
-											<MoreHorizontal size={24} />
-										</TableCell>
-									</TableRow>
+									{bookings
+										?.filter(
+											(booking: Booking) =>
+												booking.status === 'COMPLETED'
+										)
+										.map(
+											(
+												booking: Booking,
+												index: number
+											) => (
+												<TableRow
+													className='h-12 mt-4'
+													key={booking.id}
+												>
+													<TableCell className='pl-12'>
+														{index + 1}
+													</TableCell>
+													<TableCell className='font-medium flex items-center gap-x-3 '>
+														<Avatar className='w-10 h-10'>
+															<AvatarImage
+																src={
+																	booking.customer_email
+																}
+															/>
+															<AvatarFallback>
+																{booking.customer_email
+																	.charAt(0)
+																	.toUpperCase()}
+															</AvatarFallback>
+														</Avatar>
+														<div className='flex flex-col gap-y-1'>
+															<p className='text-base font-medium'>
+																{
+																	booking.customer_email
+																}
+															</p>
+														</div>
+													</TableCell>
+													<TableCell>
+														{booking.status ===
+														'PENDING' ? (
+															<Pending />
+														) : booking.status ===
+														  'COMPLETED' ? (
+															<Completed />
+														) : booking.status ===
+														  'CANCELLED' ? (
+															<Failed />
+														) : (
+															<Approved />
+														)}
+													</TableCell>
+													<TableCell>
+														{booking.time}
+													</TableCell>
+													<TableCell>
+														{' '}
+														<span className='text-gray-500 font-medium rounded-full px-2 py-1 border border-gray-500'>
+															{
+																booking.service
+																	.name
+															}
+														</span>
+													</TableCell>
+													<TableCell>
+														{
+															booking.service
+																.duration
+														}{' '}
+														mins
+													</TableCell>
+													<TableCell className=''>
+														<DropdownMenu>
+															{' '}
+															<DropdownMenuTrigger>
+																<MoreVertical
+																	size={24}
+																	className='text-gray-700 rotate-90 group-hover:text-gray-800 cursor-pointer'
+																/>
+															</DropdownMenuTrigger>
+															<DropdownMenuContent
+																side='bottom'
+																align='end'
+															>
+																<DropdownMenuItem className='flex items-center gap-x-2 text-red-500'>
+																	<Trash
+																		size={
+																			24
+																		}
+																		className='text-red-500'
+																	/>
+																	Cancel
+																</DropdownMenuItem>
+																<DropdownMenuItem className='flex items-center gap-x-2 text-green-500'>
+																	<CircleCheck
+																		size={
+																			24
+																		}
+																		className='text-green-500'
+																	/>
+																	Complete
+																</DropdownMenuItem>
+															</DropdownMenuContent>
+														</DropdownMenu>
+													</TableCell>
+												</TableRow>
+											)
+										)}
 								</TableBody>
 							</Table>
 						</TabsContent>
 					</Tabs>
 					<div className='flex items-center justify-center mt-10'>
-						<Button
-							onClick={() =>
-								router.push('/admin/dashboard/bookings')
-							}
-							className='bg-transparent font-medium text-lg text-gray-800 hover:bg-gray-100 w-xs border border-gray-200 h-12'
-						>
-							View all bookings
-						</Button>
+						{bookings?.length > 10 && (
+							<Button
+								onClick={() =>
+									router.push('/admin/dashboard/bookings')
+								}
+								className='bg-transparent font-medium text-lg text-gray-800 hover:bg-gray-100 w-xs border border-gray-200 h-12'
+							>
+								View all bookings
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>

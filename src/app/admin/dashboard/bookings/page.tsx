@@ -329,7 +329,7 @@ const Page = () => {
 										</div>
 									))}
 								</div>
-								<Table className='hidden md:block mt-6 pl-6 w-full'>
+								<Table className='hidden md:table mt-6 pl-6 w-full'>
 									<TableHeader className='bg-gray-100 py-2  h-12'>
 										<TableRow>
 											<TableHead className='pl-12'>
@@ -469,25 +469,28 @@ const Page = () => {
 							</TabsContent>
 							<TabsContent value='pending'>
 								<div className='flex flex-col md:hidden gap-y-5'>
-									<BookingCard
+									{bookings.filter((booking) => booking.status === 'PENDING').map((booking, index) => (
+										<BookingCard
+											key={index}
 										id={1}
-										business_name='Sample Business'
-										customer_email='john.doe@example.com'
-										date='2025-01-01'
-										time='10:00 AM'
-										status='COMPLETED'
-										status_display='Completed'
+										business_name={booking.business_name}	
+										customer_email={booking.customer_email}
+										date={booking.date}
+										time={booking.time}
+										status='PENDING'
+										status_display={booking.status_display}
 										service={{
-											id: 1,
-											name: 'Haircut',
+											id: booking.service.id,
+											name: booking.service.name,
 											description:
-												'Professional haircut service',
-											price: '50.00',
-											duration: 30,
+												booking.service.description,
+											price: booking.service.price,
+											duration: booking.service.duration,
 										}}
 									/>
+									))}
 								</div>
-								<Table className='hidden md:block mt-6 pl-6 w-full'>
+								<Table className='hidden md:table mt-6 pl-6 w-full'>
 									<TableHeader className='bg-gray-100 py-2  h-12'>
 										<TableRow>
 											<TableHead className='pl-12'>
@@ -630,25 +633,28 @@ const Page = () => {
 							</TabsContent>
 							<TabsContent value='completed'>
 								<div className='flex flex-col md:hidden gap-y-5'>
+									{bookings.filter((booking) => booking.status === 'COMPLETED').map((booking, index) => (
 									<BookingCard
-										id={1}
-										business_name='Sample Business'
-										customer_email='john.doe@example.com'
-										date='2025-01-01'
-										time='10:00 AM'
+										key={index}
+										id={booking.id}
+										business_name={booking.business_name}
+										customer_email={booking.customer_email}
+										date={booking.date}
+										time={booking.time}
 										status='COMPLETED'
-										status_display='Completed'
+										status_display={booking.status_display}
 										service={{
-											id: 1,
-											name: 'Haircut',
+											id: booking.service.id,
+											name: booking.service.name,
 											description:
-												'Professional haircut service',
-											price: '50.00',
-											duration: 30,
+												booking.service.description,
+											price: booking.service.price,
+											duration: booking.service.duration,
 										}}
 									/>
+									))}
 								</div>
-								<Table className='hidden md:block mt-6 pl-6 w-full'>
+								<Table className='hidden md:table mt-6 pl-6 w-full'>
 									<TableHeader className='bg-gray-100 py-2  h-12'>
 										<TableRow>
 											<TableHead className='pl-12'>
@@ -792,25 +798,28 @@ const Page = () => {
 							</TabsContent>
 							<TabsContent value='failed'>
 								<div className='flex flex-col md:hidden gap-y-5'>
+									{bookings.filter((booking) => booking.status === 'CANCELLED').map((booking, index) => (
 									<BookingCard
-										id={1}
-										business_name='Sample Business'
-										customer_email='john.doe@example.com'
-										date='2025-01-01'
-										time='10:00 AM'
-										status='FAILED'
-										status_display='Failed'
+										key={index}
+											id={booking.id}
+										business_name={booking.business_name}
+										customer_email={booking.customer_email}
+										date={booking.date}
+										time={booking.time}
+										status='CANCELLED'
+										status_display={booking.status_display}
 										service={{
-											id: 1,
-											name: 'Haircut',
+											id: booking.service.id,
+											name: booking.service.name,
 											description:
-												'Professional haircut service',
-											price: '50.00',
-											duration: 30,
+												booking.service.description,
+											price: booking.service.price,
+											duration: booking.service.duration,
 										}}
 									/>
+									))}
 								</div>
-								<Table className='hidden md:block mt-6 pl-6 w-full'>
+								<Table className='hidden md:table mt-6 pl-6 w-full'>
 									<TableHeader className='bg-gray-100 py-2  h-12'>
 										<TableRow>
 											<TableHead className='pl-12'>

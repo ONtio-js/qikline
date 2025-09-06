@@ -57,7 +57,7 @@ const Header = () => {
 								? 'text-blue-800'
 								: ''
 						}`}
-						href='/how-it-works'
+						href='/#how-it-works'
 					>
 						How it works
 					</Link>
@@ -174,7 +174,7 @@ const Navbar = ({isOpen, setIsOpen, setIsTrackingOpen}: {isOpen: boolean, setIsO
 						}}
 						className='hover:bg-gray-100 p-2 hover:text-blue-700 text-gray-700'
 					>
-						<Link href='/how-it-works'>How it Works</Link>
+						<Link href='/#how-it-works'>How it Works</Link>
 					</motion.li>
 					<motion.li
 						onClick={() => setIsOpen(false)}

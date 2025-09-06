@@ -15,7 +15,7 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import { Eye, EyeOff, Loader, X } from 'lucide-react';
+import { ArrowLeftIcon, Eye, EyeOff, Loader, X } from 'lucide-react';
 import Link from 'next/link';
 import { signup } from '@/actions/auth/businessOwner/route';
 import { useRouter } from 'next/navigation';
@@ -84,7 +84,12 @@ const AdminSignUp = () => {
 	};
 	return (
 		<Form {...form}>
-			<div   className='flex  items-center mb-6 md:hidden'>
+			<div className='items-center gap-x-2 mb-6 hidden md:flex w-fit cursor-pointer' onClick={() => router.back()}>
+				<ArrowLeftIcon
+					className='w-5 h-5 text-blue-700 cursor-pointer'
+				/> Back
+			</div>
+			<div className='flex items-center  mb-6 md:hidden'>
 				<Logo />
 			</div>
 			<h2 className='text-2xl font-bold mb-2'>
@@ -174,7 +179,7 @@ const AdminSignUp = () => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel className='text-base'>
-										Create Password
+										Create Password<span className='text-amber-500 text-xs'>(min of 8 characters)</span>
 									</FormLabel>
 									<FormControl>
 										<div className='relative'>
@@ -218,7 +223,7 @@ const AdminSignUp = () => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel className='text-base'>
-										Confirm Password
+										Confirm Password 
 									</FormLabel>
 									<FormControl>
 										<div className='relative'>

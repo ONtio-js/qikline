@@ -31,7 +31,7 @@ const BusinessCard = React.memo(
 		return (
 			<div
 				key={business?.id}
-				className='border border-gray-200 rounded-lg p-4 flex flex-col  gap-4'
+				className='border border-gray-200 rounded-lg p-4 flex flex-col  gap-4 shadow-md shadow-accent-foreground/10'
 				style={style}
 			>
 				<div className='flex items-center justify-between'>
