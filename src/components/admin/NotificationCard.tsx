@@ -1,11 +1,13 @@
+'use client'
 import { Bell, Calendar, CircleCheck, MoreHorizontal, Trash } from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import {
 	DropdownMenu,
 	DropdownMenuItem,
 	DropdownMenuTrigger,DropdownMenuContent,
 } from '../ui/dropdown-menu';
+import NotificationViewCard from './NotificationViewCard';
 type NotificationCardProps = {
     title: string
     message: string
@@ -16,8 +18,10 @@ type NotificationCardProps = {
     id: string
 }
 const NotificationCard = ({title,message,email,type,createdAt,read,id}: NotificationCardProps) => {
+	const [isOpen, setIsOpen] = useState(false);
   return (
-		<div key={id} className='hover:bg-gray-50 p-8 px-4 rounded-lg  space-y-4 border border-gray-200 flex items-start justify-between max-w-4xl'>
+    <>
+		<div onClick={() => setIsOpen(true)} key={id} className='hover:bg-gray-50 p-8 px-4 rounded-lg  space-y-4 border border-gray-200 flex items-start justify-between max-w-4xl'>
 			<div className='flex items-start gap-x-4'>
 				<div>
 					{type === 'BOOKINGS' && (
@@ -83,6 +87,19 @@ const NotificationCard = ({title,message,email,type,createdAt,read,id}: Notifica
 				</DropdownMenuContent>
 			</DropdownMenu> 
 		</div>
+		
+		<NotificationViewCard
+			title={title}
+			message={message}
+			email={email}
+			type={type}
+			createdAt={createdAt}
+			read={read}
+			id={id}
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+		/>
+	</>
   );
 }
 

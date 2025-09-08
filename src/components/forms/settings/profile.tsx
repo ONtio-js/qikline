@@ -23,6 +23,7 @@ import { toast } from 'sonner';
 const Profilesetting = () => {
 	const accessToken = getAccessToken();
 	const decodedToken: { email: string } = jwtDecode(accessToken as string);
+	console.log(decodedToken)
 	console.log(decodedToken);
 	const [isPending, startTransition] = useTransition();
 	const form = useForm({

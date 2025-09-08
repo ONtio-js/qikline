@@ -37,9 +37,6 @@ class ApiWrapper {
 		this.axiosInstance = axios.create({
 			baseURL: API_URL,
 			timeout: 10000,
-			headers: {
-				'Content-Type': 'application/json',
-			},
 		});
 
 		this.setupInterceptors();
@@ -256,13 +253,13 @@ class ApiWrapper {
 			};
 		} catch (error: unknown) {
 			const axiosError = error as {
-				response?: { data?: { message?: string } };
+				response?: { data?: { message?: string, errors?: { non_field_errors?: string[] } } };
 				message?: string;
 			};
 			return {
 				success: false,
 				error:
-					axiosError.response?.data?.message ||
+					axiosError.response?.data?.errors?.non_field_errors?.[0] ||
 					axiosError.message ||
 					'Request failed',
 			};

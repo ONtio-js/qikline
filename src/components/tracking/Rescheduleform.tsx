@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, Loader, X, XIcon } from 'lucide-react';
+import { ArrowLeft, CalendarIcon, Clock, Loader, X, XIcon } from 'lucide-react';
 import React, { useEffect, useState, useRef, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { Form, FormField, FormItem, FormLabel, FormControl } from '../ui/form';
@@ -46,6 +46,7 @@ const RescheduleForm = ({
 	onRescheduleConfirmation: () => void;
 }) => {
 	const [isPending, startTransition] = useTransition();
+	const dateInputRef = useRef<HTMLInputElement>(null);
 	const form = useForm<z.infer<typeof rescheduleFormSchema>>({
 		defaultValues: {
 			bookingId: bookingData?.id.toString() || '',
@@ -196,12 +197,22 @@ const RescheduleForm = ({
 							<FormItem>
 								<FormLabel>Date</FormLabel>
 								<FormControl>
-									<Input
-										type='date'
-										{...field}
-										placeholder='Select a date'
-										className='w-full h-[50px] pr-10 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden'
-									/>
+									<div className='relative'>
+										<Input
+											type='date'
+											{...field}
+											placeholder='Select a date'
+											className='w-full h-[50px] pr-10 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden'
+											ref={dateInputRef}
+										/>
+										<CalendarIcon
+											className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600'
+											onClick={() =>
+												dateInputRef.current?.showPicker?.() ||
+												dateInputRef.current?.click()
+											}
+										/>
+									</div>
 								</FormControl>
 							</FormItem>
 						)}
@@ -259,10 +270,7 @@ const RescheduleForm = ({
 						<Button
 							type='submit'
 							className='w-full h-[50px] bg-blue-700 text-white hover:bg-blue-800 max-w-xs mx-auto'
-							disabled={
-								isPending ||
-								!form.formState.isValid
-							}
+							disabled={isPending || !form.formState.isValid}
 						>
 							{isPending ? (
 								<Loader className='w-5 h-5 animate-spin' />

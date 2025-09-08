@@ -46,7 +46,7 @@ const SearchBusinessBox = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-                <motion.div initial={{opacity:0,y:100}} whileInView={{opacity:1,y:0}} exit={{opacity:0,y:100}} transition={{duration:0.3,ease:'easeInOut'}} className={`h-72 w-full bg-gray-50 rounded-md absolute  left-0 right-0 mx-auto p-4 ${searchTerm.length > 0 ? 'block' : 'hidden'} no-scrollbar overflow-y-auto`}>
+                <motion.div initial={{opacity:0,y:100}} whileInView={{opacity:1,y:0}} exit={{opacity:0,y:100}} transition={{duration:0.3,ease:'easeInOut'}} className={`h-72 w-full bg-gray-50 rounded-md absolute  left-0 right-0 mx-auto p-4 ${searchTerm.length > 0 ? 'block' : 'hidden'} no-scrollbar overflow-y-auto overflow-x-hidden`}>
                     {searchResults.length > 0 ? (
                         searchResults.map((result,index) => (
                             <motion.div key={result.id} initial={{opacity:0,x:100}} whileInView={{opacity:1,x:0}} exit={{opacity:0,x:100}} transition={{duration:0.3,ease:'easeInOut',delay:0.1 * index,type:'spring',stiffness:100,damping:10}} className='flex items-center gap-x-2 hover:bg-gray-100 p-2 rounded-md'>

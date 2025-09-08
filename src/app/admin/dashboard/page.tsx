@@ -1,6 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Calendar, ChevronDown, Users, MoreVertical, CircleCheck, Trash } from 'lucide-react';
+import {
+	Calendar,
+	Users,
+	MoreVertical,
+	CircleCheck,
+	Trash,
+} from 'lucide-react';
 import {
 	Table,
 	TableBody,
@@ -273,28 +279,28 @@ const Page = () => {
 				</h3>
 				<div className='mt-6 '>
 					<Tabs
-						defaultValue='upcoming'
+						defaultValue='pending'
 						className='w-full  '
 					>
 						<div className='flex flex-col-reverse gap-y-2  md:flex-row md:items-center gap-x-4 w-full justify-between'>
 							<TabsList className='h-13 bg-gray-100 px-2 rounded-md w-full md:w-[500px]'>
 								<TabsTrigger
-									value='upcoming'
+									value='pending'
 									className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
 								>
-									Upcoming
-								</TabsTrigger>
-								<TabsTrigger
-									value='today'
-									className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
-								>
-									Today
+									Pending
 								</TabsTrigger>
 								<TabsTrigger
 									value='completed'
 									className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
 								>
 									Completed
+								</TabsTrigger>
+								<TabsTrigger
+									value='cancelled'
+									className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
+								>
+									Cancelled
 								</TabsTrigger>
 							</TabsList>
 							<div className='flex items-center gap-x-4'>
@@ -308,30 +314,10 @@ const Page = () => {
 									/>
 									Filter by date
 								</Button>
-
-								<DropdownMenu>
-									<DropdownMenuTrigger>
-										<div className='flex items-center gap-x-2 bg-white h-12 text-gray-800 px-5 rounded-md cursor-pointer border border-gray-200'>
-											All status{' '}
-											<ChevronDown
-												size={24}
-												className='text-gray-400'
-											/>
-										</div>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent
-										side='bottom'
-										align='end'
-									>
-										<DropdownMenuItem>
-											View calendar
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
 							</div>
 						</div>
 						<TabsContent
-							value='upcoming'
+							value='pending'
 							className=''
 						>
 							<div className='flex flex-col md:hidden gap-y-5 '>
@@ -460,25 +446,35 @@ const Page = () => {
 								</TableBody>
 							</Table>
 						</TabsContent>
-						<TabsContent value='today'>
+						<TabsContent value='completed'>
 							<div className='flex flex-col md:hidden gap-y-5'>
-								<BookingCard
-									id={1}
-									business_name='John Doe'
-									customer_email='john.doe@example.com'
-									date='2025-01-01'
-									time='10:00 AM'
-									status='PENDING'
-									status_display='Pending'
-									service={{
-										id: 1,
-										name: 'Haircut',
-										description: 'Haircut',
-										price: '100',
-										duration: 30,
-									}}
-								/>
+								{bookings
+									?.filter(
+										(booking: Booking) =>
+											booking.status === 'COMPLETED'
+									)
+									.map((booking: Booking, index: number) => (
+										<BookingCard
+											key={index}
+											id={booking.id}
+											business_name={booking.business_name}
+											customer_email={booking.customer_email}
+											date={booking.date}
+											time={booking.time}
+											status={booking.status}
+											status_display={booking.status_display}
+											service={{
+												id: booking.service.id,
+												name: booking.service.name,
+												description:
+													booking.service.description,
+												price: booking.service.price,
+												duration: booking.service.duration,
+											}}
+										/>
+									))}
 							</div>
+							
 							<Table className='hidden md:table mt-6 pl-6 min-w-full '>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
 									<TableRow>
@@ -498,10 +494,7 @@ const Page = () => {
 									{bookings
 										?.filter(
 											(booking: Booking) =>
-												booking.date ===
-												new Date()
-													.toISOString()
-													.split('T')[0]
+												booking.status === 'COMPLETED'
 										)
 										.map(
 											(
@@ -610,12 +603,12 @@ const Page = () => {
 								</TableBody>
 							</Table>
 						</TabsContent>
-						<TabsContent value='completed'>
+						<TabsContent value='cancelled'>
 							<div className='flex flex-col md:hidden gap-y-5'>
 								{bookings
 									?.filter(
 										(booking: Booking) =>
-											booking.status === 'COMPLETED'
+											booking.status === 'CANCELLED'
 									)
 									.map((booking: Booking) => (
 										<BookingCard
@@ -664,7 +657,7 @@ const Page = () => {
 									{bookings
 										?.filter(
 											(booking: Booking) =>
-												booking.status === 'COMPLETED'
+												booking.status === 'CANCELLED'
 										)
 										.map(
 											(

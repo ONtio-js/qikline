@@ -8,6 +8,7 @@ import {
 } from '../../../../schema/schema';
 import { z } from 'zod';
 import { apiWrapper } from '@/actions/wrapper';
+import { handleApiErrors } from '@/lib/utils';
 
 // Define business hours array schema
 
@@ -54,11 +55,9 @@ export const createBusiness = async (
 ) => {
 	let formData: FormData;
 
-	// Check if data is FormData (for file uploads) or schema data
 	if (data instanceof FormData) {
 		formData = data;
 	} else {
-		// Validate schema data
 		const validatedData = createBusinessSchema.parse(data);
 		if (!validatedData) {
 			return {
@@ -67,7 +66,6 @@ export const createBusiness = async (
 			};
 		}
 
-		// Create FormData from validated data
 		formData = new FormData();
 		formData.append('name', validatedData.name);
 		formData.append('description', validatedData.description);
@@ -83,17 +81,11 @@ export const createBusiness = async (
 	}
 
 	try {
-		// Debug: Log FormData contents
-		console.log('API Route - FormData contents:');
-		for (const [key, value] of formData.entries()) {
-			console.log(key, value);
-		}
-
 		const response = await apiWrapper.post(
 			`${process.env.NEXT_PUBLIC_API_URL}/businesses/create/`,
 			formData,
 			{
-				transformRequest: (data) => data, // Prevent axios from transforming FormData
+				transformRequest: (data) => data,
 			}
 		);
 
@@ -106,7 +98,7 @@ export const createBusiness = async (
 		}
 		return {
 			status: false,
-			message: response.error || 'Failed to create business',
+			message: handleApiErrors(response.error),
 			data: null,
 		};
 	} catch (error) {
@@ -127,11 +119,9 @@ export const updateBusiness = async (
 ) => {
 	let formData: FormData;
 
-	// Check if data is FormData (for file uploads) or schema data
 	if (data instanceof FormData) {
 		formData = data;
 	} else {
-		// Validate schema data
 		const validatedData = updateBusinessSchema.parse(data);
 		if (!validatedData) {
 			return {
@@ -139,8 +129,6 @@ export const updateBusiness = async (
 				message: 'Invalid data',
 			};
 		}
-
-		// Create FormData from validated data
 		formData = new FormData();
 		formData.append('name', validatedData.name);
 		formData.append('description', validatedData.description);
@@ -156,30 +144,32 @@ export const updateBusiness = async (
 	}
 
 	try {
-		// Debug: Log FormData contents
-		console.log('API Route - Update FormData contents:');
-		for (const [key, value] of formData.entries()) {
-			console.log(key, value);
-		}
-
 		const response = await apiWrapper.patch(
 			`${process.env.NEXT_PUBLIC_API_URL}/businesses/update/`,
 			formData,
 			{
-				transformRequest: (data) => data, // Prevent axios from transforming FormData
+				transformRequest: (data) => data,
 			}
 		);
-		return {
-			status: true,
-			message: 'Business updated successfully',
-			data: response.data,
-		};
-	} catch (error) {
-		console.log(error);
+		if (response.success) {
+			return {
+				status: true,
+				message: 'Business updated successfully',
+				data: response.data,
+			};
+		}
+		
 		return {
 			status: false,
-			message: 'Failed to update business',
-			data: null,
+			message: response.error,
+			
+		};
+	} catch (error) {
+		
+		return {
+			status: false,
+			message: error instanceof Error ? error.message : 'Failed to update business',
+			
 		};
 	}
 };

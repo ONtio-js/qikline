@@ -31,7 +31,7 @@ const RescheduleConfirmation = ({ onClose, bookingData }: { onClose: () => void,
   return (
     <div
 			onClick={(e) => e.stopPropagation()}
-			className='w-[90%] md:w-2xl bg-white rounded-lg px-5 py-10 md:p-10 overflow-y-auto no-scrollbar max-h-[80vh]'
+			className='w-[90%] md:w-2xl bg-white rounded-lg px-5 py-10 md:p-10 overflow-y-auto no-scrollbar max-h-[80vh] h-fit'
 		>
 			<div className='flex items-center justify-end'>
 			

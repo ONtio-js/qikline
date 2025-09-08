@@ -52,7 +52,7 @@ export const businessSchema = z.object({
 	phone_number: z.string().min(1),
 	email: z.string().email({ message: 'Invalid email address' }),
 	website: z.string().optional().nullable(),
-	banner: z
+	images: z
 		.array(
 			z.object({
 				image: z.string().min(1),
@@ -89,7 +89,7 @@ export const createBusinessSchema = businessSchema.omit({
 });
 
 export const updateBusinessSchema = businessSchema.omit({
-	banner: true,
+	images: true,
 	services: true,
 	is_active: true,
 	business_hours: true,
@@ -109,7 +109,20 @@ export const createBusinessServiceSchema = z.object({
 	description: z.string().min(1),
 	price: z.string().min(1),
 	duration: z.number().min(1),
-	category: z.enum(['HAIRCUT', 'HAIR_COLOR', 'STYLING', 'TREATMENT', 'MAKEUP', 'COLORING', 'FACIAL', 'MASSAGE', 'MANICURE', 'PEDICURE', 'WAXING', 'OTHER']),
+	category: z.enum([
+		'HAIRCUT',
+		'HAIR_COLOR',
+		'STYLING',
+		'TREATMENT',
+		'MAKEUP',
+		'COLORING',
+		'FACIAL',
+		'MASSAGE',
+		'MANICURE',
+		'PEDICURE',
+		'WAXING',
+		'OTHER',
+	]),
 	is_active: z.boolean(),
 });
 
@@ -134,10 +147,10 @@ export const bookFormSchema = z.object({
 });
 
 export const BusinessOwnerProfile = z.object({
-	name:z.string(),
-	email:z.string().email(),
-	phone:z.string(),
-})
+	name: z.string(),
+	email: z.string().email(),
+	phone: z.string(),
+});
 
 export const bookingSettingsSchema = z.object({
 	is_booking_enabled: z.boolean(),
@@ -157,13 +170,21 @@ export const securitySettingSchema = z.object({
 
 export const kycSettingSchema = z.object({
 	kyc_document: z.string().optional().nullable(),
-	kyc_document_type: z.enum(['PASSPORT', 'DRIVING_LICENSE', 'NATIONAL_ID', 'OTHER']),
+	kyc_document_type: z.enum([
+		'PASSPORT',
+		'DRIVING_LICENSE',
+		'NATIONAL_ID',
+		'OTHER',
+	]),
 	kyc_document_number: z.string().optional().nullable(),
 	kyc_document_expiration_date: z.string().optional().nullable(),
 	kyc_document_front: z.string().optional().nullable(),
 	kyc_document_back: z.string().optional().nullable(),
 	kyc_document_selfie: z.string().optional().nullable(),
-	kyc_document_status: z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional().nullable(),
+	kyc_document_status: z
+		.enum(['PENDING', 'APPROVED', 'REJECTED'])
+		.optional()
+		.nullable(),
 });
 
 export const rescheduleFormSchema = z.object({

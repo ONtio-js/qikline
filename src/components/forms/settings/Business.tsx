@@ -3,7 +3,7 @@ import { createBusinessSchema } from '../../../../schema/schema';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Pencil, X, Upload, Trash2, Check } from 'lucide-react';
+import { Pencil, X, Upload, Trash2, Check, Loader } from 'lucide-react';
 import {
 	Form,
 	FormField,
@@ -56,15 +56,31 @@ export const Business = () => {
 			phone_number: '',
 			email: '',
 			website: '',
-			banner: [],
+			images: [],
 			is_active: true,
 		},
 		resolver: zodResolver(createBusinessSchema),
 	});
-
+	console.log(businessData?.images)
 	const [isPending, startTransition] = useTransition();
 	useEffect(() => {
 		if (businessData) {
+			let existingImages: Array<{ id: string; image: string }> = [];
+			if (businessData.images && Array.isArray(businessData.images)) {
+				existingImages = businessData.images.map(
+					(
+						imageItem: { image?: string; url?: string } | string,
+						index: number
+					) => ({
+						id: `existing-${index}`,
+						image:
+							typeof imageItem === 'string'
+								? imageItem
+								: imageItem.image || imageItem.url || '',
+					})
+				);
+			}
+
 			form.reset({
 				name: businessData.name,
 				category: businessData.category as
@@ -77,29 +93,15 @@ export const Business = () => {
 				address: businessData.address,
 				city: businessData.city,
 				state: businessData.state,
-				country: businessData.country,
+				country: businessData.country || 'Nigeria',
 				phone_number: businessData.phone_number,
 				email: businessData.email,
 				website: businessData.website,
-				banner: businessData.banner,
+				images: existingImages,
+				is_active: businessData.is_active,
 			});
 
-			if (businessData.banner && Array.isArray(businessData.banner)) {
-				const existingImages = businessData.banner.map(
-					(
-						imageItem: { image?: string; url?: string } | string,
-						index: number
-					) => ({
-						id: `existing-${index}`,
-						image:
-							typeof imageItem === 'string'
-								? imageItem
-								: imageItem.image || imageItem.url || '',
-						file: undefined, 
-					})
-				);
-				setUploadedImages(existingImages);
-			}
+			setUploadedImages(existingImages);
 		}
 	}, [businessData, form]);
 	const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +139,13 @@ export const Business = () => {
 
 					setUploadedImages((prev) => {
 						const updatedImages = [...prev, newImage];
-						form.setValue('banner', updatedImages);
+						form.setValue(
+							'images',
+							updatedImages.map(({ id, image }) => ({
+								id,
+								image,
+							}))
+						);
 						return updatedImages;
 					});
 				};
@@ -149,7 +157,10 @@ export const Business = () => {
 	const removeImage = (id: string) => {
 		setUploadedImages((prev) => {
 			const filtered = prev.filter((img) => img.id !== id);
-			form.setValue('banner', filtered);
+			form.setValue(
+				'images',
+				filtered.map(({ id, image }) => ({ id, image }))
+			);
 			return filtered;
 		});
 	};
@@ -187,7 +198,6 @@ export const Business = () => {
 		}
 		startTransition(async () => {
 			try {
-				
 				const formData = new FormData();
 				formData.append('name', data.name);
 				formData.append('category', data.category);
@@ -201,7 +211,6 @@ export const Business = () => {
 				formData.append('website', data.website || '');
 				formData.append('is_active', 'true');
 
-				
 				const newImages = uploadedImages.filter((image) => image.file);
 				newImages.forEach((image) => {
 					if (image.file) {
@@ -209,25 +218,12 @@ export const Business = () => {
 					}
 				});
 
-				for (const [key, value] of formData.entries()) {
-					console.log(key, value);
-				}
-
-				newImages.forEach((image, index) => {
-					console.log(`File ${index}:`, {
-						name: image.file?.name,
-						size: image.file?.size,
-						type: image.file?.type,
-						isFile: image.file instanceof File,
-					});
-				});
-
 				let response;
 				if (businessData) {
-					
+					console.log('Updating business');
 					response = await updateBusiness(formData);
 				} else {
-					
+					console.log('Creating business');
 					response = await createBusiness(formData);
 				}
 
@@ -244,7 +240,7 @@ export const Business = () => {
 					});
 					form.reset();
 					setUploadedImages([]);
-					
+
 					await fetchBusinessData();
 				} else {
 					toast.error(response.message, {
@@ -268,7 +264,7 @@ export const Business = () => {
 	};
 
 	return (
-		<Form {...form}>
+		<Form {...form} >
 			<div className='p-4 px-2 md:px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
 				<div className='flex items-center justify-between my-6'>
 					<h4 className='text-lg font-semibold text-gray-800'>
@@ -290,7 +286,7 @@ export const Business = () => {
 					</Button>
 				</div>
 
-				<form onSubmit={form.handleSubmit(onSubmit)}>
+				<form onSubmit={form.handleSubmit(onSubmit)} >
 					<div className='pt-8 space-y-8 '>
 						<div className='grid grid-cols-1 md:grid-cols-2 gap-4 gap-y-8'>
 							<FormField
@@ -309,6 +305,7 @@ export const Business = () => {
 												{...field}
 												className='h-12'
 												placeholder='Enter business name'
+												disabled={!isEditing && !!businessData}
 											/>
 										</FormControl>
 									</FormItem>
@@ -330,6 +327,7 @@ export const Business = () => {
 												value={field.value}
 												onValueChange={field.onChange}
 												defaultValue={field.value}
+												disabled={!isEditing && !!businessData}
 											>
 												<SelectTrigger
 													className='h-12 w-full'
@@ -374,6 +372,7 @@ export const Business = () => {
 											{...field}
 											className='h-20 resize-none'
 											placeholder='Enter description'
+											disabled={!isEditing && !!businessData}
 										/>
 									</FormControl>
 								</FormItem>
@@ -400,6 +399,7 @@ export const Business = () => {
 												{...field}
 												className='h-12'
 												placeholder='Enter street address'
+												disabled={!isEditing && !!businessData}
 											/>
 										</FormControl>
 									</FormItem>
@@ -423,6 +423,7 @@ export const Business = () => {
 													{...field}
 													className='h-12'
 													placeholder='Enter city'
+													disabled={!isEditing && !!businessData}
 												/>
 											</FormControl>
 										</FormItem>
@@ -444,6 +445,7 @@ export const Business = () => {
 													{...field}
 													className='h-12'
 													placeholder='Enter state'
+													disabled={!isEditing && !!businessData}
 												/>
 											</FormControl>
 										</FormItem>
@@ -466,6 +468,7 @@ export const Business = () => {
 												{...field}
 												className='h-12'
 												placeholder='Enter country'
+												disabled={!isEditing && !!businessData}
 											/>
 										</FormControl>
 									</FormItem>
@@ -494,6 +497,7 @@ export const Business = () => {
 													{...field}
 													className='h-12'
 													placeholder='Enter phone number'
+													disabled={!isEditing && !!businessData}
 												/>
 											</FormControl>
 										</FormItem>
@@ -515,6 +519,7 @@ export const Business = () => {
 													{...field}
 													className='h-12'
 													placeholder='Enter your email adddress '
+													disabled={!isEditing && !!businessData}
 												/>
 											</FormControl>
 										</FormItem>
@@ -533,6 +538,7 @@ export const Business = () => {
 												value={field.value ?? ''}
 												className='h-12'
 												placeholder='www.mybusiness.com '
+												disabled={!isEditing && !!businessData}
 											/>
 										</FormControl>
 									</FormItem>
@@ -545,7 +551,6 @@ export const Business = () => {
 								Business Images
 							</h4>
 
-							
 							<input
 								ref={fileInputRef}
 								type='file'
@@ -555,7 +560,6 @@ export const Business = () => {
 								className='hidden'
 							/>
 
-							
 							<div className='flex justify-center mb-6'>
 								<Button
 									type='button'
@@ -574,7 +578,6 @@ export const Business = () => {
 							</div>
 						</div>
 
-						
 						<div className='grid md:grid-cols-3 gap-4 pb-3'>
 							{uploadedImages.length > 0
 								? uploadedImages.map((image, index) => (
@@ -604,7 +607,6 @@ export const Business = () => {
 								  ))
 								: null}
 
-							
 							{Array.from({
 								length: 3 - uploadedImages.length,
 							}).map((_, index) => (
@@ -639,15 +641,21 @@ export const Business = () => {
 							<Button
 								className=' w-xs md:w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
 								type='submit'
-								disabled={form.formState.isSubmitting}
+								disabled={
+									form.formState.isSubmitting || isPending
+								}
 							>
-								{isPending
-									? businessData
-										? 'Updating...'
-										: 'Saving...'
-									: businessData
-									? 'Update Changes'
-									: 'Save Changes'}
+								{isPending ? (
+									businessData ? (
+										<Loader className='w-4 h-4 animate-spin' />
+									) : (
+										<Loader className='w-4 h-4 animate-spin' />
+									)
+								) : businessData ? (
+									'Update Changes'
+								) : (
+									'Save Changes'
+								)}
 							</Button>
 						</div>
 					</div>

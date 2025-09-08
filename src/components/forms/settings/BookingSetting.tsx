@@ -27,10 +27,9 @@ import {
 	updateBookingSettings,
 } from '@/actions/admin/businessMgt/route';
 import { toast } from 'sonner';
-import { CheckIcon, Loader2, XIcon } from 'lucide-react';
+import { CheckIcon, Loader, XIcon } from 'lucide-react';
 
 export const BookingSetting = () => {
-	
 	const [isPending, startTransition] = useTransition();
 	const [bookingSettings, setBookingSettings] = useState<
 		z.infer<typeof bookingSettingsSchema>
@@ -45,8 +44,8 @@ export const BookingSetting = () => {
 		defaultValues: {
 			is_booking_enabled: bookingSettings.is_booking_enabled || true,
 			is_deposit_required: bookingSettings.is_deposit_required || true,
-			cancellation_notice: bookingSettings.cancellation_notice || 0.25,
-			advance_booking_time:  bookingSettings.advance_booking_time || 0.25,
+			cancellation_notice: bookingSettings.cancellation_notice || 1,
+			advance_booking_time: bookingSettings.advance_booking_time || 1,
 		},
 	});
 
@@ -58,10 +57,22 @@ export const BookingSetting = () => {
 					typeof bookingSettingsSchema
 				>;
 				setBookingSettings(settings);
-				form.setValue('is_booking_enabled', settings.is_booking_enabled);
-				form.setValue('is_deposit_required', settings.is_deposit_required);
-				form.setValue('cancellation_notice', settings.cancellation_notice);
-				form.setValue('advance_booking_time', settings.advance_booking_time);
+				form.setValue(
+					'is_booking_enabled',
+					settings.is_booking_enabled
+				);
+				form.setValue(
+					'is_deposit_required',
+					settings.is_deposit_required
+				);
+				form.setValue(
+					'cancellation_notice',
+					settings.cancellation_notice
+				);
+				form.setValue(
+					'advance_booking_time',
+					settings.advance_booking_time
+				);
 			}
 		};
 		fetchBookingSettings();
@@ -177,7 +188,13 @@ export const BookingSetting = () => {
 										</div>
 										<FormControl>
 											<Select
-												value={field.value.toString()}
+												value={
+													typeof field.value ===
+														'number' &&
+													field.value >= 1
+														? String(field.value)
+														: undefined
+												}
 												onValueChange={(value) =>
 													field.onChange(
 														parseInt(value)
@@ -193,47 +210,76 @@ export const BookingSetting = () => {
 													<SelectValue placeholder='Select a cancellation notice' />
 												</SelectTrigger>
 												<SelectContent className='border-gray-200 '>
-													<SelectItem value='0.25'>
-														15 minutes
-													</SelectItem>
-													<SelectItem value='0.5'>
-														30 minutes
-													</SelectItem>
-													<SelectItem value='0.75'>
-														45 minutes
-													</SelectItem>
 													<SelectItem value='1'>
 														1 hour
 													</SelectItem>
-													<SelectItem value='1.5'>
-														1.5 hours
-													</SelectItem>
+
 													<SelectItem value='2'>
 														2 hours
 													</SelectItem>
-													<SelectItem value='2.5'>
-														2.5 hours
-													</SelectItem>
+
 													<SelectItem value='3'>
 														3 hours
 													</SelectItem>
-													<SelectItem value='3.5'>
-														3.5 hours
-													</SelectItem>
+
 													<SelectItem value='4'>
 														4 hours
 													</SelectItem>
-													<SelectItem value='4.5'>
-														4.5 hours
-													</SelectItem>
+
 													<SelectItem value='5'>
 														5 hours
 													</SelectItem>
-													<SelectItem value='5.5'>
-														5.5 hours
-													</SelectItem>
+
 													<SelectItem value='6'>
 														6 hours
+													</SelectItem>
+													<SelectItem value='7'>
+														7 hours
+													</SelectItem>
+													<SelectItem value='8'>
+														8 hours
+													</SelectItem>
+													<SelectItem value='9'>
+														9 hours
+													</SelectItem>
+													<SelectItem value='10'>
+														10 hours
+													</SelectItem>
+													<SelectItem value='11'>
+														11 hours
+													</SelectItem>
+													<SelectItem value='12'>
+														12 hours
+													</SelectItem>
+													<SelectItem value='13'>
+														13 hours
+													</SelectItem>
+													<SelectItem value='14'>
+														14 hours
+													</SelectItem>
+													<SelectItem value='15'>
+														15 hours
+													</SelectItem>
+													<SelectItem value='16'>
+														16 hours
+													</SelectItem>
+													<SelectItem value='17'>
+														17 hours
+													</SelectItem>
+													<SelectItem value='18'>
+														18 hours
+													</SelectItem>
+													<SelectItem value='19'>
+														19 hours
+													</SelectItem>
+													<SelectItem value='20'>
+														20 hours
+													</SelectItem>
+													<SelectItem value='21'>
+														21 hours
+													</SelectItem>
+													<SelectItem value='22'>
+														22 hours
 													</SelectItem>
 												</SelectContent>
 											</Select>
@@ -260,7 +306,13 @@ export const BookingSetting = () => {
 										</div>
 										<FormControl>
 											<Select
-												value={field.value.toString()}
+												value={
+													typeof field.value ===
+														'number' &&
+													field.value >= 1
+														? String(field.value)
+														: undefined
+												}
 												onValueChange={(value) =>
 													field.onChange(
 														parseInt(value)
@@ -276,47 +328,79 @@ export const BookingSetting = () => {
 													<SelectValue placeholder='Select a advance booking time' />
 												</SelectTrigger>
 												<SelectContent className='border-gray-200 '>
-													<SelectItem value='0.25'>
-														15 Minutes
-													</SelectItem>
-													<SelectItem value='0.5'>
-														30 Minutes
-													</SelectItem>
-													<SelectItem value='0.75'>
-														45 Minutes
-													</SelectItem>
 													<SelectItem value='1'>
 														1 Hour
 													</SelectItem>
-													<SelectItem value='1.5'>
-														1.5 Hours
-													</SelectItem>
+
 													<SelectItem value='2'>
 														2 Hours
 													</SelectItem>
-													<SelectItem value='2.5'>
-														2.5 Hours
-													</SelectItem>
+
 													<SelectItem value='3'>
 														3 Hours
 													</SelectItem>
-													<SelectItem value='3.5'>
-														3.5 Hours
-													</SelectItem>
-														<SelectItem value='4'>
+
+													<SelectItem value='4'>
 														4 Hours
 													</SelectItem>
-													<SelectItem value='4.5'>
-														4.5 Hours
-													</SelectItem>
+
 													<SelectItem value='5'>
 														5 Hours
 													</SelectItem>
-													<SelectItem value='5.5'>
-														5.5 Hours
-													</SelectItem>
+
 													<SelectItem value='6'>
 														6 Hours
+													</SelectItem>
+													<SelectItem value='7'>
+														7 Hours
+													</SelectItem>
+													<SelectItem value='8'>
+														8 Hours
+													</SelectItem>
+													<SelectItem value='9'>
+														9 Hours
+													</SelectItem>
+													<SelectItem value='10'>
+														10 Hours
+													</SelectItem>
+													<SelectItem value='11'>
+														11 Hours
+													</SelectItem>
+													<SelectItem value='12'>
+														12 Hours
+													</SelectItem>
+													<SelectItem value='13'>
+														13 Hours
+													</SelectItem>
+													<SelectItem value='14'>
+														14 Hours
+													</SelectItem>
+													<SelectItem value='15'>
+														15 Hours
+													</SelectItem>
+													<SelectItem value='16'>
+														16 Hours
+													</SelectItem>
+													<SelectItem value='17'>
+														17 Hours
+													</SelectItem>
+													<SelectItem value='18'>
+														18 Hours
+													</SelectItem>
+													<SelectItem value='19'>
+														19 Hours
+													</SelectItem>
+													<SelectItem value='20'>
+														20 Hours
+													</SelectItem>
+													<SelectItem value='21'>
+														21 Hours
+													</SelectItem>
+													<SelectItem value='22'>
+														22 Hours
+													</SelectItem>
+													<SelectItem value='23'>
+														23 Hours
 													</SelectItem>
 												</SelectContent>
 											</Select>
@@ -333,7 +417,11 @@ export const BookingSetting = () => {
 								type='submit'
 								className='sm:w-xs w-full h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
 							>
-								{isPending ? <Loader2 className='w-4 h-4 animate-spin' /> : 'Save Changes'}
+								{isPending ? (
+									<Loader className='w-4 h-4 animate-spin' />
+								) : (
+									'Save Changes'
+								)}
 							</Button>
 						</div>
 					</div>

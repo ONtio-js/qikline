@@ -271,22 +271,31 @@ const Page = () => {
 													{service.description}
 												</p>
 											</div>
-											<Button
-												onClick={handleBookingClick}
-												onTouchEnd={(e) => {
-													e.preventDefault();
-													handleBookingClick();
-												}}
-												className=' border-gray-200 border text-gray-500  bg-transparent  hover:bg-blue-800 hover:text-white rounded-md mt-4'
-												style={{
-													// Safari-specific button fixes
-													WebkitAppearance: 'none',
-													WebkitTapHighlightColor:
-														'transparent',
-												}}
-											>
-												Book Now
-											</Button>
+											<div className=''>
+												<Link
+													className=' border-gray-200 border text-gray-500  bg-transparent  hover:bg-blue-700 hover:text-white rounded-md mt-4 px-2 py-2 hidden md:block'
+													href={`/businesses/${business?.id}/#book-appointment`}
+												>
+													Book Now
+												</Link>
+												<Button
+													onClick={handleBookingClick}
+													onTouchEnd={(e) => {
+														e.preventDefault();
+														handleBookingClick();
+													}}
+													className=' border-gray-200 border text-gray-500  bg-transparent  hover:bg-blue-700 hover:text-white rounded-md mt-4 md:hidden'
+													style={{
+														// Safari-specific button fixes
+														WebkitAppearance:
+															'none',
+														WebkitTapHighlightColor:
+															'transparent',
+													}}
+												>
+													Book Now
+												</Button>
+											</div>
 										</div>
 									))
 								)}
@@ -413,7 +422,7 @@ const Page = () => {
 						</TabsContent>
 					</Tabs>
 				</div>
-				<div className='hidden md:block w-[40%]'>
+				<div id='book-appointment' className='hidden md:block w-[40%]'>
 					<div className='border border-gray-200 p-4 rounded-lg '>
 						<h2 className='text-xl font-medium '>
 							Book an Appointment

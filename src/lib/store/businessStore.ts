@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { createBusiness, getBusiness,  } from '@/actions/admin/businessMgt/route';
+import { createBusiness, getBusiness } from '@/actions/admin/businessMgt/route';
 
 import { getAccessToken } from '@/utils/token';
 
@@ -15,7 +15,7 @@ export interface BusinessData {
 	phone_number: string;
 	email: string;
 	website?: string;
-	banner?: Array<{ id: string; image: string }>;
+	images?: Array<{ id: string; image: string }>;
 	is_active: boolean;
 	business_hours?: Array<{
 		day_name: string;
@@ -50,7 +50,6 @@ interface BusinessStore {
 	clearBusinessData: () => void;
 	setLoading: (loading: boolean) => void;
 	setError: (error: string | null) => void;
-	
 }
 
 export const useBusinessStore = create<BusinessStore>((set, get) => ({
@@ -168,7 +167,6 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 	clearBusinessData: () => {
 		set({ businessData: null, error: null, isInitialized: false });
 	},
-
 
 	setLoading: (loading: boolean) => {
 		set({ isLoading: loading });

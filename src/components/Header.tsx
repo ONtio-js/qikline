@@ -1,19 +1,20 @@
-'use client'
+'use client';
 import Link from 'next/link';
 import Logo from './Logo';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { usePathname, useRouter } from 'next/navigation';
-import {motion} from 'framer-motion' 
-import { X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {  User2Icon, X } from 'lucide-react';
 import Menubar from './Menuba';
 import TrackingLanding from './tracking/TrackingLanding';
+import { authService } from '@/services/auth';
 const Header = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 	const pathname = usePathname();
-  return (
+	return (
 		<div className=' md:px-20 pb-3 md:pb-5 flex justify-between items-center shadow-md md:shadow-none p-5  z-50 fixed top-0 left-0 right-0 bg-white/30 backdrop-blur-2xl'>
 			<Navbar
 				isOpen={isOpen}
@@ -63,7 +64,12 @@ const Header = () => {
 					</Link>
 				</li>
 				<li className='font-medium text-gray-700  hover:text-blue-700 transition-all duration-300'>
-					<div onClick={() => setIsTrackingOpen(true)} className='cursor-pointer'>Track Booking</div>
+					<div
+						onClick={() => setIsTrackingOpen(true)}
+						className='cursor-pointer'
+					>
+						Track Booking
+					</div>
 				</li>
 			</ul>
 			<Button
@@ -72,7 +78,9 @@ const Header = () => {
 				size='lg'
 				onClick={() => router.push('/admin')}
 			>
-				Register Your Business
+				{authService.isAuthenticated()
+					? <p className='flex items-center gap-x-2'><User2Icon className='w-5 h-5' /> Dashboard</p>
+					:  'Register Your Business'}
 			</Button>
 			<div
 				onClick={() => setIsOpen(true)}
@@ -81,9 +89,17 @@ const Header = () => {
 				<Menubar />
 			</div>
 		</div>
-  );
-}
-const Navbar = ({isOpen, setIsOpen, setIsTrackingOpen}: {isOpen: boolean, setIsOpen: (isOpen: boolean) => void, setIsTrackingOpen: (isTrackingOpen: boolean) => void}) => {
+	);
+};
+const Navbar = ({
+	isOpen,
+	setIsOpen,
+	setIsTrackingOpen,
+}: {
+	isOpen: boolean;
+	setIsOpen: (isOpen: boolean) => void;
+	setIsTrackingOpen: (isTrackingOpen: boolean) => void;
+}) => {
 	const router = useRouter();
 	return (
 		<div
@@ -180,7 +196,7 @@ const Navbar = ({isOpen, setIsOpen, setIsTrackingOpen}: {isOpen: boolean, setIsO
 						onClick={() => setIsOpen(false)}
 						initial={{
 							x: 100,
-							opacity: 0.5,	
+							opacity: 0.5,
 							y: 0,
 						}}
 						whileInView={{
@@ -198,7 +214,12 @@ const Navbar = ({isOpen, setIsOpen, setIsTrackingOpen}: {isOpen: boolean, setIsO
 						}}
 						className='hover:bg-gray-100 p-2 hover:text-blue-700 text-gray-700'
 					>
-						<div onClick={() => setIsTrackingOpen(true)} className='cursor-pointer'>Track Your Booking</div>
+						<div
+							onClick={() => setIsTrackingOpen(true)}
+							className='cursor-pointer'
+						>
+							Track Your Booking
+						</div>
 					</motion.li>
 				</ul>
 				<Button
@@ -207,10 +228,10 @@ const Navbar = ({isOpen, setIsOpen, setIsTrackingOpen}: {isOpen: boolean, setIsO
 					size='lg'
 					onClick={() => router.push('/admin')}
 				>
-					Register Your Business
+					{authService.isAuthenticated() ? <p className='flex items-center gap-x-2'><User2Icon className='w-5 h-5' /> Dashboard</p> : 'Register Your Business'}
 				</Button>
 			</motion.div>
 		</div>
 	);
-}
-export default Header
+};
+export default Header;

@@ -12,6 +12,7 @@ interface Notification {
 	message: string;
 	category: string;
 	created_at: string;
+	is_read:boolean;
 	updated_at: string;
 }
 const Page = () => {
@@ -28,6 +29,19 @@ const Page = () => {
 		};
 		fetchNotifications();
 	}, [page, limit, category]);
+	const systemNotifications = notifications.filter(
+		(notification) => notification.category === 'SYSTEM'
+	);
+	const appointmentNotifications = notifications.filter(
+		(notification) => notification.category === 'BOOKINGS'
+	);
+	const paymentNotifications = notifications.filter(
+		(notification) => notification.category === 'PAYMENTS'
+	);
+	const unreadNotifications = notifications.filter(
+		(notification) => notification.is_read === false
+	);
+	console.log(notifications)
 	return (
 		<div className='p-6'>
 			<div className='flex flex-col gap-y-1'>
@@ -112,15 +126,25 @@ const Page = () => {
 				className='mt-10'
 				defaultValue={'all'}
 			>
-				<TabsList className='h-13 bg-gray-100 px-2 rounded-md w-full md:w-[500px]'>
-					<TabsTrigger value='all'>
-						All({notifications?.length})
-					</TabsTrigger>
-					<TabsTrigger value='unread'>Unread</TabsTrigger>
-					<TabsTrigger value='appointments'>Appointments</TabsTrigger>
-					<TabsTrigger value='payments'>Payments</TabsTrigger>
-					<TabsTrigger value='system'>system</TabsTrigger>
-				</TabsList>
+				<div className='flex overflow-x-hidden items-center justify-between  '>
+					<TabsList className=' h-13 bg-gray-100 px-2 rounded-md w-full md:w-[650px] no-scrollbar overflow-x-scroll flex justify-start'>
+						<TabsTrigger value='all'>
+							All({notifications?.length})
+						</TabsTrigger>
+						<TabsTrigger value='unread'>
+							Unread ({unreadNotifications.length})
+						</TabsTrigger>
+						<TabsTrigger value='Appointment'>
+							Appointments ({appointmentNotifications.length})
+						</TabsTrigger>
+						<TabsTrigger value='payments'>
+							Payments ({paymentNotifications.length})
+						</TabsTrigger>
+						<TabsTrigger value='system'>
+							system ({systemNotifications.length})
+						</TabsTrigger>
+					</TabsList>
+				</div>
 				<TabsContent value='all'>
 					<div className='space-y-4'>
 						{notifications?.length === 0 && (
@@ -146,53 +170,101 @@ const Page = () => {
 											: 'SYSTEM'
 									}
 									createdAt={notification.created_at}
-									read={false}
+									read={notification.is_read}
 									id={notification.id.toString()}
 								/>
 							))}
 					</div>
 				</TabsContent>
-				<TabsContent value='unread'>
-					<div>
-						<h1>Unread</h1>
+				<TabsContent value='Appointment'>
+					<div className='space-y-4'>
+						{appointmentNotifications.length === 0 && (
+							<EmptyState
+								title='No notifications found'
+								description='No notifications found, create a new notification to get started'
+							/>
+						)}
+						{appointmentNotifications.length > 0 &&
+							appointmentNotifications.map((notification) => (
+								<NotificationCard
+									key={notification.id}
+									title={notification.title}
+									message={notification.message}
+									type={'BOOKINGS'}
+									createdAt={notification.created_at}
+									read={notification.is_read}
+									id={notification.id.toString()}
+								/>
+							))}
 					</div>
 				</TabsContent>
 
-				<TabsContent value='appointments'>
+				<TabsContent value='unread'>
 					<div className='space-y-4'>
-						<NotificationCard
-							title='New Appointment Booked'
-							message='John Doe has booked an appointment for 2021-01-01 at 10:00 AM'
-							type='BOOKINGS'
-							createdAt='2021-01-01'
-							read={true}
-							id='1'
-						/>
-						<NotificationCard
-							title='New Appointment Booked'
-							message='John Doe has booked an appointment for 2021-01-01 at 10:00 AM'
-							type='BOOKINGS'
-							createdAt='2021-01-01'
-							read={true}
-							id='1'
-						/>
+						{unreadNotifications.length === 0 && (
+							<EmptyState
+								title='No notifications found'
+								description='No notifications found, create a new notification to get started'
+							/>
+						)}
+						{unreadNotifications.length > 0 &&
+							unreadNotifications.map((notification) => (
+								<NotificationCard
+									key={notification.id}
+									title={notification.title}
+									message={notification.message}
+									type={'BOOKINGS'}
+									createdAt={notification.created_at}
+									read={notification.is_read}
+									id={notification.id.toString()}
+								/>
+							))}
 					</div>
 				</TabsContent>
 
 				<TabsContent value='payments'>
-					<div className='space-y-4'></div>
+					<div className='space-y-4'>
+						{paymentNotifications.length === 0 && (
+							<EmptyState
+								title='No notifications found'
+								description='No notifications found, create a new notification to get started'
+							/>
+						)}
+						{paymentNotifications.length > 0 &&
+							paymentNotifications.map((notification) => (
+								<NotificationCard
+									key={notification.id}
+									title={notification.title}
+									message={notification.message}
+									type={'PAYMENTS'}
+									createdAt={notification.created_at}
+									read={notification.is_read}
+									id={notification.id.toString()}
+								/>
+							))}
+					</div>
 				</TabsContent>
 
 				<TabsContent value='system'>
 					<div className='space-y-4'>
-						<NotificationCard
-							title='System maintenance Schedule '
-							message='John Doe has booked an appointment for 2021-01-01 at 10:00 AM'
-							type='SYSTEM'
-							createdAt='2021-01-01'
-							read={true}
-							id='1'
-						/>
+						{systemNotifications.length === 0 && (
+							<EmptyState
+								title='No notifications found'
+								description='No notifications found, create a new notification to get started'
+							/>
+						)}
+						{systemNotifications.length > 0 &&
+							systemNotifications.map((notification) => (
+								<NotificationCard
+									key={notification.id}
+									title={notification.title}
+									message={notification.message}
+									type={'SYSTEM'}
+									createdAt={notification.created_at}
+									read={notification.is_read}
+									id={notification.id.toString()}
+								/>
+							))}
 					</div>
 				</TabsContent>
 			</Tabs>
