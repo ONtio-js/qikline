@@ -3,21 +3,21 @@ import { Calendar1Icon, FlashlightIcon, LucideLayoutDashboard, SearchIcon,  Tren
 export const howItWorks = [
 	{
 		id: 1,
-		title: 'Find a Service',
+		title: 'Search Verified Local Businesses',
 		description:
 			'Browse local service providers and read reviews from real customers.',
 		icon: <SearchIcon />,
 	},
 	{
 		id: 2,
-		title: 'Choose a Time',
+		title: 'Pick a slot that fits',
 		description:
 			'Select from available time slots that work with your schedule.',
 		icon: <Calendar1Icon />,
 	},
 	{
 		id: 3,
-		title: 'Book Instantly',
+		title: 'Book and Pay Securely',
 		description:
 			'Browse local service providers and read reviews from real customers.',
 		icon: <FlashlightIcon />,
@@ -38,7 +38,7 @@ export const features = [
 	},
 	{
 		id: 3,
-		title: 'Grow Revenue',
+		title: ' Revenue Growth',
 		description: 'Increase bookings by up to 40% with our platform',
 		icon: <TrendingUp />,
 	},

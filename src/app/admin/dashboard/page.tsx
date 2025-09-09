@@ -61,6 +61,7 @@ const Page = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const { businessData, isLoading, isInitialized } = useBusiness();
+
 	const [bookings, setBookings] = useState<Booking[]>([]);
 	const [page] = useState(1);
 	const [limit] = useState(10);
@@ -457,24 +458,31 @@ const Page = () => {
 										<BookingCard
 											key={index}
 											id={booking.id}
-											business_name={booking.business_name}
-											customer_email={booking.customer_email}
+											business_name={
+												booking.business_name
+											}
+											customer_email={
+												booking.customer_email
+											}
 											date={booking.date}
 											time={booking.time}
 											status={booking.status}
-											status_display={booking.status_display}
+											status_display={
+												booking.status_display
+											}
 											service={{
 												id: booking.service.id,
 												name: booking.service.name,
 												description:
 													booking.service.description,
 												price: booking.service.price,
-												duration: booking.service.duration,
+												duration:
+													booking.service.duration,
 											}}
 										/>
 									))}
 							</div>
-							
+
 							<Table className='hidden md:table mt-6 pl-6 min-w-full '>
 								<TableHeader className='bg-gray-100 py-2  h-12'>
 									<TableRow>

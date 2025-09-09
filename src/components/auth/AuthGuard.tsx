@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { authService } from '@/services/auth';
 import { getAccessToken, removeTokens } from '@/utils/token';
 
+
 interface AuthGuardProps {
 	children: React.ReactNode;
 }
@@ -28,7 +29,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
 		
 
-			if (!authenticated || !isValidToken) {
+			if (!authenticated || !isValidToken ) {
 				
 				
 				removeTokens();

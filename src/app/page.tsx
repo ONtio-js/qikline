@@ -25,8 +25,8 @@ export default function Home() {
 			<Header />
 			<section className='px-3 bg-gradient-to-t from-[#F1D5FF] via-[] to-[#EFF7FF] py-20'>
 				<div className='space-y-6 mt-'>
-					<h1 className='text-3xl md:text-5xl font-bold text-center max-w-[550px] mx-auto leading-16'>
-						Book services with{' '}
+					<h1 className='text-3xl md:text-5xl font-bold text-center max-w-[550px] mx-auto '>
+						Book Barbers & Spas in Lagos with {' '}
 						<motion.span
 							initial={{ opacity: 0, x: -10, y: -10 }}
 							whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -44,8 +44,8 @@ export default function Home() {
 					</h1>
 
 					<p className='text-center  text-gray-700 max-w-[570px] mx-auto mb-10'>
-						Skip the wait. Discover businesses near you and book
-						appointments instantly, no calls, no stress.
+						Skip the wait, avoid Lagos traffic stress. Book trusted
+						services instantly.
 					</p>
 					<SearchBox />
 					<div className='overflow-hidden md:overflow-auto'>
@@ -114,7 +114,10 @@ export default function Home() {
 					</Button>
 				</div>
 			</section>
-			<section id='how-it-works' className='py-20 md:p-20 px-5 '>
+			<section
+				id='how-it-works'
+				className='py-20 md:p-20 px-5 '
+			>
 				<Title
 					title='How it works'
 					description='Getting your service appointment has never been easier. Follow these simple steps to get started.'

@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Header from '@/components/Header';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useNetworkStatus } from '@/hooks/use-network-status';
+import OfflineState from '@/components/status/OfflineState';
 const CustomersPage = () => {
 	interface BusinessProps {
 		id: number;
@@ -172,7 +174,7 @@ const CustomersPage = () => {
 	}, [businesses, currentPage, businessesPerPage]);
 
 	const { totalPages, currentBusinesses } = paginationData;
-
+	const {isOffline} = useNetworkStatus()
 	return (
 		<>
 			<Header />
@@ -280,6 +282,9 @@ const CustomersPage = () => {
 				onClose={onClose}
 			/>
 			<div className='p-6 md:px-20 px-6 grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-6 relative '>
+				{
+					isOffline && <OfflineState />
+				}
 				{isLoading && (
 					<div className='col-span-full flex justify-center items-center h-full py-20'>
 						<div className='text-center'>
@@ -291,7 +296,7 @@ const CustomersPage = () => {
 					</div>
 				)}
 
-				{isError && !isLoading && (
+				{!isOffline && isError && !isLoading &&  (
 					<div className='col-span-full flex justify-center items-center h-full py-20'>
 						<EmptyState
 							title='Error loading businesses'

@@ -76,14 +76,14 @@ const BookingCard = ({
 		}
 	};
 	return (
-		<div className='hover:border-blue-500 transition-all duration-300 flex gap-x-4 p-6 border border-gray-200 rounded-md cursor-pointer hover:shadow-md'>
-			<Avatar className='w-10 h-10 rounded-full bg-blue-200/30 text-gray-500 flex items-center justify-center font-bold'>
+		<div className='hover:border-blue-500 transition-all duration-300 flex gap-x-4  p-3 border border-gray-200 rounded-md cursor-pointer hover:shadow-md'>
+			<Avatar className='w-10 h-10  rounded-full bg-blue-200/30 text-gray-500 flex items-center justify-center font-bold'>
 				<AvatarImage src={''} />
 				<AvatarFallback>
 					{customer_email?.charAt(0).toUpperCase() || ''}
 				</AvatarFallback>
 			</Avatar>
-			<div className='flex w-[87%] justify-between items-start'>
+			<div className='flex w-[83%] justify-between items-start'>
 				<div className='flex flex-col justify-between gap-2'>
 					<div className='flex flex-col gap-y-2'>
 						<h4 className='text-lg font-medium truncate max-w-[200px]'>
