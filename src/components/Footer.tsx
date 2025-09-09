@@ -5,16 +5,16 @@ import { FacebookIcon, LinkedinIcon, Twitter } from 'lucide-react';
 
 const Footer = () => {
   return (
-		<footer className='md:p-20 py-20 px-5'>
-			<div className='grid md:grid-cols-4'>
-				<div className='col-span-1 space-y-5'>
+		<footer className='md:px-10 lg:p-20 py-20 px-5'>
+			<div className='grid grid-cols-1 md:grid-cols-5 '>
+				<div className='col-span-2 space-y-5 mr-10'>
 					<Logo />
 					<p className='max-w-[20rem] text-gray-600 text-lg mt-3'>
-						Connecting customers with local service providers
+						Connecting customers with Verified service providers
 						through seamless appointment booking.
 					</p>
 				</div>
-				<div>
+				<div className='col-span-2 md:col-span-1'>
 					<h3 className='font-semibold text-xl py-5'>Product</h3>
 					<ul className='space-y-2 text-gray-700 capitalize text-lg'>
 						<li>
@@ -31,7 +31,7 @@ const Footer = () => {
 						</li>
 					</ul>
 				</div>
-				<div>
+				<div className='col-span-2 md:col-span-1'>
 					<h3 className='font-semibold text-xl py-5'>Company</h3>
 					<ul className='space-y-2 text-gray-700 capitalize text-lg'>
 						<li>
@@ -48,7 +48,7 @@ const Footer = () => {
 						</li>
 					</ul>
 				</div>
-				<div>
+				<div className='col-span-1'>
 					<h3 className='font-semibold text-xl py-5'>Legal</h3>
 					<ul className='space-y-2 text-gray-700 capitalize text-lg'>
 						<li>

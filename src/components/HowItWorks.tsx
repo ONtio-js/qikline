@@ -7,7 +7,7 @@ const HowItWorks = ({icon,title,description,id}:{icon:React.ReactNode,title:stri
         <div className='bg-blue-600/80 group-hover:bg-white group-hover:text-blue-600/80 transition-all duration-500 ease-in-out text-white p-5 rounded-2xl text-2xl'>
             {icon}
         </div>
-        <h3 className='text-xl text-white md:text-gray-900 font-semibold group-hover:text-white duration-500 ease-in-out transition-all'>{title}</h3>
+        <h3 className=' text-white md:text-gray-900 font-semibold group-hover:text-white duration-500 ease-in-out transition-all'>{title}</h3>
         <p className='text-center text-white md:text-gray-700 group-hover:text-white transition-all duration-500 ease-in-out'>{description} </p>
     </motion.div>
   )

@@ -15,7 +15,7 @@ const Header = () => {
 	const [isTrackingOpen, setIsTrackingOpen] = useState(false);
 	const pathname = usePathname();
 	return (
-		<div className=' md:px-20 pb-3 md:pb-5 flex justify-between items-center shadow-md md:shadow-none p-5  z-50 fixed top-0 left-0 right-0 bg-white/30 backdrop-blur-2xl'>
+		<div className=' md:px-10 lg:px-20 pb-3 md:pb-5 flex justify-between items-center shadow-md md:shadow-none p-5  z-50 fixed top-0 left-0 right-0 bg-white/30 backdrop-blur-2xl'>
 			<Navbar
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
@@ -26,7 +26,7 @@ const Header = () => {
 				onClose={() => setIsTrackingOpen(false)}
 			/>
 			<Logo />
-			<ul className='hidden md:flex items-center gap-x-10'>
+			<ul className='hidden lg:flex items-center gap-x-10  '>
 				<li
 					className={`${
 						pathname.includes('businesses')
@@ -74,7 +74,7 @@ const Header = () => {
 			</ul>
 			<Button
 				variant='outline'
-				className='hidden md:block font-medium border-none  transition-all duration-300 bg-blue-700 hover:bg-blue-800 text-white  h-12 cursor-pointer hover:text-white'
+				className='hidden lg:block font-medium border-none  transition-all duration-300 bg-blue-700 hover:bg-blue-800 text-white  h-12 cursor-pointer hover:text-white'
 				size='lg'
 				onClick={() => router.push('/admin')}
 			>
@@ -84,7 +84,7 @@ const Header = () => {
 			</Button>
 			<div
 				onClick={() => setIsOpen(true)}
-				className='md:hidden  p-2 rounded-md cursor-pointer'
+				className='lg:hidden  p-2 rounded-md cursor-pointer'
 			>
 				<Menubar />
 			</div>

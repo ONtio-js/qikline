@@ -87,7 +87,7 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
-			<section className='py-10 md:p-20 md:pb-10 px-5 '>
+			<section className='py-10  lg:p-20 md:pb-10 px-5 '>
 				<Title
 					title='Trusted by Local Businesses'
 					description='Getting your service appointment has never been easier. Follow these simple steps to get started.'
@@ -116,13 +116,13 @@ export default function Home() {
 			</section>
 			<section
 				id='how-it-works'
-				className='py-20 md:p-20 px-5 '
+				className='py-20 md:px-10 lg:p-20 px-5 '
 			>
 				<Title
 					title='How it works'
 					description='Getting your service appointment has never been easier. Follow these simple steps to get started.'
 				/>
-				<div className='grid md:grid-cols-3  align-middle mt-14 justify-items-center gap-y-10'>
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  align-middle mt-14 justify-items-center gap-y-5 gap-x-5'>
 					{howItWorks.map((how) => {
 						return (
 							<HowItWorks
@@ -135,7 +135,7 @@ export default function Home() {
 						);
 					})}
 				</div>
-				<div className='grid md:grid-cols-2 gap-20 mt-32 md:px-10'>
+				<div className='grid lg:grid-cols-2 gap-20 mt-32 md:px-10'>
 					<div className='space-y-10'>
 						<h2 className='text-3xl font-semibold md:max-w-[25rem] capitalize'>
 							grow your business with{' '}
@@ -157,7 +157,7 @@ export default function Home() {
 							businesses already growing with QikLine.
 						</p>
 
-						<div className='grid md:grid-cols-2 gap-10 mt-10 '>
+						<div className='grid grid-cols-1  gap-10 mt-10 '>
 							{features.map((feature) => {
 								return (
 									<motion.div
@@ -227,7 +227,7 @@ export default function Home() {
 						/>
 					</motion.div>
 				</div>
-				<div className='flex flex-col-reverse md:flex-row gap-20 mt-32 md:px-10'>
+				<div className='flex flex-col-reverse lg:flex-row gap-20 mt-32 md:px-10'>
 					<motion.div
 						initial={{ opacity: 0, x: 100, y: 20 }}
 						whileInView={{
@@ -274,7 +274,7 @@ export default function Home() {
 							training, we&apos;ve got you covered.
 						</p>
 
-						<div className='grid md:grid-cols-2 gap-10 mt-10 '>
+						<div className='grid  gap-10 mt-10 '>
 							{servicesFeatures.map((feature) => {
 								return (
 									<motion.div
@@ -314,12 +314,12 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
-			<section className='md:p-20 py-20 px-5'>
+			<section className='lg:p-20 md:px-10 py-20 px-5'>
 				<Title
 					title='what our users say'
 					description='Join thousands of satisfied customers and business owners who love QikLine.'
 				/>
-				<div className='grid md:grid-cols-3 gap-10 justify-items-center mt-20 '>
+				<div className='grid lg:grid-cols-3 gap-10 justify-items-center mt-20 '>
 					{testmonials.map((testmonial) => (
 						<motion.div
 							key={testmonial.id}

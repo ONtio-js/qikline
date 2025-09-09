@@ -13,7 +13,6 @@ type SearchResultsProps = {
     image: string;
 }
 const SearchBusinessBox = () => {
-    const [isFocused, setIsFocused] = useState<boolean>(false);
     const [searchTerm,setSearchTerm] = useState<string>('');
     const [searchResults,setSearchResults] = useState<SearchResultsProps[]>([]);
     const fetchSearchResults = useCallback((searchTerm: string) => {
@@ -29,19 +28,16 @@ const SearchBusinessBox = () => {
   return (
 		<div className='flex flex-col gap-y-4'>
 			<div className='  max-w-md mx-auto space-y-2 relative '>
-				<div className='flex items-center gap-x-2 border bg-white border-gray-200 p-4 py-1 rounded-md md:w-md w-auto  '>
+				<div className='flex items-center gap-x-2 border bg-white border-blue-700 p-4 py-1 rounded-md md:w-md w-auto  '>
 					<Search
 						size={24}
-						className={`${
-							isFocused ? 'text-blue-700' : 'text-gray-400'
-						} transition-colors duration-200 ease-in-out`}
+						className={`text-blue-700
+						transition-colors duration-200 ease-in-out`}
 					/>
 					<Input
 						type='text'
 						placeholder='Search businesses near you'
-						className='border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent'
-						onFocus={() => setIsFocused(true)}
-						onBlur={() => setIsFocused(false)}
+						className='border-none shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent '
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
 					/>

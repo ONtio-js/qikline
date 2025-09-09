@@ -3,7 +3,7 @@ import { Calendar1Icon, FlashlightIcon, LucideLayoutDashboard, SearchIcon,  Tren
 export const howItWorks = [
 	{
 		id: 1,
-		title: 'Search Verified Local Businesses',
+		title: 'Search Verified  Businesses',
 		description:
 			'Browse local service providers and read reviews from real customers.',
 		icon: <SearchIcon />,
