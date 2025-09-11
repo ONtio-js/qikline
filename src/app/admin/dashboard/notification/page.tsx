@@ -12,7 +12,7 @@ interface Notification {
 	message: string;
 	category: string;
 	created_at: string;
-	is_read:boolean;
+	is_read: boolean;
 	updated_at: string;
 }
 const Page = () => {
@@ -29,19 +29,30 @@ const Page = () => {
 		};
 		fetchNotifications();
 	}, [page, limit, category]);
-	const systemNotifications = notifications.filter(
+	
+	const sortedNotifications = [...notifications].sort((a, b) => {
+		
+		if (a.is_read !== b.is_read) {
+			return a.is_read ? 1 : -1;
+		}
+		return (
+			new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+		);
+	});
+
+	const systemNotifications = sortedNotifications.filter(
 		(notification) => notification.category === 'SYSTEM'
 	);
-	const appointmentNotifications = notifications.filter(
+	const appointmentNotifications = sortedNotifications.filter(
 		(notification) => notification.category === 'BOOKINGS'
 	);
-	const paymentNotifications = notifications.filter(
+	const paymentNotifications = sortedNotifications.filter(
 		(notification) => notification.category === 'PAYMENTS'
 	);
-	const unreadNotifications = notifications.filter(
+	const unreadNotifications = sortedNotifications.filter(
 		(notification) => notification.is_read === false
 	);
-	console.log(notifications)
+
 	return (
 		<div className='p-6'>
 			<div className='flex flex-col gap-y-1'>
@@ -67,7 +78,9 @@ const Page = () => {
 						</div>
 
 						<div>
-							<p className='text-lg font-semibold'>100</p>
+							<p className='text-lg font-semibold'>
+								{notifications.length}
+							</p>
 						</div>
 					</div>
 					<div className='bg-white p-8 px-4 rounded-lg  space-y-4 border border-gray-200'>
@@ -85,7 +98,7 @@ const Page = () => {
 
 						<div>
 							<p className='text-lg font-semibold text-red-600'>
-								5
+								{unreadNotifications.length}
 							</p>
 						</div>
 					</div>
@@ -98,7 +111,7 @@ const Page = () => {
 						</div>
 						<div>
 							<p className='text-lg font-semibold text-blue-800'>
-								24
+								{appointmentNotifications.length}
 							</p>
 						</div>
 					</div>
@@ -116,7 +129,7 @@ const Page = () => {
 						</div>
 						<div>
 							<p className='text-lg font-semibold text-green-700'>
-								14{' '}
+								{paymentNotifications.length}
 							</p>
 						</div>
 					</div>
@@ -129,7 +142,7 @@ const Page = () => {
 				<div className='flex overflow-x-hidden items-center justify-between  '>
 					<TabsList className=' h-13 bg-gray-100 px-2 rounded-md w-full md:w-[650px] no-scrollbar overflow-x-scroll flex justify-start'>
 						<TabsTrigger value='all'>
-							All({notifications?.length})
+							All({sortedNotifications?.length})
 						</TabsTrigger>
 						<TabsTrigger value='unread'>
 							Unread ({unreadNotifications.length})
@@ -147,14 +160,14 @@ const Page = () => {
 				</div>
 				<TabsContent value='all'>
 					<div className='space-y-4'>
-						{notifications?.length === 0 && (
+						{sortedNotifications?.length === 0 && (
 							<EmptyState
 								title='No notifications found'
 								description='No notifications found, create a new notification to get started'
 							/>
 						)}
-						{notifications?.length > 0 &&
-							notifications?.map((notification) => (
+						{sortedNotifications?.length > 0 &&
+							sortedNotifications?.map((notification) => (
 								<NotificationCard
 									key={notification.id}
 									title={notification.title || ''}
@@ -254,7 +267,7 @@ const Page = () => {
 							/>
 						)}
 						{systemNotifications.length > 0 &&
-							systemNotifications.map((notification) => (
+							systemNotifications.sort().map((notification) => (
 								<NotificationCard
 									key={notification.id}
 									title={notification.title}

@@ -44,3 +44,53 @@ export const getNotifications = async ({
 		};
 	}
 };
+
+export const DeleteNotification = async (id: string) => {
+	try {
+		const response = await apiWrapper.delete(
+			`${process.env.NEXT_PUBLIC_API_URL}/notifications/${id}/`
+		);
+		if (response.success) {
+			return {
+				status: true,
+				message: 'Notification deleted successfully',
+			};
+		} else {
+			return {
+				status: false,
+				message: 'Failed to delete notification',
+			};
+		}
+	} catch (error) {
+		console.log(error);
+		return {
+			status: false,
+			message: 'Failed to delete notification',
+		};
+	}
+};
+
+export const MarkReadNotification = async (id: string) => {
+	try {
+		const response = await apiWrapper.post(
+			`${process.env.NEXT_PUBLIC_API_URL}/notifications/${id}/read/`
+		);
+		if (response.success) {
+			return {
+				status: true,
+				message: 'Notification marked as read successfully',
+			};
+		} else {
+			return {
+				status: false,
+				message: 'Failed to mark notification as read',
+			};
+		}
+	} catch (error) {
+		console.log(error);
+		return {
+			status: false,
+			message: 'Failed to mark notification as read',
+		};
+	}
+};

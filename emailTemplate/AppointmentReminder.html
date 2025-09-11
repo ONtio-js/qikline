@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<style>
+			
+			.title {
+				font-size: 32px;
+				color: black;
+				margin-top: 20px;
+			}
+
+			@media only screen and (max-width: 600px) {
+				.title {
+					font-size: 24px !important;
+				}
+				.mobile-padding {
+					padding: 20px !important;
+				}
+				.mobile-center {
+					text-align: center !important;
+				}
+				.mobile-full-width {
+					width: 100% !important;
+				}
+				.mobile-stack {
+					display: block !important;
+					width: 100% !important;
+				}
+				.mobile-hide {
+					display: none !important;
+				}
+			}
+		</style>
+	</head>
+	<body style="font-family: Arial, sans-serif; padding: 0; margin: 0">
+		<table style="width: 100%; height: 100%; padding: 0; margin: 0">
+			<thead
+				style="
+					background: linear-gradient(to bottom, #eff7ff, #f1d5ff);
+					height: 100px;
+					width: 100%;
+				"
+			>
+				<tr>
+					<td style="padding: 20px 50px; margin: 0">
+						<h1>Q<span style="color: blue">ik</span>Line</h1>
+					</td>
+				</tr>
+			</thead>
+			<tbody style="width: 100%; padding: 20px">
+				<tr>
+					<td
+						class="mobile-padding"
+						style="padding: 50px; margin: 0"
+					>
+						<h1 class="title">Your appointment starts in {time_allocation }</h1>
+						<h4
+							style="
+								font-size: 24px;
+								color: #666;
+								margin-top: 20px;
+							"
+						>
+							Hi {{user_first_name}}
+						</h4>
+						<p
+							style="
+								font-size: 18px;
+								color: #666;
+								margin-top: 20px;
+								line-height: 1.5;
+							"
+						>
+							This  is  a quick reminder that your booking with {business_name} is schedule for:
+						</p>
+					
+
+						<table style="margin-top: 20px; width: 100%">
+							<tr>
+								<td
+									class="mobile-center"
+									style="text-align: left"
+								>
+									<table style="margin: 0 left">
+										<tr>
+											<td
+												style="
+													font-size: 18px;
+													color: #666;
+													margin: 0;
+													font-weight: semibold;
+												"
+											>
+												Date: {{date}}
+											</td>
+										</tr>
+										<tr>
+											<td
+												style="
+													font-size: 18px;
+													color: #666;
+													margin: 0;
+													font-weight: semibold;
+												"
+											>
+												Time: {{time}}
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<br />
+                        <p>
+                       We recommend getting ready and leaving on time to avoid delays. 
+                        </p>
+						<table>
+						
+							<tr>
+								<td>
+									<br />
+								</td>
+							</tr>
+							<tr>
+								<td
+									class="mobile-center"
+									style="
+										
+										width: 150px;
+										background-color: blue;
+										border-radius: 5px;
+										padding: 15px 25px;
+									"
+								>
+									<a
+										href="{{booking_url}}"
+										style="
+											font-size: 16px;
+											color: white;
+											margin: 0;
+											font-weight: semibold;
+											text-decoration: none;
+											text-align: center;
+											display: block;
+										"
+										>View Booking</a
+									>
+								</td>
+								<td
+									class="mobile-center"
+									style="
+										display: block;
+										width: 150px;
+										margin-left: 20px;
+										background-color: blue;
+										border-radius: 5px;
+										padding: 15px 25px;
+									"
+								>
+									<a
+										href="{{reschedule_url}}"
+										style="
+											font-size: 16px;
+											color: white;
+											margin: 0;
+											font-weight: semibold;
+											text-decoration: none;
+											text-align: center;
+											display: block;
+										"
+										>Reschedule</a
+									>
+								</td>
+							</tr>
+						</table>
+						<p
+							style="
+								font-size: 18px;
+								color: #666;
+								margin-top: 20px;
+								line-height: 1.5;
+								max-width: 800px;
+							"
+						>
+							See you soon!
+						</p>
+						<p
+							style="
+								font-size: 18px;
+								color: #666;
+								margin-top: 20px;
+								line-height: 1.5;
+								max-width: 800px;
+							"
+						>
+							The QikLine Team
+						</p>
+					</td>
+				</tr>
+			</tbody>
+
+			<tfoot
+				style="
+					background: linear-gradient(to bottom, #eff7ff, #f1d5ff);
+					height: 100px;
+					width: 100%;
+				"
+			>
+				<tr>
+					<td
+						class="mobile-padding"
+						style="padding: 50px; padding-bottom: 100px; margin: 0"
+					>
+						<!-- Desktop Layout -->
+						<table
+							class="mobile-hide"
+							style="width: 100%; border-collapse: collapse"
+						>
+							<tr>
+								<td style="vertical-align: top; width: 60%">
+									<h1>
+										Q<span style="color: blue">ik</span
+										>Line
+									</h1>
+									<p
+										style="
+											font-size: 18px;
+											color: #666;
+											max-width: 300px;
+											margin: 10px 0;
+										"
+									>
+										Connecting customers with Verified
+										service providers through seamless
+										appointment booking.
+									</p>
+
+									<table style="border-collapse: collapse">
+										<tr>
+											<td>
+												<p
+													style="
+														font-size: 16px;
+														color: #666;
+														margin: 0;
+													"
+												>
+													follow us:
+												</p>
+											</td>
+											<td style="padding-right: 10px">
+												<a
+													href="https://www.facebook.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/facebook-new.png"
+														alt="Facebook"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+											<td style="padding-right: 10px">
+												<a
+													href="https://www.instagram.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/instagram-new.png"
+														alt="Instagram"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+											<td style="padding-right: 10px">
+												<a
+													href="https://www.x.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/twitter.png"
+														alt="Twitter"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+											<td style="padding-right: 10px">
+												<a
+													href="https://www.linkedin.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/linkedin.png"
+														alt="LinkedIn"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td
+									style="
+										vertical-align: top;
+										width: 40%;
+										text-align: right;
+									"
+								>
+									<p
+										style="
+											font-size: 16px;
+											color: #666;
+											margin: 0;
+										"
+									>
+										Need help? Contact us at<br />
+										<a
+											href="mailto:support@qikline.com"
+											style="
+												color: blue;
+												text-decoration: none;
+											"
+											>support@qikline.com</a
+										>
+									</p>
+								</td>
+							</tr>
+						</table>
+
+						<!-- Mobile Layout -->
+						<table
+							class="mobile-stack"
+							style="
+								width: 100%;
+								border-collapse: collapse;
+								display: none;
+							"
+						>
+							<tr>
+								<td
+									class="mobile-center"
+									style="
+										text-align: center;
+										padding-bottom: 20px;
+									"
+								>
+									<h1>
+										Q<span style="color: blue">ik</span
+										>Line
+									</h1>
+									<p
+										style="
+											font-size: 18px;
+											color: #666;
+											margin: 10px 0;
+										"
+									>
+										Connecting customers with Verified
+										service providers through seamless
+										appointment booking.
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td
+									class="mobile-center"
+									style="
+										text-align: center;
+										padding-bottom: 20px;
+									"
+								>
+									<table
+										style="
+											border-collapse: collapse;
+											margin: 0 auto;
+										"
+									>
+										<tr>
+											<td style="padding: 5px">
+												<p
+													style="
+														font-size: 16px;
+														color: #666;
+														margin: 0;
+													"
+												>
+													follow us:
+												</p>
+											</td>
+											<td style="padding: 5px">
+												<a
+													href="https://www.facebook.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/facebook-new.png"
+														alt="Facebook"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+											<td style="padding: 5px">
+												<a
+													href="https://www.instagram.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/instagram-new.png"
+														alt="Instagram"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+											<td style="padding: 5px">
+												<a
+													href="https://www.x.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/twitter.png"
+														alt="Twitter"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+											<td style="padding: 5px">
+												<a
+													href="https://www.linkedin.com/qikline"
+													><img
+														src="https://img.icons8.com/ios-glyphs/30/linkedin.png"
+														alt="LinkedIn"
+														style="
+															width: 25px;
+															height: 25px;
+															border: 0;
+														"
+												/></a>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td
+									class="mobile-center"
+									style="text-align: center"
+								>
+									<p
+										style="
+											font-size: 16px;
+											color: #666;
+											margin: 0;
+										"
+									>
+										Need help? Contact us at<br />
+										<a
+											href="mailto:support@qikline.com"
+											style="
+												color: blue;
+												text-decoration: none;
+											"
+											>support@qikline.com</a
+										>
+									</p>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</body>
+</html>

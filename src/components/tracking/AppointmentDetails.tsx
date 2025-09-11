@@ -20,6 +20,8 @@ type ServiceData = {
 type BookingData = {
 	id: number;
 	business_name: string;
+	business_description: string;
+	business_address: string;
 	created_at: string;
 	date: string;
 	time: string;
@@ -121,16 +123,16 @@ const AppointmentDetails = ({
 			{bookingData?.business_name && (
 				<BusinessCard
 					business={{
-						id: 0, // Placeholder ID since we don't have it in the new type
+						id: 0, 
 						name: bookingData.business_name,
-						image: '/cus1.jpg', // Assuming a default image
-						location: '', // No direct address in this type
+						image: '/cus1.jpg', 
+						location: bookingData.business_address, 
 						city: '',
 						state: '',
-						description: '',
+						description: bookingData.business_description,
 						category: [],
-						rating: 0, // Default rating
-						address: '', // No direct address in this type
+						rating: 0, 
+						address: bookingData.business_address, 
 					}}
 				/>
 			)}

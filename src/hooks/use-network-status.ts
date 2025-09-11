@@ -7,7 +7,6 @@ export function useNetworkStatus() {
 
 	useEffect(() => {
 		function handleOnline() {
-			window.location.reload();
 			setIsOnline(true);
 		}
 		function handleOffline() {

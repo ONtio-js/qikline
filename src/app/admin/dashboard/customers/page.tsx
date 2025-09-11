@@ -14,7 +14,7 @@ const Page = () => {
 		<>
 			<h2 className='pl-6 pt-6 text-xl font-semibold text-gray-800 capitalize'>
 				{' '}
-				Staff Management
+				Customers
 			</h2>
 			<div className='p-6'>
 				<Tabs
@@ -27,7 +27,7 @@ const Page = () => {
 								value='allstaff'
 								className='data-[state=active]:bg-blue-700 data-[state=active]:text-white h-10'
 							>
-								All Staff
+								All Customers
 							</TabsTrigger>
 							<TabsTrigger
 								value='active'

@@ -28,5 +28,6 @@ export const useBusiness = () => {
 		setError,
 		hasBusiness: !!businessData,
 		primaryBusiness: businessData || null,
+		businessMetrics: businessData?.metrics || null,
 	};
 };

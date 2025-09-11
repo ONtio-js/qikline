@@ -152,7 +152,7 @@ export function AppSidebar() {
 								<AvatarFallback>{decodedToken.email[0].toUpperCase()}</AvatarFallback>
 							</Avatar>
 							<div>
-								<p className='text-xs text-gray-500'>
+								<p className='text-sm font-medium text-gray-500'>
 									{decodedToken.email}
 								</p>
 							</div>

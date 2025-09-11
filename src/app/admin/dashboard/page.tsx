@@ -63,6 +63,7 @@ const Page = () => {
 	const { businessData, isLoading, isInitialized } = useBusiness();
 
 	const [bookings, setBookings] = useState<Booking[]>([]);
+
 	const [page] = useState(1);
 	const [limit] = useState(10);
 	useEffect(() => {
@@ -204,7 +205,8 @@ const Page = () => {
 
 							<div>
 								<p className='text-lg font-semibold'>
-									{bookings.length}
+									{businessData?.metrics?.data
+										?.total_bookings.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 0}
 								</p>
 								<p className='text-gray-500'>
 									+8% from last week
@@ -227,7 +229,9 @@ const Page = () => {
 
 							<div>
 								<p className='text-lg font-semibold'>
-									N 100,000
+									N{' '}
+									{businessData?.metrics?.data
+										?.total_revenue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') || '0.00'}
 								</p>
 								<p className='text-gray-500'>
 									+32.5% from last week
@@ -248,7 +252,10 @@ const Page = () => {
 								/>
 							</div>
 							<div>
-								<p className='text-lg font-semibold'>24</p>
+								<p className='text-lg font-semibold'>
+									{businessData?.metrics?.data
+										?.active_customers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') || 0}
+								</p>
 								<p className='text-gray-500'>
 									-20% from last week
 								</p>
@@ -265,7 +272,11 @@ const Page = () => {
 								/>
 							</div>
 							<div>
-								<p className='text-lg font-semibold'>14 mins</p>
+								<p className='text-lg font-semibold'>
+									{businessData?.metrics?.data
+										?.average_wait_time || 0}{' '}
+									mins
+								</p>
 								<p className='text-gray-500'>
 									-20% from last week
 								</p>

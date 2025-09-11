@@ -25,6 +25,8 @@ const TrackingLanding = ({
 	const [bookingData, setBookingData] = useState<{
 		id: number;
 		business_name: string;
+		business_description: string;
+		business_address: string;
 		created_at: string;
 		date: string;
 		time: string;
@@ -45,7 +47,7 @@ const TrackingLanding = ({
 		tracking_id: string;
 		updated_at: string;
 	} | null>(null);
-
+	console.log(bookingData);
 	const [isPending, startTransition] = useTransition();
 
 	const onTrackBooking = async () => {

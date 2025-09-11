@@ -11,6 +11,8 @@ type NotificationCardProps = {
 	read: boolean;
 	isOpen: boolean;
 	setIsOpen: (isOpen: boolean) => void;
+	handleDelete: () => void;
+	handleMarkRead: () => void;
 };
 const NotificationViewCard = ({
 	title,
@@ -20,6 +22,8 @@ const NotificationViewCard = ({
 	read,
 	isOpen,
 	setIsOpen,
+	handleDelete,
+	handleMarkRead,
 }: NotificationCardProps) => {
 	return (
 		<div
@@ -29,10 +33,10 @@ const NotificationViewCard = ({
 			onClick={() => setIsOpen(false)}
 		>
 			<div
-				className='bg-white  rounded-lg pb-4 w-[90%] md:w-full  md:max-w-4xl space-y-4 pt-0'
+				className='bg-white h-[350px] rounded-lg pb-4 w-[90%] md:w-full  md:max-w-xl space-y-4 pt-0 relative'
 				onClick={(e) => e.stopPropagation()}
 			>
-				<h3 className='text-2xl px-4 rounded-t-lg font-semibold py-4 bg-blue-700/80 text-white flex items-center gap-x-2 '>
+				<h3 className='text-2xl px-4 rounded-t-lg font-semibold py-4 bg-gradient-to-b from-[#8772FD] to-[#9589d1] text-white flex items-center gap-x-2 '>
 					{title}{' '}
 					{type === 'BOOKINGS' && (
 						<Calendar className='w-5 h-5 text-white' />
@@ -56,7 +60,7 @@ const NotificationViewCard = ({
 				</p>
 				<p className='text-gray-500 px-4'>{read}</p>
 
-				<div className='flex items-center gap-x-2 px-4'>
+				<div className='flex items-center gap-x-2 px-4 absolute bottom-10 left-0 right-0'>
 					<Button
 						variant='outline'
 						onClick={() => setIsOpen(false)}
@@ -65,14 +69,14 @@ const NotificationViewCard = ({
 					</Button>
 					<Button
 						variant='destructive'
-						onClick={() => setIsOpen(false)}
+						onClick={handleDelete}
 					>
 						Delete <Trash className='w-4 h-4' />
 					</Button>
 					<Button
 						variant='outline'
 						className='bg-green-500 text-white hover:bg-green-600 w-fit border-none'
-						onClick={() => setIsOpen(false)}
+						onClick={handleMarkRead}
 					>
 						Mark Read <CircleCheck className='w-4 h-4' />
 					</Button>

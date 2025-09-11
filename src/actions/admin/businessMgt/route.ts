@@ -376,3 +376,30 @@ export const updateBookingSettings = async (
 		};
 	}
 };
+
+export const getBusinessMetrics = async (id:string) => {
+	try {
+		const response = await apiWrapper.get(
+			`${process.env.NEXT_PUBLIC_API_URL}/businesses/${id}/metrics/`
+		);
+		if (response.success) {
+			return {
+				status: true,
+				message: 'Business metrics fetched successfully',
+				data: response.data,
+			};
+		}
+		return {
+			status: false,
+			message: 'Failed to fetch business metrics',
+			data: null,
+		};
+	} catch (error) {
+		console.log(error);
+		return {
+			status: false,
+			message: 'Failed to fetch business metrics',
+			data: null,
+		};
+	}
+};

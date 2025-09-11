@@ -1,9 +1,10 @@
+'use client'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createBusinessSchema } from '../../../../schema/schema';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Pencil, X, Upload, Trash2, Check, Loader } from 'lucide-react';
+import { Pencil, X, Upload, Trash2, Loader } from 'lucide-react';
 import {
 	Form,
 	FormField,
@@ -29,6 +30,7 @@ import {
 import { useBusiness } from '@/hooks/useBusiness';
 import { z } from 'zod';
 import Image from 'next/image';
+import BusinessRegistrationNotifiation from '@/components/status/BusinessRegistrationNotifiation';
 
 export const Business = () => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -37,7 +39,7 @@ export const Business = () => {
 	>([]);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const { businessData, fetchBusinessData } = useBusiness();
-
+	const [isOpen, setIsOpen] = useState(false);
 	const form = useForm({
 		defaultValues: {
 			name: '',
@@ -61,7 +63,7 @@ export const Business = () => {
 		},
 		resolver: zodResolver(createBusinessSchema),
 	});
-	console.log(businessData?.images)
+	
 	const [isPending, startTransition] = useTransition();
 	useEffect(() => {
 		if (businessData) {
@@ -228,16 +230,7 @@ export const Business = () => {
 				}
 
 				if (response.status) {
-					toast.success(response.message, {
-						duration: 3000,
-						className: 'bg-green-500 text-white',
-						icon: <Check className='w-4 h-4' />,
-						style: {
-							backgroundColor: '#10b981',
-							color: '#fff',
-						},
-						position: 'top-right',
-					});
+					setIsOpen(true);
 					form.reset();
 					setUploadedImages([]);
 
@@ -264,6 +257,8 @@ export const Business = () => {
 	};
 
 	return (
+		<>		
+		<BusinessRegistrationNotifiation businessName={businessData?.name || ''} businessId={businessData?.id || ''} isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} />
 		<Form {...form} >
 			<div className='p-4 px-2 md:px-8 border border-gray-200 rounded-lg max-w-[1000px] mb-10'>
 				<div className='flex items-center justify-between my-6'>
@@ -662,5 +657,6 @@ export const Business = () => {
 				</form>
 			</div>
 		</Form>
+		</>
 	);
 };

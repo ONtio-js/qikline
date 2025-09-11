@@ -1,2 +1,2 @@
 export { useBusinessStore } from './businessStore';
-export type { BusinessData } from './businessStore';
+export type { BusinessData, BusinessMetrics } from './businessStore';

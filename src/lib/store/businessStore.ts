@@ -1,5 +1,9 @@
 import { create } from 'zustand';
-import { createBusiness, getBusiness } from '@/actions/admin/businessMgt/route';
+import {
+	createBusiness,
+	getBusiness,
+	getBusinessMetrics,
+} from '@/actions/admin/businessMgt/route';
 
 import { getAccessToken } from '@/utils/token';
 
@@ -34,17 +38,25 @@ export interface BusinessData {
 		category_display: string;
 		is_active: boolean;
 	}>;
+	metrics?: BusinessMetrics;
 	created_at?: string;
 	updated_at?: string;
 }
-
+export type BusinessMetrics = {
+	data: {
+	total_bookings: number;
+		total_revenue: number;
+		active_customers: number;
+		average_wait_time: number;
+	}
+};
 interface BusinessStore {
 	businessData: BusinessData | null;
 	isLoading: boolean;
 	error: string | null;
 	isInitialized: boolean;
 
-	fetchBusinessData: () => Promise<void>;
+	fetchBusinessData: (forceRefresh?: boolean) => Promise<void>;
 	setBusinessData: (data: BusinessData | null) => void;
 	updateBusiness: (updates: Partial<BusinessData>) => void;
 	clearBusinessData: () => void;
@@ -58,10 +70,16 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 	error: null,
 	isInitialized: false,
 
-	fetchBusinessData: async () => {
-		const { setLoading, setError, setBusinessData } = get();
+	fetchBusinessData: async (forceRefresh = false) => {
+		const { setLoading, setError, setBusinessData, isInitialized } = get();
 
-		console.log('BusinessStore: Starting to fetch business data');
+		if (isInitialized && !forceRefresh) {
+			return;
+		}
+
+		console.log('BusinessStore: Starting to fetch business data', {
+			forceRefresh,
+		});
 		setLoading(true);
 		setError(null);
 
@@ -82,18 +100,32 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 				const businessData = Array.isArray(response.data)
 					? response.data[0]
 					: response.data;
-
+				
 				if (businessData) {
-					console.log(
-						'BusinessStore: Business data fetched successfully',
-						businessData
-					);
+					
+
+					
+					try {
+						const metricsResponse = await getBusinessMetrics(
+							businessData.id
+						);
+						if (metricsResponse.status) {
+							businessData.metrics =
+								metricsResponse.data as BusinessMetrics;
+						
+						}
+					} catch (metricsError) {
+						console.warn(
+							'BusinessStore: Failed to fetch business metrics',
+							metricsError
+						);
+						
+					}
+
 					setBusinessData(businessData);
 				} else {
-					console.log(
-						'BusinessStore: No business data found - user may need to create a business profile'
-					);
-					// Don't set an error for this case - it's normal for new users
+					
+
 					setBusinessData(null);
 				}
 				set({ isInitialized: true });
@@ -102,23 +134,32 @@ export const useBusinessStore = create<BusinessStore>((set, get) => ({
 					'BusinessStore: Failed to fetch business data',
 					response
 				);
-				// If status is false, it means no business was found or there was an error
-				// For new users, this is normal - they need to create a business profile
-				console.log(
-					'BusinessStore: No business profile found - user needs to create one'
-				);
+
 				setBusinessData(null);
 				set({ isInitialized: true });
 			}
 		} catch (error) {
 			console.error('BusinessStore: Error fetching business data', error);
-			// For any error, assume the user needs to create a business profile
-			// This is the safest approach for new users
-			console.log(
-				'BusinessStore: Error occurred - user may need to create a business profile'
-			);
-			setBusinessData(null);
-			setError(null); // Don't show error for this case
+
+			// Check if it's a network error
+			if (
+				error instanceof Error &&
+				(error.message.includes('fetch') ||
+					error.message.includes('network') ||
+					error.message.includes('Failed to fetch'))
+			) {
+				console.log(
+					'BusinessStore: Network error detected, will retry later'
+				);
+				setError('Network error - please check your connection');
+			} else {
+				// For other errors, assume the user needs to create a business profile
+				console.log(
+					'BusinessStore: Error occurred - user may need to create a business profile'
+				);
+				setBusinessData(null);
+				setError(null); // Don't show error for this case
+			}
 			set({ isInitialized: true });
 		} finally {
 			setLoading(false);
