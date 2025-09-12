@@ -65,7 +65,7 @@ const Page = () => {
 				</p>
 			</div>
 			<div className='overflow-x-auto no-scrollbar'>
-				<div className='grid grid-cols-4 gap-4 md:mt-6  pb-10 p-6 min-w-[1200px]'>
+				<div className='grid grid-cols-4 gap-4 md:mt-6  pb-10 p-6 pl-0 min-w-[1200px]'>
 					<div className='bg-white p-8 px-4 rounded-lg  space-y-4 border border-gray-200 '>
 						<div className='flex items-center justify-between'>
 							<h5 className='text-lg font-semibold text-gray-800'>

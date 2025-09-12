@@ -622,10 +622,10 @@ export const Business = () => {
 							))}
 						</div>
 
-						<div className='flex flex-col-reverse md:flex-row justify-center gap-4 mb-10'>
+						<div className='flex flex-col-reverse items-center md:flex-row justify-center gap-4 mb-10'>
 							<Button
 								variant={'outline'}
-								className='w-xs md:w-xs h-12 text-[16px] text-gray-600 hover:bg-gray-100'
+								className='w-full md:w-xs h-12 text-[16px] text-gray-600 hover:bg-gray-100'
 								onClick={() => {
 									form.reset();
 									setUploadedImages([]);
@@ -634,7 +634,7 @@ export const Business = () => {
 								Cancel
 							</Button>
 							<Button
-								className=' w-xs md:w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
+								className='  w-full md:w-xs h-12 bg-blue-700 text-white text-[16px] hover:bg-blue-800 font-semibold'
 								type='submit'
 								disabled={
 									form.formState.isSubmitting || isPending

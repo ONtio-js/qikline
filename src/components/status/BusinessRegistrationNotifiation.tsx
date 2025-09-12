@@ -78,21 +78,21 @@ const BusinessRegistrationNotifiation = ({
 				<X className='w-4 h-4 cursor-pointer group-hover:text-red-500 hover:scale-110 transition-all duration-300' />
 				close
 			</p>
-			<div className=' max-w-2xl mx-auto flex flex-col items-center justify-center'>
-				<div className='text-center mb-8'>
-					<h2 className='text-3xl font-bold text-gray-800 mb-4'>
+			<div className='w-full  md:max-w-2xl mx-auto flex flex-col items-center justify-center'>
+				<div className='text-center mb-8 mt-20'>
+					<h2 className='md:text-3xl text-xl font-bold text-gray-800 mb-4'>
 						Welcome to QikLine, {businessName}!
 					</h2>
-					<p className='text-gray-600 text-lg mb-4 font-medium'>
+					<p className='text-gray-600 md:text-lg text-base mb-4 font-medium'>
 						Your business profile is now live on QikLine.
 					</p>
-					<p className='text-gray-600  mb-4 font-medium'>
+					<p className='text-gray-600 md:text-lg text-base mb-4 font-medium'>
 						Share your booking link and QR code with your customers
 						so they can book appointments instantly.
 					</p>
 				</div>
 
-				<div className='  p-6 mb-6'>
+				<div className='  md:p-6 p-2 mb-6'>
 					<div className='flex flex-col items-center space-y-4'>
 						{isLoading ? (
 							<div className='w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center'>
@@ -124,8 +124,8 @@ const BusinessRegistrationNotifiation = ({
 						>
 							Download QR Code
 						</button>
-                        <div className='flex items-center justify-between gap-x-2'>
-                            <p className='text-gray-600 text-sm'>
+                        <div className='flex items-center md:flex-row flex-col justify-between gap-2'>
+                            <p className='text-gray-600 md:text-sm text-xs'>
                                 Booking URL: {bookingURL}
                             </p>
                             <button
@@ -133,7 +133,7 @@ const BusinessRegistrationNotifiation = ({
                                     navigator.clipboard.writeText(bookingURL);
                                     toast.success('Booking URL copied to clipboard');
                                 }}
-                                className='text-blue-600 text-sm cursor-pointer'
+                                className='text-blue-600 md:text-sm text-xs cursor-pointer'
                             >
                                 <CopyIcon className='w-5 h-5' />
                                

@@ -65,7 +65,7 @@ const NotificationViewCard = ({
 						variant='outline'
 						onClick={() => setIsOpen(false)}
 					>
-						Close <X className='w-4 h-4' />
+						 <X className='w-4 h-4' />
 					</Button>
 					<Button
 						variant='destructive'
